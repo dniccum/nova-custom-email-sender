@@ -1,0 +1,71 @@
+.email-sender {
+
+  $tester-margin: .4rem;
+
+  .input-wrapper {
+    position: relative;
+    display: block;
+    max-width: 800px;
+  }
+
+  .vue-input-tag-wrapper {
+    background-color: var(--white);
+    overflow: hidden;
+    padding-left: .8rem;
+    padding-top: $tester-margin;
+    cursor: text;
+    text-align: left;
+    -webkit-appearance: textfield;
+    display: flex;
+    flex-wrap: wrap;
+
+    // resets
+    &.form-control.form-input.form-input-bordered {
+      min-height: 2.9rem;
+      height: auto;
+    }
+
+    &.read-only {
+      cursor: default;
+      background-color: var(--gray);
+    }
+    .new-tag {
+      background: transparent;
+      border: 0;
+      color: #777;
+      font-size: 16px;
+      font-weight: 400;
+      margin-bottom: 6px;
+      margin-top: 1px;
+      outline: none;
+      padding: 4px 4px 4px 0;
+      flex-grow: 1;
+    }
+    .input-tag {
+      border-radius: 6px;
+      background-color: var(--primary);
+      border: 1px solid rgba(var(--primary-dark), .98);
+      color: var(--white);
+      display: inline-block;
+      font-size: 16px;
+      font-weight: 400;
+      margin-bottom: $tester-margin;
+      margin-right: $tester-margin;
+      padding: 3px 6px;
+
+      .remove {
+        cursor: pointer;
+        font-weight: bold;
+        color: var(--white);
+        margin-left: 4px;
+
+        &:hover {
+          text-decoration: none;
+        }
+        &::before {
+          content: " x";
+        }
+      }
+    }
+  }
+}
