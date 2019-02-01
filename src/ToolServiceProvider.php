@@ -27,7 +27,7 @@ class ToolServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/novaemailsender.php' => base_path('config/'.$this->config.'.php'),
+                __DIR__.'/../config/'.$this->config.'.php' => base_path('config/'.$this->config.'.php'),
             ], 'config');
         }
 
