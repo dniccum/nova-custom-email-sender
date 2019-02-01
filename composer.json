@@ -1,9 +1,19 @@
 {
     "name": "dniccum/custom-email-sender",
-    "description": "A Laravel Nova tool.",
+    "description": "A tool for Laravel's Nova administrator panel that allows you to send custom email messages that within your application that leverages the applications existing settings and configurations.",
     "keywords": [
         "laravel",
-        "nova"
+        "nova",
+        "tool",
+        "email",
+        "messages"
+    ],
+    "authors": [
+        {
+            "name": "Doug Niccum",
+            "email": "dniccumdesign@gmail.com",
+            "role": "Developer"
+        }
     ],
     "license": "MIT",
     "require": {

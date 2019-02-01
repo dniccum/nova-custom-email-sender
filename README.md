@@ -18,7 +18,7 @@ This is a tool for Laravel's Nova administrator panel that allows you to send cu
 You can install the package via composer:
 
 ```
-composer require dniccum/nova-custom-email-sender
+composer require dniccum/custom-email-sender
 ```
 
 You will then need to publish the package's configuration and blade view files to your applications installation:
