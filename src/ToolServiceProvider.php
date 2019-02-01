@@ -32,7 +32,7 @@ class ToolServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__.'/../resources/views/email.blade.php' => resource_path('views/vendor/custom-email-sender'),
+            __DIR__.'/../resources/views/email.blade.php' => resource_path('views/vendor/custom-email-sender/email.blade.php'),
         ]);
 
         Nova::serving(function (ServingNova $event) {
