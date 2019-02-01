@@ -2,12 +2,11 @@
 namespace Dniccum\CustomEmailSender\Http\Controllers;
 
 use Dniccum\CustomEmailSender\Http\Requests\SendCustomEmailMessage;
+use Dniccum\CustomEmailSender\Mail\CustomMessageMailable;
 
 class CustomEmailSenderController
 {
     private $model;
-
-    private $view;
 
     public function __construct()
     {
@@ -18,13 +17,6 @@ class CustomEmailSenderController
         }
 
         $this->model = new $userClassName;
-
-        $this->view = config('novaemailsender.template.view');
-
-        if (!view()->exists($this->view)) {
-            \View::addLocation(base_path('vendor/dniccum/custom-email-sender/resources/views'));
-            $this->view = 'email';
-        }
     }
 
     /**
@@ -40,6 +32,12 @@ class CustomEmailSenderController
             ->json(config('novaemailsender'));
     }
 
+    /**
+     * Sends the messages to the requested users.
+     *
+     * @param SendCustomEmailMessage $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function send(SendCustomEmailMessage $request)
     {
         $requestData = $request->validated();
@@ -52,30 +50,15 @@ class CustomEmailSenderController
             });
         }
 
-        $content = $this->convertContent($requestData['htmlContent']);
+        $content = $requestData['htmlContent'];
         $subject = $requestData['subject'];
 
         $users->map(function($user) use ($content, $subject) {
-
-            // TODO figure out a way to build the markdown view
-
-            try {
-                \Mail::send($this->view, $content, function($message) use ($user, $subject) {
-                    $message
-                        ->from(config('novaemailsender.from.address'), config('novaemailsender.from.name'))
-                        ->subject($subject);
-
-                    $message->to($user->email);
-                });
-            } catch (\Exception $e) {
-                \Log::debug('email could not be sent', [
-                    'user' => $user,
-                    'error' => $e
-                ]);
-            }
+            \Mail::to($user)
+                ->send(new CustomMessageMailable($subject, $content));
         });
 
-        return response()->json('Email(s) have been sent successfully.', 200);
+        return response()->json($users->count(). ' email(s) have been sent.', 200);
     }
 
     /**
@@ -125,16 +108,5 @@ class CustomEmailSenderController
         }
 
         return $selectQuery;
-    }
-
-    /**
-     * @param string $htmlContent
-     * @return array
-     */
-    private function convertContent(string $htmlContent)
-    {
-        return [
-            'content' => $htmlContent,
-        ];
     }
 }
