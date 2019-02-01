@@ -63,4 +63,28 @@ return [
 
     'template' => resource_path('vendor/custom-email-sender/email'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Quill WYSIWYG editor configuration
+    |--------------------------------------------------------------------------
+    |
+    | The basic buttons that come enabled out of the box. These were chosen to
+    | eliminate the potential intrusion of the email layout. Other options are
+    | available and documented on the Quill website: https://quilljs.com/docs
+    |
+    */
+
+    'editor' => [
+
+        'toolbar' => [
+            [ 'header' => 1 ],
+            [ 'header' => 2 ],
+            [ 'list' => 'ordered' ],
+            [ 'list' => 'bullet' ],
+            'bold',
+            'italic',
+            'link',
+        ]
+    ],
+
 ];
