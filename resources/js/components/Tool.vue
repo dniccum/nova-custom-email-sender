@@ -2,7 +2,9 @@
     <div class="email-sender">
         <loader v-if="loading"></loader>
 
-        <message-form v-else></message-form>
+        <message-form
+                :quill-configuration="config.editor"
+                v-else></message-form>
     </div>
 </template>
 
@@ -19,7 +21,9 @@
         data() {
             return {
                 loading: true,
-                config: {}
+                config: {
+                    editor: {}
+                }
             }
         },
         mounted() {
