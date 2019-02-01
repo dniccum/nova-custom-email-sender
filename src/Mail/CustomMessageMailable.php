@@ -41,19 +41,25 @@ class CustomMessageMailable extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $view = config('novaemailsender.template');
+        $view = config('novaemailsender.template.view');
 
-        if (!view()->exists($this->view)) {
+        if (!view()->exists($view)) {
             \View::addLocation(base_path('vendor/dniccum/custom-email-sender/resources/views'));
             $view = 'email';
         }
 
-        return $this->markdown($view)
-            ->subject($this->subject)
+        $this->subject($this->subject)
             ->from(config('novaemailsender.from.address'), config('novaemailsender.from.name'))
             ->with([
-                'content' => $this->message,
-                'salutation' => config('novaemailsender.from.address')
+                'content' => $this->message
             ]);
+
+        if (config('novaemailsender.template.markdown')) {
+            $this->markdown($view);
+        } else {
+            $this->html($view);
+        }
+
+        return $this;
     }
 }
