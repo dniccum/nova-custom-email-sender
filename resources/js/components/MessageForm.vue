@@ -74,32 +74,39 @@
             CounterInput,
             ToggleButton
         },
+        props: {
+            quillConfiguration: Object,
+            default: {
+                toolbar: [
+                    { 'header': 1}, { 'header': 2 },
+                    { 'list': 'ordered'}, { 'list': 'bullet' },
+                    'bold',
+                    'italic',
+                    'link',
+                ]
+            }
+        },
         data() {
             return {
                 loading: false,
                 sendToAll: false,
                 subject: '',
                 recipients: [],
-                htmlContent: ''
+                htmlContent: '',
             }
+        },
+        mounted() {
+            console.log(this.quillConfiguration);
         },
         computed: {
             quillEditorOptions() {
                 return {
                     modules: {
-                        toolbar: [
-                            { 'header': 1}, { 'header': 2 },
-                            { 'list': 'ordered'}, { 'list': 'bullet' },
-                            'bold',
-                            'italic',
-                            'link',
-                        ]
+                        ...this.quillConfiguration
                     }
                 }
             },
             quillEditor() {
-                // this.quillEditor.enable(false)
-
                 return this.$refs.myQuillEditor.quill
             }
         },
@@ -138,7 +145,7 @@
                     recipients: vm.recipients,
                     htmlContent: this.htmlContent
                 }).then(response => {
-                    console.log(response);
+                    this.$toasted.show(response.data, { type: 'success' });
                 }).catch(error => {
                     let response = error.response;
                     let status = response.status
