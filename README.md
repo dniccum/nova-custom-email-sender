@@ -1,5 +1,9 @@
 # Custom Email Sender for Laravel Nova
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/dniccum/custom-email-sender.svg?style=flat-square&color=#0E7FC0)](https://packagist.org/packages/dniccum/custom-email-sender)
+[![License](https://img.shields.io/packagist/l/dniccum/custom-email-sender.svg?style=flat-square)](https://packagist.org/packages/dniccum/custom-email-sender)
+[![Total Downloads](https://img.shields.io/packagist/dt/dniccum/custom-email-sender.svg?style=flat-square)](https://packagist.org/packages/dniccum/custom-email-sender)
+
 This is a tool for Laravel's Nova administrator panel that allows you to send custom email messages that within your application that leverages the applications existing settings and configurations; from address, email driver, etc.
 
 ## Features
