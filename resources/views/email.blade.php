@@ -4,6 +4,6 @@
 
     {{-- Salutation --}}
     @if (! empty($salutation))
-        {{ $salutation }}
+        {!! $salutation !!}
     @endif
 @endcomponent
