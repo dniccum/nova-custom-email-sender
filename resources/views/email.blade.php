@@ -1,9 +1,9 @@
 @component('mail::message')
 
-    {!! $content !!}
+{!! $content !!}
 
-    {{-- Salutation --}}
-    @if (! empty($salutation))
-        {!! $salutation !!}
-    @endif
+{{-- Salutation --}}
+@if (! empty($salutation))
+    {!! $salutation !!}
+@endif
 @endcomponent
