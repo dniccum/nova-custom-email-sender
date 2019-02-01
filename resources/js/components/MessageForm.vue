@@ -96,7 +96,7 @@
             }
         },
         mounted() {
-            console.log(this.quillConfiguration);
+            //
         },
         computed: {
             quillEditorOptions() {
