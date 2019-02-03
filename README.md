@@ -55,6 +55,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Priority
+    |--------------------------------------------------------------------------
+    |
+    | The priority in which the emails sent will be added to the queue driver.
+    | In order to take advantage of this feature, you must specify queue
+    | priority in your worker like so: php artisan queue:work --queue=high,low
+    |
+    */
+
+    'priority' => 'low',
+
+    /*
+    |--------------------------------------------------------------------------
     | Mail Driver
     |--------------------------------------------------------------------------
     |

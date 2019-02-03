@@ -49,6 +49,7 @@ class CustomMessageMailable extends Mailable implements ShouldQueue
         }
 
         $this->subject($this->subject)
+            ->onQueue(config('novaemailsender.priority'))
             ->from(config('novaemailsender.from.address'), config('novaemailsender.from.name'))
             ->with([
                 'content' => $this->message
