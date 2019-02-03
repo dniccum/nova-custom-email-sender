@@ -7,6 +7,7 @@
                 type="text"
                 v-model="interface"
                 v-on:keydown="addNew"
+                :disabled="disabled"
         />
         <div class="counter" :style="counterColor()" v-if="interface.length > 0">
             {{ counterNumber() }}
@@ -14,7 +15,7 @@
     </div>
 </template>
 
-<script> //v-on:blur= "handleInputBlur"
+<script>
     export default {
         name: "CounterInput",
         props: {
@@ -25,10 +26,14 @@
                 default: () => {
                     return 60
                 }
+            },
+            disabled: {
+                type: Boolean,
+                default: false
             }
         },
         mounted() {
-            // console.log('mount')
+            //
         },
         computed: {
             interface: {
