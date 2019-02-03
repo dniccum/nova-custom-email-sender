@@ -2,8 +2,4 @@
 
 {!! $content !!}
 
-{{-- Salutation --}}
-@if (! empty($salutation))
-    {!! $salutation !!}
-@endif
 @endcomponent
