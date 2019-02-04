@@ -6,6 +6,8 @@
 
 This is a tool for Laravel's Nova administrator panel that allows you to send custom email messages that within your application that leverages the applications existing settings and configurations; from address, email driver, etc.
 
+[![Screenshot](https://raw.githubusercontent.com/dniccum/nova-custom-email-sender/master/screenshots/screenshot-1.png)](https://raw.githubusercontent.com/dniccum/nova-custom-email-sender/master/screenshots/screenshot-1.png)
+
 ## Features
 
 * Inherits your Laravel application's notification Blade layout with any and all modifications and customizations.
