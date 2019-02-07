@@ -2,11 +2,15 @@
 namespace Dniccum\CustomEmailSender\Http\Controllers;
 
 use Dniccum\CustomEmailSender\Http\Requests\SendCustomEmailMessage;
+use Dniccum\CustomEmailSender\Library\UserUtility;
 use Dniccum\CustomEmailSender\Mail\CustomMessageMailable;
 
 class CustomEmailSenderController
 {
-    private $model;
+    /**
+     * @var UserUtility
+     */
+    private $userUtility;
 
     public function __construct()
     {
@@ -16,7 +20,7 @@ class CustomEmailSenderController
             die('Please define a user class for the Custom Email Sender');
         }
 
-        $this->model = new $userClassName;
+        $this->userUtility = new UserUtility(new $userClassName);
     }
 
     /**
@@ -43,7 +47,7 @@ class CustomEmailSenderController
         $requestData = $request->validated();
 
         if ($requestData['sendToAll']) {
-            $users = $this->getAllUsers();
+            $users = $this->userUtility->getAllUsers();
         } else {
             $users = collect($requestData['recipients'])->map(function($address) {
                 return ['email' => $address];
@@ -61,52 +65,17 @@ class CustomEmailSenderController
         return response()->json($users->count(). ' email(s) have been sent.', 200);
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    private function getAllUsers()
+    public function preview(SendCustomEmailMessage $request)
     {
-        $selectQuery = $this->selectQuery();
-        $userCollection = collect([]);
+        $requestData = $request->validated();
 
-        $this->model->select($selectQuery)->chunk(200, function($users) use ($userCollection) {
-            foreach ($users as $user) {
-                $email = config('novaemailsender.model.email');
+        $content = $requestData['htmlContent'];
+        $subject = $requestData['subject'];
 
-                if (!empty(config('novaemailsender.model.name'))) {
-                    $nameProperty = config('novaemailsender.model.name');
-                    $name = $user->$nameProperty;
-                } else {
-                    $firstNameProperty = config('novaemailsender.model.first_name');
-                    $lastNameProperty = config('novaemailsender.model.last_name');
-                    $name = $user->$firstNameProperty.' '.$user->$lastNameProperty;
-                }
+        $email = new CustomMessageMailable($subject, $content);
 
-                $object = new \stdClass();
-                $object->email = $user->$email;
-                $object->name = $name;
-
-                $userCollection->push($object);
-            }
-        });
-
-        return $userCollection;
-    }
-
-    /**
-     * @return array|string[]
-     */
-    private function selectQuery()
-    {
-        $selectQuery = [ 'id', config('novaemailsender.model.email') ];
-
-        if (!empty(config('novaemailsender.model.name'))) {
-            $selectQuery[] = 'name';
-        } else {
-            $selectQuery[] = config('novaemailsender.model.first_name');
-            $selectQuery[] = config('novaemailsender.model.last_name');
-        }
-
-        return $selectQuery;
+        return response()->json([
+           'content' => $email->render()
+        ], 200);
     }
 }
