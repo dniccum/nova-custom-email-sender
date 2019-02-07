@@ -17,3 +17,4 @@ define('NAMESPACE', '');
 
 Route::get('/config', 'Dniccum\CustomEmailSender\Http\Controllers\CustomEmailSenderController@config');
 Route::post('/send', 'Dniccum\CustomEmailSender\Http\Controllers\CustomEmailSenderController@send');
+Route::post('/preview', 'Dniccum\CustomEmailSender\Http\Controllers\CustomEmailSenderController@preview');
