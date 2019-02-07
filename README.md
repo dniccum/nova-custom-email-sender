@@ -16,7 +16,8 @@ This is a tool for Laravel's Nova administrator panel that allows you to send cu
 * Currently, provides two methods of sending messages:
     * A simple toggle to send the message to all of your users
     * Via ad-hoc email input with email address validation
-* Leverages the [Quill](https://quilljs.com/docs) WYSIWYG editor with the ability to customize the availabe buttons/functionality for your users
+* Leverages the [Quill](https://quilljs.com/docs) WYSIWYG editor with the ability to customize the available buttons/functionality for your users
+* Preview the message before it's sent
 * Various settings to adjust this tool to your installation.
 
 ## Installation
@@ -151,6 +152,7 @@ return [
 
 ## To Do
 
+- [x] Email preview (thanks @Yelles for the idea!)
 - [ ] Add dynamic autocomplete for app's user Model
 - [ ] Add support for Laravel action button components
 - [ ] Polish up UI
