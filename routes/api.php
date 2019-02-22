@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-define('NAMESPACE', '');
-
 /*
 |--------------------------------------------------------------------------
 | Tool API Routes
