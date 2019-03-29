@@ -20,6 +20,7 @@ class ToolServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'custom-email-sender');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'custom-email-sender');
 
         $this->app->booted(function () {
             $this->routes();
@@ -33,7 +34,12 @@ class ToolServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/../resources/views/email.blade.php' => resource_path('views/vendor/custom-email-sender/email.blade.php'),
-        ]);
+        ], 'views');
+
+        $this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/custom-email-sender'),
+        ], 'lang');
+
 
         Nova::serving(function (ServingNova $event) {
 
