@@ -1,64 +1,66 @@
 <template>
-    <div class="flex-row mb-8 lg:mb-20 w-1/2" v-if="!complete">
+    <div class="flex-row mb-8 lg:mb-20" v-if="!complete">
         <div class="flex flex-wrap md:w-full">
-            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 lg:pr-10">
-                <heading class="mb-6">Custom Email Sender</heading>
+            <div class="w-full mb-6 md:mb-0 lg:pr-10">
+                <heading class="mb-6">{{ messages['tool-name'] }}</heading>
 
-                <h3 class="text-base text-80 font-bold mb-3">Subject</h3>
-                <div class="mb-8">
-                    <p class="mb-2 italic">Enter the subject line for your message</p>
-                    <counter-input placeholder="Message subject line"
-                                   :model.sync="subject"
-                                   :disabled="isThinking()"
-                    ></counter-input>
-                </div>
-
-                <h3 class="text-base text-80 font-bold mb-3">Recipients</h3>
-                <div class="mb-8">
-                    <div class="mb-6">
-                        <p class="mb-2">Would you like to send this message to all of the users?</p>
-                        <toggle-button :width="60" :height="26" color="var(--primary)" v-model="sendToAll" :disabled="isThinking()" />
+                <card class="px-6 py-4">
+                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['subject-header'] }}</h3>
+                    <div class="mb-8">
+                        <p class="mb-2 italic">{{ messages['subject-copy'] }}</p>
+                        <counter-input :placeholder="messages['subject-placeholder']"
+                                       :model.sync="subject"
+                                       :disabled="isThinking()"
+                        ></counter-input>
                     </div>
-                    <p class="mb-2">Enter the users'/recipients' email addresses that you would like to send this message to.</p>
-                    <div class="input-wrapper">
-                        <email-input-tag
-                                v-model="recipients"
-                                placeholder="Email addresses"
-                                class="form-control form-input form-input-bordered"
-                                :validate="validateEmailAddress"
-                                :read-only="sendToAll || isThinking()"
-                        ></email-input-tag>
+
+                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-header'] }}</h3>
+                    <div class="mb-8">
+                        <div class="mb-6">
+                            <p class="mb-2">{{ messages['recipients-toggle-copy'] }}</p>
+                            <toggle-button :width="60" :height="26" color="var(--primary)" v-model="sendToAll" :disabled="isThinking()" />
+                        </div>
+                        <p class="mb-2">{{ messages['recipients-manual-input-copy'] }}</p>
+                        <div class="input-wrapper">
+                            <email-input-tag
+                                    v-model="recipients"
+                                    :placeholder="messages['recipients-manual-input-placeholder']"
+                                    class="form-control form-input form-input-bordered"
+                                    :validate="validateEmailAddress"
+                                    :read-only="sendToAll || isThinking()"
+                            ></email-input-tag>
+                        </div>
                     </div>
-                </div>
 
-                <h3 class="text-base text-80 font-bold mb-3">Content</h3>
-                <div class="mb-8">
-                    <p class="mb-2">Add the content for the message that you would like to send.</p>
-                    <div class="input-wrapper">
-                        <quill-editor class="quill-editor"
-                                      :options="quillEditorOptions"
-                                      v-model="htmlContent"
-                                      ref="myQuillEditor"
-                        ></quill-editor>
+                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['content-header'] }}</h3>
+                    <div class="mb-8">
+                        <p class="mb-2">{{ messages['content-copy'] }}</p>
+                        <div class="input-wrapper">
+                            <quill-editor class="quill-editor"
+                                          :options="quillEditorOptions"
+                                          v-model="htmlContent"
+                                          ref="myQuillEditor"
+                            ></quill-editor>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mt-4">
-                    <h3 class="text-base text-80 font-bold mb-3">Send/Preview</h3>
-                    <p class="mb-2">Click the button below to either send and/or preview the message.</p>
+                    <div class="mt-4">
+                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview'] }}</h3>
+                        <p class="mb-2">{{ messages['preview-copy'] }}</p>
 
-                    <button class="btn btn-default btn-primary" @click="sendMessage" :disabled="isThinking() || !formIsValid()">
-                        {{ loading ? 'Sending. Please wait...' : 'Send Message' }}
-                    </button>
-                    <button class="btn btn-default btn-secondary" @click="preview" :disabled="isThinking() || !formIsValid()">
-                        {{ gettingPreview ? 'Getting preview. Please wait...' : 'Preview' }}
-                    </button>
-                </div>
+                        <button class="btn btn-default btn-primary" @click="sendMessage" :disabled="isThinking() || !formIsValid()">
+                            {{ loading ? messages['send-message-loading'] : messages['send-message'] }}
+                        </button>
+                        <button class="btn btn-default btn-secondary" @click="preview" :disabled="isThinking() || !formIsValid()">
+                            {{ gettingPreview ? messages['preview-loading'] : messages['preview'] }}
+                        </button>
+                    </div>
+                </card>
             </div>
         </div>
     </div>
 
-    <success-panel v-else @reset="reset"></success-panel>
+    <success-panel v-else @reset="reset" :messages="messages"></success-panel>
 </template>
 
 <script>
@@ -83,6 +85,7 @@
             SuccessPanel,
         },
         props: {
+            messages: Object,
             quillConfiguration: Object,
             default: {
                 toolbar: [
@@ -113,7 +116,8 @@
                 return {
                     modules: {
                         ...this.quillConfiguration
-                    }
+                    },
+                    placeholder: this.messages['content-placeholder']
                 }
             },
             quillEditor() {
@@ -146,7 +150,7 @@
                 let isValid = re.test(String(value).toLowerCase());
 
                 if (!isValid) {
-                    this.$toasted.show('Invalid email address.', { type: 'error' })
+                    this.$toasted.show(this.messages['invalid-email'], { type: 'error' })
                 }
 
                 return isValid;

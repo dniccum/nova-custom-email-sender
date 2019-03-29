@@ -1,44 +1,45 @@
 <template>
-    <div class="email-sender">
-        <loader v-if="loading"></loader>
+    <loading-card v-if="loading" class="flex flex-col px-6 py-4" style="min-height: 400px;"></loading-card>
 
+    <div class="email-sender" v-else>
         <message-form
                 :quill-configuration="config.editor"
-                v-else></message-form>
+                :messages="messages"
+        ></message-form>
 
-        <preview-modal></preview-modal>
+        <preview-modal :close-copy="messages['close']" ></preview-modal>
     </div>
 </template>
 
 <script>
     import MessageForm from './MessageForm';
-    import Loader from './Loader';
     import PreviewModal from './PreviewModal';
 
     export default {
         name: 'CustomEmailSender',
         components: {
             MessageForm,
-            Loader,
             PreviewModal,
         },
         data() {
             return {
                 loading: true,
                 config: {
-                    editor: {}
-                }
+                    editor: {},
+                },
+                messages: {}
             }
         },
         mounted() {
-            this.getConfig()
+            this.getConfig();
         },
         methods: {
             getConfig() {
                 let vm = this;
 
                 Nova.request().get('/nova-vendor/custom-email-sender/config').then(response => {
-                    vm.config = response.data;
+                    vm.config = response.data.config;
+                    vm.messages = response.data.messages;
                 }).catch(error => {
                     this.$toasted.show(error.response.data, { type: 'error' })
                 }).finally(() => {

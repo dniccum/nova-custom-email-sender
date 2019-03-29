@@ -2,13 +2,13 @@
     <div class="modal-wrapper fixed w-screen h-screen pin z-30 flex flex-col items-center justify-center" v-show="visible">
         <div class="background absolute w-full h-full" style="background-color: var(--primary); opacity: .8"></div>
         <button class="btn btn-default btn-white text-primary z-10 mb-8" type="button" @click="close">
-            Close
+            {{ closeCopy }}
         </button>
         <div class="iframe-wrapper relative z-10">
             <iframe id="preview-frame" class="absolute w-full h-full pin rounded-lg"></iframe>
         </div>
         <button class="btn btn-default btn-white text-primary z-10 mt-8" type="button" @click="close">
-            Close
+            {{ closeCopy }}
         </button>
     </div>
 </template>
@@ -16,6 +16,9 @@
 <script>
     export default {
         name: "PreviewModal",
+        props: {
+            closeCopy: String,
+        },
         data() {
             return {
                 visible: false

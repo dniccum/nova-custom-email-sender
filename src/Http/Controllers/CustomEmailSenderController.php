@@ -33,7 +33,10 @@ class CustomEmailSenderController
     public function config()
     {
         return response()
-            ->json(config('novaemailsender'));
+            ->json([
+                'config' => config('novaemailsender'),
+                'messages' => __('custom-email-sender::tool')
+            ]);
     }
 
     /**
@@ -62,7 +65,7 @@ class CustomEmailSenderController
                 ->send(new CustomMessageMailable($subject, $content));
         });
 
-        return response()->json($users->count(). ' email(s) have been sent.', 200);
+        return response()->json($users->count(). ' '.__('custom-email-sender::tool.emails-sent'), 200);
     }
 
     public function preview(SendCustomEmailMessage $request)
