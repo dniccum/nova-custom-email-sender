@@ -8,11 +8,11 @@
                 </div>
 
                 <div class="w-1/2 mt-6 mb-6 text-center" style="color: var(--white)">
-                    <h2 class="text-3xl mb-6">Emails have been sent.</h2>
-                    <p class="text-lg mb-8">Your email message has been sent successfully. If you would like to send another message, please click the button below to start over.</p>
+                    <h2 class="text-3xl mb-6">{{ messages['success-header'] }}</h2>
+                    <p class="text-lg mb-8">{{ messages['success-copy'] }}</p>
                     <p>
                         <button class="btn btn-default btn-white text-primary" type="button" @click="$emit('reset')">
-                            Start Over
+                            {{ messages['start-over'] }}
                         </button>
                     </p>
                 </div>
@@ -24,6 +24,9 @@
 <script>
     export default {
         name: "SuccessPanel",
+        props: {
+            messages: Object
+        }
     }
 </script>
 
