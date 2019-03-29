@@ -17,6 +17,7 @@ This is a tool for Laravel's Nova administrator panel that allows you to send cu
     * A simple toggle to send the message to all of your users
     * Via ad-hoc email input with email address validation
 * Leverages the [Quill](https://quilljs.com/docs) WYSIWYG editor with the ability to customize the available buttons/functionality for your users
+* Language localization
 * Preview the message before it's sent
 * Various settings to adjust this tool to your installation.
 
@@ -32,6 +33,18 @@ You will then need to publish the package's configuration and blade view files t
 
 ```
 php artisan vendor:publish --provider="Dniccum\CustomEmailSender\ToolServiceProvider"
+```
+
+If you would only like to publish a portion of the vendor assets, you may use the following tags:
+
+* config
+* views
+* lang
+
+with the necessary artisan command like so:
+
+```
+php artisan vendor:publish --provider="Dniccum\CustomEmailSender\ToolServiceProvider" --tag=config
 ```
 
 ## Configuration
@@ -150,9 +163,14 @@ return [
 ];
 ```
 
+## Localization / Translation
+
+After the vendor files have been published, you may edit the necessary placeholders in the `resources/lang/vendor/custom-email-sender` directory.
+
 ## To Do
 
 - [x] Email preview (thanks @Yelles for the idea!)
+- [x] Localization
 - [ ] Add dynamic autocomplete for app's user Model
 - [ ] Add support for Laravel action button components
 - [ ] Polish up UI
