@@ -47,6 +47,14 @@ with the necessary artisan command like so:
 php artisan vendor:publish --provider="Dniccum\CustomEmailSender\ToolServiceProvider" --tag=config
 ```
 
+Inside `App\Providers\NovaServiceProvider`update the tools function. This will include the link on the sidebar.  
+```
+    public function tools()
+    {
+        return [new CustomEmailSender()];
+    }
+```
+
 ## Configuration
 
 The configuration items listed below can be found in the `novaemailsender.php` configuration file.
