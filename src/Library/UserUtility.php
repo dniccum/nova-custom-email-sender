@@ -56,7 +56,7 @@ class UserUtility
         $selectQuery = [ 'id', config('novaemailsender.model.email') ];
 
         if (!empty(config('novaemailsender.model.name'))) {
-            $selectQuery[] = 'name';
+            $selectQuery[] = config('novaemailsender.model.name');
         } else {
             $selectQuery[] = config('novaemailsender.model.first_name');
             $selectQuery[] = config('novaemailsender.model.last_name');
