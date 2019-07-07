@@ -109,7 +109,9 @@
             }
         },
         mounted() {
-            //
+            this.$refs.myQuillEditor.$el.addEventListener('keydown', e => {
+                e.stopPropagation()
+            }, false);
         },
         computed: {
             quillEditorOptions() {
@@ -125,6 +127,10 @@
             }
         },
         methods: {
+            handleKeydown(event) {
+                // resets default
+            },
+
             isThinking() {
                 if (this.loading || this.gettingPreview) {
                     return true
