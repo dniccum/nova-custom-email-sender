@@ -181,8 +181,13 @@ After the vendor files have been published, you may edit the necessary placehold
 - [x] Localization
 - [ ] Add dynamic autocomplete for app's user Model
 - [ ] Add support for Laravel action button components
-- [ ] Polish up UI
+- [x] Polish up UI
 - [ ] Add additional options to further customize the Quill editor
+
+## Credits
+
+* [Doug Niccum](https://github.com/dniccum)
+* [Andreas Bergqvist](https://github.com/andreasbergqvist)
 
 ## License
 
