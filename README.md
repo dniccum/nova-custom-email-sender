@@ -188,6 +188,8 @@ After the vendor files have been published, you may edit the necessary placehold
 
 * [Doug Niccum](https://github.com/dniccum)
 * [Andreas Bergqvist](https://github.com/andreasbergqvist)
+* [Samer Halawani](https://github.com/shalawani)
+* [Blake](https://github.com/StarClutch)
 
 ## License
 
