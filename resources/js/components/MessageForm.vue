@@ -4,56 +4,74 @@
             <div class="w-full mb-6 md:mb-0 lg:pr-10">
                 <heading class="mb-6">{{ messages['tool-name'] }}</heading>
 
-                <card class="px-6 py-4">
-                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['subject-header'] }}</h3>
-                    <div class="mb-8">
-                        <p class="mb-2 italic">{{ messages['subject-copy'] }}</p>
-                        <counter-input :placeholder="messages['subject-placeholder']"
-                                       :model.sync="subject"
-                                       :disabled="isThinking()"
-                        ></counter-input>
+                <card class="flex px-6 py-4">
+                    <div class="w-3/5">
+                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['subject-header'] }}</h3>
+                        <div class="mb-8">
+                            <p class="mb-2 italic">{{ messages['subject-copy'] }}</p>
+                            <counter-input :placeholder="messages['subject-placeholder']"
+                                           :model.sync="subject"
+                                           :disabled="isThinking()"
+                            ></counter-input>
+                        </div>
+
+                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-header'] }}</h3>
+
+                        <recipient-form :messages="messages"
+                                        @add="addAddress"
+                                    :send-to-all.sync="sendToAll"
+                                    :loading="isThinking()"
+                                    :recipients="recipients"
+                        ></recipient-form>
+
+                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['content-header'] }}</h3>
+                        <div class="mb-8">
+                            <p class="mb-2">{{ messages['content-copy'] }}</p>
+                            <div class="input-wrapper">
+                                <quill-editor class="quill-editor"
+                                              :options="quillEditorOptions"
+                                              v-model="htmlContent"
+                                              ref="myQuillEditor"
+                                ></quill-editor>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview'] }}</h3>
+                            <p class="mb-2">{{ messages['preview-copy'] }}</p>
+
+                            <button class="btn btn-default btn-primary" @click="sendMessage" :disabled="isThinking() || !formIsValid()">
+                                {{ loading ? messages['send-message-loading'] : messages['send-message'] }}
+                            </button>
+                            <button class="btn btn-default btn-secondary" @click="preview" :disabled="isThinking() || !formIsValid()">
+                                {{ gettingPreview ? messages['preview-loading'] : messages['preview'] }}
+                            </button>
+                        </div>
                     </div>
 
-                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-header'] }}</h3>
-                    <div class="mb-8">
-                        <div class="mb-6">
-                            <p class="mb-2">{{ messages['recipients-toggle-copy'] }}</p>
-                            <toggle-button :width="60" :height="26" color="var(--primary)" v-model="sendToAll" :disabled="isThinking()" />
-                        </div>
-                        <p class="mb-2">{{ messages['recipients-manual-input-copy'] }}</p>
-                        <div class="input-wrapper">
-                            <email-input-tag
-                                    v-model="recipients"
-                                    :placeholder="messages['recipients-manual-input-placeholder']"
-                                    class="form-control form-input form-input-bordered"
-                                    :validate="validateEmailAddress"
-                                    :read-only="sendToAll || isThinking()"
-                            ></email-input-tag>
-                        </div>
-                    </div>
+                    <div class="w-2/5">
+                        <card class="recipients-list px-6 py-4" style="background-color: var(--20)">
+                            <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-list-header'] }}</h3>
 
-                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['content-header'] }}</h3>
-                    <div class="mb-8">
-                        <p class="mb-2">{{ messages['content-copy'] }}</p>
-                        <div class="input-wrapper">
-                            <quill-editor class="quill-editor"
-                                          :options="quillEditorOptions"
-                                          v-model="htmlContent"
-                                          ref="myQuillEditor"
-                            ></quill-editor>
-                        </div>
-                    </div>
+                            <div v-if="recipients.length > 0" class="recipient-result" v-for="(recipient, index) of recipients">
+                                <div class="name" v-if="recipient.name && recipient.name.length > 0">
+                                    <strong>{{ recipient.name }}</strong>
+                                    <{{ recipient.address }}>
+                                </div>
+                                <div class="name" v-else>
+                                    {{ recipient.address }}
+                                </div>
+                                <div class="button-wrapper">
+                                    <button :title="messages['remove']" class="appearance-none cursor-pointer text-70 hover:text-danger mr-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-labelledby="delete" role="presentation" class="fill-current"><path fill-rule="nonzero" d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
 
-                    <div class="mt-4">
-                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview'] }}</h3>
-                        <p class="mb-2">{{ messages['preview-copy'] }}</p>
-
-                        <button class="btn btn-default btn-primary" @click="sendMessage" :disabled="isThinking() || !formIsValid()">
-                            {{ loading ? messages['send-message-loading'] : messages['send-message'] }}
-                        </button>
-                        <button class="btn btn-default btn-secondary" @click="preview" :disabled="isThinking() || !formIsValid()">
-                            {{ gettingPreview ? messages['preview-loading'] : messages['preview'] }}
-                        </button>
+                            <div v-if="recipients.length === 0" class="p-4 bg-danger rounded">
+                                <p class="text-white">No addresses have been added.</p>
+                            </div>
+                        </card>
                     </div>
                 </card>
             </div>
@@ -69,20 +87,18 @@
     import 'quill/dist/quill.bubble.css'
 
     import { quillEditor } from 'vue-quill-editor'
-    import { ToggleButton } from 'vue-js-toggle-button'
 
-    import EmailInputTag from './EmailInputTag';
     import CounterInput from './CounterInput';
     import SuccessPanel from './SuccessPanel';
+    import RecipientForm from './RecipientForm';
 
     export default {
         name: "MessageForm",
         components: {
             quillEditor,
-            EmailInputTag,
             CounterInput,
-            ToggleButton,
             SuccessPanel,
+            RecipientForm,
         },
         props: {
             messages: Object,
@@ -151,15 +167,8 @@
                 return true;
             },
 
-            validateEmailAddress(value) {
-                let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                let isValid = re.test(String(value).toLowerCase());
-
-                if (!isValid) {
-                    this.$toasted.show(this.messages['invalid-email'], { type: 'error' })
-                }
-
-                return isValid;
+            addAddress(userObject) {
+                this.recipients.push(userObject);
             },
 
             sendMessage() {
