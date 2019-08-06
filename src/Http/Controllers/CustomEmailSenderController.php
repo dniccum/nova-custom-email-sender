@@ -4,6 +4,7 @@ namespace Dniccum\CustomEmailSender\Http\Controllers;
 use Dniccum\CustomEmailSender\Http\Requests\SendCustomEmailMessage;
 use Dniccum\CustomEmailSender\Library\UserUtility;
 use Dniccum\CustomEmailSender\Mail\CustomMessageMailable;
+use Illuminate\Http\Request;
 
 class CustomEmailSenderController
 {
@@ -81,4 +82,20 @@ class CustomEmailSenderController
            'content' => $email->render()
         ], 200);
     }
+
+    /**
+     * Search results
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $query = $request->get('search');
+
+        $results = $this->userUtility->searchUsers($query);
+
+        return response()->json($results, 200);
+    }
+
 }
