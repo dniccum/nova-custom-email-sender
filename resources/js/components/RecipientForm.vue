@@ -7,17 +7,19 @@
         <transition name="slide-fade">
             <div  v-if="!sendToAllInterface">
                 <p class="mb-2">{{ messages['recipients-manual-input-copy'] }}</p>
-                <form @submit.prevent="addAdHocEmail" class="flex flex-wrap">
-                    <input
-                        class="form-control form-input form-input-bordered flex-1"
-                        :placeholder="messages['recipients-manual-input-placeholder']"
-                        type="text"
-                        v-model="adHocEmailAddress"
-                        :disabled="loading"
-                    />
-                    <button type="submit" class="btn btn-default btn-primary ml-4" :disabled="loading || !validateEmailAddress()">
-                        {{ messages['add-address'] }}
-                    </button>
+                <form id="email-search-form" @submit.prevent="addAdHocEmail" class="flex flex-wrap">
+                    <auto-complete-input
+                            class="form-control flex-1"
+                            name="search"
+                            :loading.sync="loading"
+                            :model.sync="search"
+                            :results.sync="searchResults"
+                            @search="performSearch"
+                            @select="selectResult"
+                            @ad-hoc="addAdHocEmail"
+                            :placeholder="messages['recipients-manual-input-placeholder']"
+                            :messages="messages"
+                    ></auto-complete-input>
                 </form>
             </div>
         </transition>
@@ -26,13 +28,16 @@
 
 <script>
     import EmailInputTag from './EmailInputTag';
+    import AutoCompleteInput from './AutoCompleteInput';
     import { ToggleButton } from 'vue-js-toggle-button'
+    import EmailUtility from "../services/EmailUtility";
 
     export default {
         name: "RecipientForm",
         components: {
             EmailInputTag,
             ToggleButton,
+            AutoCompleteInput,
         },
         props: {
             messages: Object,
@@ -57,8 +62,9 @@
         },
         data() {
             return {
-                manualRecipients: [],
-                adHocEmailAddress: ''
+                loading: false,
+                searchResults: [],
+                search: ''
             }
         },
         computed: {
@@ -81,25 +87,43 @@
         },
         methods: {
             validateEmailAddress() {
-                let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-                let isValid = re.test(String(this.adHocEmailAddress).toLowerCase());
-
-                return isValid;
+                return EmailUtility.validateEmailAddress(this.search);
             },
 
             addAdHocEmail() {
-                if (this.validateEmailAddress() === false) {
+                if (this.searchResults.length > 0 || this.validateEmailAddress() === false) {
                     return false;
                 }
 
                 this.$emit('add', {
                     'name': null,
-                    'address': this.adHocEmailAddress
+                    'email': this.search
                 });
 
-                this.adHocEmailAddress = '';
-            }
+                this.search = '';
+            },
 
+            performSearch($e) {
+                Nova.request().get('/nova-vendor/custom-email-sender/search', {
+                    params: {
+                        search: $e.query
+                    },
+                    timeout: $e.timeout
+                }).then(results => {
+                    this.searchResults = results.data;
+                    this.loading = false;
+                })
+            },
+
+            selectResult(result) {
+                for (let i = 0; i < this.searchResults.length; i++) {
+                    let target = this.searchResults[i];
+
+                    if (result.email === target.email) {
+                        this.$emit('add', target);
+                    }
+                }
+            }
         }
     }
 </script>

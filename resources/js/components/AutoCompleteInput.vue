@@ -11,12 +11,13 @@
                 <span class="font-bold">{{ result.name }}</span>
                 <span class="font-italic font-light"><{{ result.email }}></span>
             </div>
-            <div class="auto-complete-no-results" style="padding: 5px 0;" v-if="!loadingInterface && searchResults.length === 0 && noResultsActionButtonText.length > 0">
-                <button class="button primary small skinny" type="button" style="margin: 0" @click="noResults">
-                    {{ noResultsActionButtonText }}
+            <div class="auto-complete-no-results flex flex-row justify-center items-center" style="padding: 10px 0;" v-if="!loadingInterface && searchResults.length === 0 && searchIsEmail()">
+                <span class="mr-4">Click to add this address.</span>
+                <button @click="$emit('ad-hoc')" type="button" class="btn btn-default btn-primary">
+                    {{ messages['add-address'] }}
                 </button>
             </div>
-            <div class="auto-complete-no-results" v-if="!loadingInterface && searchResults.length === 0 && noResultsActionButtonText.length === 0">
+            <div class="auto-complete-no-results" v-if="!loadingInterface && searchResults.length === 0 && !searchIsEmail()">
                 {{ messages['recipients-no-results'] }}.
             </div>
         </div>
@@ -24,9 +25,12 @@
 </template>
 
 <script>
+    import EmailUtility from "../services/EmailUtility";
+
     export default {
         name: "AutocompleteInput",
         props: {
+            messages: Object,
             name: String,
             model: String,
             loading: {
@@ -183,9 +187,11 @@
                 this.showResults = false;
                 this.loadingInterface = false;
 
-                console.log('click');
-
                 this.$emit('click-outside')
+            },
+
+            searchIsEmail() {
+                return EmailUtility.validateEmailAddress(this.model);
             }
         }
     }
@@ -207,6 +213,6 @@
         color: var(--primary)
     }
     .auto-complete-box .auto-complete-no-results {
-        color: var(--60)
+        color: var(--90)
     }
 </style>
