@@ -1,4 +1,8 @@
+import vClickOutside from 'v-click-outside'
+
 Nova.booting((Vue, router, store) => {
+    Vue.use(vClickOutside);
+
     router.addRoutes([
         {
             name: 'custom-email-sender',
