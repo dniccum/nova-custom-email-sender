@@ -53,23 +53,26 @@
                         <card class="recipients-list px-6 py-4" style="background-color: var(--20)">
                             <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-list-header'] }}</h3>
 
-                            <div v-if="recipients.length > 0" class="recipient-result" v-for="(recipient, index) of recipients">
+                            <div v-if="recipients.length > 0 && sendToAll === false" class="recipient-result" v-for="(recipient, index) of recipients">
                                 <div class="name" v-if="recipient.name && recipient.name.length > 0">
                                     <strong>{{ recipient.name }}</strong>
-                                    <{{ recipient.address }}>
+                                    <{{ recipient.email }}>
                                 </div>
                                 <div class="name" v-else>
-                                    {{ recipient.address }}
+                                    {{ recipient.email }}
                                 </div>
                                 <div class="button-wrapper">
-                                    <button :title="messages['remove']" class="appearance-none cursor-pointer text-70 hover:text-danger mr-3">
+                                    <button type="button" @click="removeRecipient(index)" :title="messages['remove']" class="appearance-none cursor-pointer text-70 hover:text-danger mr-3">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-labelledby="delete" role="presentation" class="fill-current"><path fill-rule="nonzero" d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path></svg>
                                     </button>
                                 </div>
                             </div>
 
-                            <div v-if="recipients.length === 0" class="p-4 bg-danger rounded">
+                            <div v-if="recipients.length === 0 && sendToAll === false" class="p-4 bg-danger rounded">
                                 <p class="text-white">No addresses have been added.</p>
+                            </div>
+                            <div v-if="sendToAll === true" class="p-4 bg-primary rounded">
+                                <p class="text-white">Message will be sent to all users.</p>
                             </div>
                         </card>
                     </div>
@@ -246,6 +249,10 @@
                 this.complete = false;
                 this.recipients = [];
                 this.htmlContent = '';
+            },
+
+            removeRecipient(index) {
+                this.recipients.splice(index, 1);
             }
         }
     }
