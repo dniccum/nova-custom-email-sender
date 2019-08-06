@@ -21,9 +21,11 @@ return [
 
     // recipients
     'recipients-header' => 'Recipients',
+    'recipients-list-header' => 'Current recipients',
     'recipients-toggle-copy' => 'Would you like to send this message to all of the users?',
     'recipients-manual-input-copy' => 'Enter the users\'/recipients\' email addresses that you would like to send this message to.',
     'recipients-manual-input-placeholder' => 'Email addresses',
+    'recipients-no-results' => 'No results were found',
 
     // content
     'content-header' => 'Content',
@@ -45,6 +47,8 @@ return [
     'preview' => 'Preview',
     'preview-loading' => 'Getting preview. Please wait...',
     'start-over' => 'Start Over',
+    'add-address' => 'Add Address',
+    'remove' => 'Remove',
 
     // toasts
     'emails-sent' => 'email(s) have been sent.',
