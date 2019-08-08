@@ -69,10 +69,10 @@
                             </div>
 
                             <div v-if="recipients.length === 0 && sendToAll === false" class="p-4 bg-danger rounded">
-                                <p class="text-white">No addresses have been added.</p>
+                                <p class="text-white">{{ messages['recipients-no-address-found'] }}</p>
                             </div>
                             <div v-if="sendToAll === true" class="p-4 bg-primary rounded">
-                                <p class="text-white">Message will be sent to all users.</p>
+                                <p class="text-white">{{ messages['recipients-send-all'] }}</p>
                             </div>
                         </card>
                     </div>

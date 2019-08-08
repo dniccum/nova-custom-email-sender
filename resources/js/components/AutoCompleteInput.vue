@@ -12,7 +12,7 @@
                 <span class="font-italic font-light"><{{ result.email }}></span>
             </div>
             <div class="auto-complete-no-results flex flex-row justify-center items-center" style="padding: 10px 0;" v-if="!loadingInterface && searchResults.length === 0 && searchIsEmail()">
-                <span class="mr-4">Click to add this address.</span>
+                <span class="mr-4">{{ messages['recipients-click-to-add'] }}</span>
                 <button @click="$emit('ad-hoc')" type="button" class="btn btn-default btn-primary">
                     {{ messages['add-address'] }}
                 </button>
