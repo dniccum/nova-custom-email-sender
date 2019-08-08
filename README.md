@@ -50,10 +50,14 @@ php artisan vendor:publish --provider="Dniccum\CustomEmailSender\ToolServiceProv
 
 Inside `App\Providers\NovaServiceProvider`update the tools function. This will include the link on the sidebar.  
 ```
-    public function tools()
-    {
-        return [new CustomEmailSender()];
-    }
+use Dniccum\CustomEmailSender\CustomEmailSender;
+
+...
+
+public function tools()
+{
+    return [new CustomEmailSender()];
+}
 ```
 
 ## Configuration
