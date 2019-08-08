@@ -7,7 +7,7 @@
         <transition name="slide-fade">
             <div  v-if="!sendToAllInterface">
                 <p class="mb-2">{{ messages['recipients-manual-input-copy'] }}</p>
-                <form id="email-search-form" @submit.prevent="addAdHocEmail" class="flex flex-wrap">
+                <form id="email-search-form" @submit.prevent="searchSubmit" class="flex flex-wrap">
                     <auto-complete-input
                             class="form-control flex-1"
                             name="search"
@@ -101,6 +101,16 @@
                 });
 
                 this.search = '';
+            },
+
+            searchSubmit() {
+                if (this.searchResults.length === 1) {
+                    this.$emit('add', this.searchResults[0]);
+                    this.searchResults.length = 0;
+                    this.search = '';
+                } else {
+                    this.addAdHocEmail();
+                }
             },
 
             performSearch($e) {
