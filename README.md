@@ -13,9 +13,10 @@ This is a tool for Laravel's Nova administrator panel that allows you to send cu
 * Inherits your Laravel application's notification Blade layout with any and all modifications and customizations.
     * Existing email template can be published to the `views/vendor` directory
     * Allows you to provide a custom Blade template (with the appropriate variables applied)
-* Currently, provides two methods of sending messages:
-    * A simple toggle to send the message to all of your users
+* Provides three methods of sending messages:
+    * Search the provided model by name and email
     * Via ad-hoc email input with email address validation
+    * A simple toggle to send the message to all of your users
 * Leverages the [Quill](https://quilljs.com/docs) WYSIWYG editor with the ability to customize the available buttons/functionality for your users
 * Language localization
 * Preview the message before it's sent
@@ -179,10 +180,11 @@ After the vendor files have been published, you may edit the necessary placehold
 
 - [x] Email preview (thanks @Yelles for the idea!)
 - [x] Localization
-- [ ] Add dynamic autocomplete for app's user Model
+- [x] Add dynamic autocomplete for app's user Model
 - [ ] Add support for Laravel action button components
 - [x] Polish up UI
 - [ ] Add additional options to further customize the Quill editor
+- [ ] Ability to save drafts
 
 ## Credits
 
