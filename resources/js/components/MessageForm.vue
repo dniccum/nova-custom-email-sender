@@ -32,7 +32,7 @@
 
                         <h3 class="text-base text-80 font-bold mb-3">{{ messages['content-header'] }}</h3>
                         <div class="mb-8" v-if="useFileContent">
-                            <file-select @input="loadFile" />
+                            <file-select @input="loadFile" v-model="htmlFile"/>
                         </div>
                         <div class="mb-8" v-else>
 
@@ -149,6 +149,7 @@
                 htmlContent: '',
                 complete: false,
                 useFileContent: false,
+                htmlFile: null,
             }
         },
         mounted() {

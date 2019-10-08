@@ -1,9 +1,9 @@
 <template>
     <label class="file-select">
-        <div class="btn btn-primary btn-default">
-            <span v-if="value">Selected File: {{value.name}}</span>
-            <span v-else>Select File</span>
+        <div class="btn btn-primary btn-default mr-2">
+            <span >Select File</span>
         </div>
+        <span v-if="value">Selected File: {{value.name}}</span>
         <input type="file" @change="handleFileChange"/>
     </label>
 </template>
