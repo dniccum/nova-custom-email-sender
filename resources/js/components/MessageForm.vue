@@ -19,13 +19,23 @@
 
                         <recipient-form :messages="messages"
                                         @add="addAddress"
-                                    :send-to-all.sync="sendToAll"
-                                    :loading="isThinking()"
-                                    :recipients="recipients"
+                                        :send-to-all.sync="sendToAll"
+                                        :loading="isThinking()"
+                                        :recipients="recipients"
                         ></recipient-form>
 
+                        <div class="mb-6">
+                            <p class="mb-2">{{ messages['toggle-use-file'] }}</p>
+                            <toggle-button :width="60" :height="26" color="var(--primary)" v-model="useFileContent"
+                                           :disabled="loading"/>
+                        </div>
+
                         <h3 class="text-base text-80 font-bold mb-3">{{ messages['content-header'] }}</h3>
-                        <div class="mb-8">
+                        <div class="mb-8" v-if="useFileContent">
+                            <file-select @input="loadFile" />
+                        </div>
+                        <div class="mb-8" v-else>
+
                             <p class="mb-2">{{ messages['content-copy'] }}</p>
                             <div class="input-wrapper">
                                 <quill-editor class="quill-editor"
@@ -40,10 +50,12 @@
                             <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview'] }}</h3>
                             <p class="mb-2">{{ messages['preview-copy'] }}</p>
 
-                            <button class="btn btn-default btn-primary" @click="sendMessage" :disabled="isThinking() || !formIsValid()">
+                            <button class="btn btn-default btn-primary" @click="sendMessage"
+                                    :disabled="isThinking() || !formIsValid()">
                                 {{ loading ? messages['send-message-loading'] : messages['send-message'] }}
                             </button>
-                            <button class="btn btn-default btn-secondary" @click="preview" :disabled="isThinking() || !formIsValid()">
+                            <button class="btn btn-default btn-secondary" @click="preview"
+                                    :disabled="isThinking() || !formIsValid()">
                                 {{ gettingPreview ? messages['preview-loading'] : messages['preview'] }}
                             </button>
                         </div>
@@ -53,7 +65,8 @@
                         <card class="recipients-list px-6 py-4" style="background-color: var(--20)">
                             <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-list-header'] }}</h3>
 
-                            <div v-if="recipients.length > 0 && sendToAll === false" class="recipient-result" v-for="(recipient, index) of recipients">
+                            <div v-if="recipients.length > 0 && sendToAll === false" class="recipient-result"
+                                 v-for="(recipient, index) of recipients">
                                 <div class="name" v-if="recipient.name && recipient.name.length > 0">
                                     <strong>{{ recipient.name }}</strong>
                                     <{{ recipient.email }}>
@@ -62,8 +75,14 @@
                                     {{ recipient.email }}
                                 </div>
                                 <div class="button-wrapper">
-                                    <button type="button" @click="removeRecipient(index)" :title="messages['remove']" class="appearance-none cursor-pointer text-70 hover:text-danger mr-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" aria-labelledby="delete" role="presentation" class="fill-current"><path fill-rule="nonzero" d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path></svg>
+                                    <button type="button" @click="removeRecipient(index)" :title="messages['remove']"
+                                            class="appearance-none cursor-pointer text-70 hover:text-danger mr-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                             viewBox="0 0 20 20" aria-labelledby="delete" role="presentation"
+                                             class="fill-current">
+                                            <path fill-rule="nonzero"
+                                                  d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path>
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
@@ -89,11 +108,13 @@
     import 'quill/dist/quill.snow.css'
     import 'quill/dist/quill.bubble.css'
 
-    import { quillEditor } from 'vue-quill-editor'
+    import {quillEditor} from 'vue-quill-editor'
 
     import CounterInput from './CounterInput';
     import SuccessPanel from './SuccessPanel';
     import RecipientForm from './RecipientForm';
+    import {ToggleButton} from 'vue-js-toggle-button'
+    import FileSelect from './FileSelect';
 
     export default {
         name: "MessageForm",
@@ -102,14 +123,16 @@
             CounterInput,
             SuccessPanel,
             RecipientForm,
+            ToggleButton,
+            FileSelect
         },
         props: {
             messages: Object,
             quillConfiguration: Object,
             default: {
                 toolbar: [
-                    { 'header': 1}, { 'header': 2 },
-                    { 'list': 'ordered'}, { 'list': 'bullet' },
+                    {'header': 1}, {'header': 2},
+                    {'list': 'ordered'}, {'list': 'bullet'},
                     'bold',
                     'italic',
                     'link',
@@ -124,13 +147,16 @@
                 subject: '',
                 recipients: [],
                 htmlContent: '',
-                complete: false
+                complete: false,
+                useFileContent: false,
             }
         },
         mounted() {
+
             this.$refs.myQuillEditor.$el.addEventListener('keydown', e => {
                 e.stopPropagation()
             }, false);
+
         },
         computed: {
             quillEditorOptions() {
@@ -185,16 +211,16 @@
                     recipients: vm.recipients,
                     htmlContent: this.htmlContent
                 }).then(response => {
-                    vm.$toasted.show(response.data, { type: 'success' });
+                    vm.$toasted.show(response.data, {type: 'success'});
                     vm.complete = true;
                 }).catch(error => {
                     let response = error.response;
                     let status = response.status
 
                     if (status === 422) {
-                        this.$toasted.show(response.data.message, { type: 'error' })
+                        this.$toasted.show(response.data.message, {type: 'error'})
                     } else {
-                        this.$toasted.show(response.statusText, { type: 'error' })
+                        this.$toasted.show(response.statusText, {type: 'error'})
                     }
                 }).finally(() => {
                     vm.setLoading(false);
@@ -218,9 +244,9 @@
                     let status = response.status
 
                     if (status === 422) {
-                        this.$toasted.show(response.data.message, { type: 'error' })
+                        this.$toasted.show(response.data.message, {type: 'error'})
                     } else {
-                        this.$toasted.show(response.statusText, { type: 'error' })
+                        this.$toasted.show(response.statusText, {type: 'error'})
                     }
                 }).finally(() => {
                     vm.setGettingPreview(false);
@@ -230,16 +256,20 @@
             /**
              * @param {boolean} loading
              */
-            setLoading(loading=true) {
-                this.quillEditor.enable(!loading)
+            setLoading(loading = true) {
+                if(!this.useFileContent) {
+                    this.quillEditor.enable(!loading)
+                }
                 this.loading = loading;
             },
 
             /**
              * @param {boolean} loading
              */
-            setGettingPreview(loading=true) {
-                this.quillEditor.enable(!loading)
+            setGettingPreview(loading = true) {
+                if(!this.useFileContent) {
+                    this.quillEditor.enable(!loading)
+                }
                 this.gettingPreview = loading;
             },
 
@@ -249,10 +279,21 @@
                 this.complete = false;
                 this.recipients = [];
                 this.htmlContent = '';
+                this.useFileContent = false;
             },
 
             removeRecipient(index) {
                 this.recipients.splice(index, 1);
+            },
+
+            loadFile(file) {
+
+                const reader = new FileReader();
+                reader.onload = e => {
+                    this.$emit("load", e.target.result)
+                    this.htmlContent = e.target.result
+                }
+                reader.readAsText(file);
             }
         }
     }
@@ -263,9 +304,11 @@
         position: relative;
         background-color: var(--white);
     }
+
     .ql-editor {
         height: 200px;
     }
+
     .ql-editor p,
     .ql-editor ol,
     .ql-editor ul,
@@ -279,11 +322,14 @@
     .ql-editor h6 {
         margin-bottom: 18px;
     }
+
     .btn-secondary {
         background-color: var(--info);
         color: var(--white)
     }
+
     .btn-secondary:not(:disabled):hover {
         opacity: .8;
     }
+
 </style>
