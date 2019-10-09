@@ -24,15 +24,14 @@
                                         :recipients="recipients"
                         ></recipient-form>
 
+                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['content-header'] }}</h3>
                         <div class="mb-6">
                             <p class="mb-2">{{ messages['toggle-use-file'] }}</p>
                             <toggle-button :width="60" :height="26" color="var(--primary)" v-model="useFileContent"
                                            :disabled="loading"/>
                         </div>
-
-                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['content-header'] }}</h3>
                         <div class="mb-8" v-if="useFileContent">
-                            <file-select @input="loadFile" v-model="htmlFile"/>
+                            <file-select @input="loadFile" v-model="htmlFile" :messages="messages" />
                         </div>
                         <div class="mb-8" v-else>
 
