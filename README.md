@@ -18,9 +18,10 @@ This is a tool for Laravel's Nova administrator panel that allows you to send cu
     * Via ad-hoc email input with email address validation
     * A simple toggle to send the message to all of your users
 * Leverages the [Quill](https://quilljs.com/docs) WYSIWYG editor with the ability to customize the available buttons/functionality for your users
+* Upload a basic HTML file to pre-populate the content for your message
 * Language localization
 * Preview the message before it's sent
-* Various settings to adjust this tool to your installation.
+* Various settings to adjust this tool to your installation
 
 ## Installation
 
@@ -176,6 +177,32 @@ return [
 ];
 ```
 
+## Adding content
+
+ When adding content to your message, you have two methods in which to do so. You can either:
+ 
+* add content using the provided WYSIWYG editor
+* upload an HTML file with coded content
+ 
+### Using the file upload method
+
+To upload HTML-based content to use within your message, begin creating a *very basic* HTML document like so, and save this file anywhere in a local environment (Desktop, Documents, Dropbox, etc):
+
+```html
+<html>
+<head></head>
+<body>
+    <h1>Content</h1>
+    <p>Your content goes here</p>
+    <!-- continue adding your content -->
+</body>
+</html>
+```
+
+Within the `<body>` tag, add the necessary content and any other inline-CSS styles that you wish. *Please keep in mind that any CSS you add will override the template that is selected in the configuration*.
+
+Once complete, simply toggle the HTML File toggle, click the **Select File** button to select the file, and then click the **Preview** button at the bottom to view your content.
+
 ## Localization / Translation
 
 After the vendor files have been published, you may edit the necessary placeholders in the `resources/lang/vendor/custom-email-sender` directory.
@@ -188,7 +215,6 @@ After the vendor files have been published, you may edit the necessary placehold
 - [ ] Add support for Laravel action button components
 - [x] Polish up UI
 - [ ] Add additional options to further customize the Quill editor
-- [ ] Ability to save drafts
 
 ## Credits
 
@@ -196,6 +222,7 @@ After the vendor files have been published, you may edit the necessary placehold
 * [Andreas Bergqvist](https://github.com/andreasbergqvist)
 * [Samer Halawani](https://github.com/shalawani)
 * [Blake](https://github.com/StarClutch)
+* [Matt Coleman](https://github.com/mattsplat)
 
 ## License
 
