@@ -52,6 +52,8 @@ return [
     'start-over' => 'Start Over',
     'add-address' => 'Add Address',
     'remove' => 'Remove',
+    'choose-file' => 'Choose File',
+    'toggle-use-file' => 'Use File',
 
     // toasts
     'emails-sent' => 'email(s) have been sent.',
