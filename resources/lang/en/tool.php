@@ -34,6 +34,9 @@ return [
     'content-header' => 'Content',
     'content-copy' => 'Add the content for the message that you would like to send.',
     'content-placeholder' => 'Insert text here ...',
+    'select-content-file' => 'Select the HTML file with the content that you would like to import.',
+    'select-file' => 'Select file',
+    'selected-file' => 'Selected file:',
 
     // send
     'send-preview' => 'Send/Preview',
@@ -53,7 +56,7 @@ return [
     'add-address' => 'Add Address',
     'remove' => 'Remove',
     'choose-file' => 'Choose File',
-    'toggle-use-file' => 'Use File',
+    'toggle-use-file' => 'Would you like to upload a static HTML file to populate this message\'s content?',
 
     // toasts
     'emails-sent' => 'email(s) have been sent.',
