@@ -15,13 +15,13 @@ class CustomEmailSenderController
 
     public function __construct()
     {
-        $userClassName = config('novaemailsender.model.class');
+        $userClassNames = config('novaemailsender.model.classes');
 
-        if (empty($userClassName)) {
+        if (empty($userClassNames)) {
             die('Please define a user class for the Custom Email Sender');
         }
 
-        $this->userUtility = new UserUtility(new $userClassName);
+        $this->userUtility = new UserUtility($userClassNames);
     }
 
     /**
@@ -33,9 +33,24 @@ class CustomEmailSenderController
      */
     public function config()
     {
+        $config = config('novaemailsender');
+
+
+        $from_options = collect( $config['from']['options'] )->map(function($sender){
+            return [
+                'address' => $sender['address'],
+                'name' => $sender['name'] . ' (' . $sender['address'] . ')',
+            ];
+        });
+        if($user = $this->getAuthUserSender()){
+            $user['name'] = $user['name']?  _('Me') . ' (' . $user['name'] . ' | ' . $user['address'] . ')' : '—';
+            $from_options->push($user);
+        }
+        $config['from']['options'] = $from_options->toArray();
+
         return response()
             ->json([
-                'config' => config('novaemailsender'),
+                'config' => $config,
                 'messages' => __('custom-email-sender::tool')
             ]);
     }
@@ -60,12 +75,15 @@ class CustomEmailSenderController
             });
         }
 
+        $sender = collect( config('novaemailsender.from.options') )
+                ->push($this->getAuthUserSender()) // remember the auth select option
+                ->firstWhere('address', $requestData['from']);
         $content = $requestData['htmlContent'];
         $subject = $requestData['subject'];
 
-        $users->map(function($user) use ($content, $subject) {
+        $users->each(function($user) use ($content, $subject, $sender) {
             \Mail::to($user)
-                ->send(new CustomMessageMailable($subject, $content));
+                 ->send(new CustomMessageMailable($subject, $content, $sender));
         });
 
         return response()->json($users->count(). ' '.__('custom-email-sender::tool.emails-sent'), 200);
@@ -98,6 +116,25 @@ class CustomEmailSenderController
         $results = $this->userUtility->searchUsers($query);
 
         return response()->json($results, 200);
+    }
+
+    /**
+     * Get auth user
+     *
+     * @return array
+     */
+    private function getAuthUserSender(){
+
+        if($user = request()->user()){
+            $user_email = $config['model']['email']?? 'email';
+            $user_name = $config['model']['name']?? $config['model']['first_name']?? 'first_name';
+            return [
+                'address' => $user->$user_email?? null,
+                'name' => $user->$user_name?? null
+            ];
+        }
+
+        return null;
     }
 
 }

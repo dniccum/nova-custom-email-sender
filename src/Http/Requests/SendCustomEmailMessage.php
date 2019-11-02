@@ -14,6 +14,7 @@ class SendCustomEmailMessage extends FormRequest
     {
         $maxCharacters = config('novaemailsender.validation.max-characters') ?? 2000;
         return [
+            'from' => 'string|required',
             'subject' => 'string|required',
             'sendToAll' => 'boolean|required_without:recipients',
             'recipients' => 'required_without:sendToAll|array',

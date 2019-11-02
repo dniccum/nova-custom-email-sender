@@ -5,15 +5,17 @@ namespace Dniccum\CustomEmailSender\Library;
 class UserUtility
 {
 
-    private $model;
+    private $models = array();
 
     /**
      * UserUtility constructor.
      * @param Model|mixed $userClass
      */
-    public function __construct($userClass)
+    public function __construct(array $userClasses)
     {
-        $this->model = new $userClass;
+        foreach($userClasses as $userClass){
+            $this->models[] = new $userClass;
+        }
     }
 
     /**
@@ -24,13 +26,15 @@ class UserUtility
         $selectQuery = $this->selectQuery();
         $userCollection = collect([]);
 
-        $this->model->select($selectQuery)->chunk(200, function($users) use ($userCollection) {
-            foreach ($users as $user) {
-                $object = $this->buildResult($user);
+        foreach($this->models as $model){
+            $model->select($selectQuery)->chunk(200, function($users) use ($userCollection) {
+                foreach ($users as $user) {
+                    $object = $this->buildResult($user);
 
-                $userCollection->push($object);
-            }
-        });
+                    $userCollection->push($object);
+                }
+            });
+        }
 
         return $userCollection;
     }
@@ -39,32 +43,36 @@ class UserUtility
      * @param string $query
      * @return array
      */
-    public function searchUsers(string $query) : array
+    public function searchUsers($query) : array
     {
+        if(is_null($query)) return [];
+
         $selectQuery = $this->selectQuery();
         $queryPieces = explode(' ', $query);
 
         $userCollection = collect([]);
 
-        foreach ($queryPieces as $piece) {
-            $base = $this->model
-                ->where(config('novaemailsender.model.email'), 'LIKE', '%'.$piece.'%')
-                ->select($selectQuery);
+        foreach($this->models as $model){
+            foreach ($queryPieces as $piece) {
+                $base = $model
+                    ->where(config('novaemailsender.model.email'), 'LIKE', '%'.$piece.'%')
+                    ->select($selectQuery);
 
-            if (!empty(config('novaemailsender.model.name'))) {
-                $query = $base->orWhere(config('novaemailsender.model.name'), 'LIKE', '%'.$piece.'%');
-            } else {
-                $query = $base->orWhere(config('novaemailsender.model.first_name'), 'LIKE', '%'.$piece.'%')
-                    ->orWhere(config('novaemailsender.model.last_name'), 'LIKE', '%'.$piece.'%');
-            }
-
-            $query->chunk(200, function($users) use ($userCollection) {
-                foreach ($users as $user) {
-                    $object = $this->buildResult($user);
-
-                    $userCollection->push($object);
+                if (!empty(config('novaemailsender.model.name'))) {
+                    $query = $base->orWhere(config('novaemailsender.model.name'), 'LIKE', '%'.$piece.'%');
+                } else {
+                    $query = $base->orWhere(config('novaemailsender.model.first_name'), 'LIKE', '%'.$piece.'%')
+                        ->orWhere(config('novaemailsender.model.last_name'), 'LIKE', '%'.$piece.'%');
                 }
-            });
+
+                $query->chunk(200, function($users) use ($userCollection) {
+                    foreach ($users as $user) {
+                        $object = $this->buildResult($user);
+
+                        $userCollection->push($object);
+                    }
+                });
+            }
         }
 
         return $userCollection
@@ -107,9 +115,11 @@ class UserUtility
             $name = $user->$firstNameProperty.' '.$user->$lastNameProperty;
         }
 
+        $user_class_name = count(config('novaemailsender.model.classes')) > 1? ' (' . basename(str_replace('\\', '/', get_class($user))) . ')': '';
+
         $object = new \stdClass();
         $object->email = $user->$email;
-        $object->name = $name;
+        $object->name = "$name$user_class_name";
 
         return $object;
     }

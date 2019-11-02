@@ -28,16 +28,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Mail Driver
+    | Mail Driver options
     |--------------------------------------------------------------------------
     |
-    | The name and associated email address from which the message will be sent.
+    | The name and associated email address options from which the message will be sent.
     |
     */
 
     'from' => [
-        'address' => config('mail.from.address'),
-        'name' => config('mail.from.name'),
+        'default' => config('mail.from.address'),
+        'options' => [
+            [
+                'address' => config('mail.from.address'),
+                'name' => config('mail.from.name'),
+            ],
+            [
+                'address' => 'hello@example.com',
+                'name' => config('app.name'),
+            ],
+        ],
     ],
 
     /*
@@ -51,7 +60,9 @@ return [
     */
 
     'model' => [
-        'class' => \App\User::class,
+        'classes' => [
+            \App\User::class,
+        ],
         'email' => 'email',
         'name' => null,
         'first_name' => 'first_name',

@@ -22,16 +22,24 @@ class CustomMessageMailable extends Mailable implements ShouldQueue
     public $message;
 
     /**
+     * @var array|null $sender
+     */
+    public $sender;
+
+    /**
      * Create a new message instance.
      *
      * @param string $subject
      * @param string $message
+     * @param array|null $sender
      * @return void
      */
-    public function __construct(string $subject, string $message)
+    public function __construct(string $subject, string $message, $sender = null)
     {
         $this->subject = $subject;
         $this->message = $message;
+        $this->sender = $sender;
+
     }
 
     /**
@@ -48,9 +56,18 @@ class CustomMessageMailable extends Mailable implements ShouldQueue
             $view = 'email';
         }
 
+        if( is_null($this->sender) ){
+            $from_options = config('novaemailsender.from.options', []);
+            $sender_email = $from_options[0]['address']?? '';
+            $sender_name = $from_options[0]['name']?? '';
+        }else{
+            $sender_email = $this->sender['address'];
+            $sender_name = $this->sender['name'];
+        }
+
         $this->subject($this->subject)
             ->onQueue(config('novaemailsender.priority'))
-            ->from(config('novaemailsender.from.address'), config('novaemailsender.from.name'))
+            ->from($sender_email, $sender_name)
             ->with([
                 'content' => $this->message
             ]);
