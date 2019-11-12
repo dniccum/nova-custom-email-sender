@@ -35,7 +35,6 @@ class CustomEmailSenderController
     {
         $config = config('novaemailsender');
 
-
         $from_options = collect( $config['from']['options'] )->map(function($sender){
             return [
                 'address' => $sender['address'],
