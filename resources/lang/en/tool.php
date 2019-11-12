@@ -14,6 +14,11 @@ return [
 
     'tool-name' => 'Custom Email Sender',
 
+    // from
+    'from-header' => 'From',
+    'from-copy' => 'Send as',
+    'from-placeholder' => 'From',
+
     // subject
     'subject-header' => 'Subject',
     'subject-copy' => 'Enter the subject line for your message',

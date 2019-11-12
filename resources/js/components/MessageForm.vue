@@ -6,6 +6,19 @@
 
                 <card class="flex px-6 py-4">
                     <div class="w-3/5">
+                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['from-header'] }}</h3>
+                        <div class="mb-8">
+                            <p class="mb-2 italic">{{ messages['from-copy'] }}</p>
+                            <select-control
+                                v-model="from"
+                                class="w-full form-control form-select"
+                                :disabled="fromSelectOptions.options.length <= 1"
+                            >
+                                <option value="" selected disabled>{{ __('Choose an option') }}</option>
+                                <option v-for="option in fromSelectOptions.options" :key="option.address" :value="option.address">{{ option.name }}</option>
+                            </select-control>
+                        </div>
+
                         <h3 class="text-base text-80 font-bold mb-3">{{ messages['subject-header'] }}</h3>
                         <div class="mb-8">
                             <p class="mb-2 italic">{{ messages['subject-copy'] }}</p>
@@ -16,7 +29,6 @@
                         </div>
 
                         <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-header'] }}</h3>
-
                         <recipient-form :messages="messages"
                                         @add="addAddress"
                                         :send-to-all.sync="sendToAll"
@@ -64,25 +76,27 @@
                         <card class="recipients-list px-6 py-4" style="background-color: var(--20)">
                             <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-list-header'] }}</h3>
 
-                            <div v-if="recipients.length > 0 && sendToAll === false" class="recipient-result"
-                                 v-for="(recipient, index) of recipients">
-                                <div class="name" v-if="recipient.name && recipient.name.length > 0">
-                                    <strong>{{ recipient.name }}</strong>
-                                    <{{ recipient.email }}>
-                                </div>
-                                <div class="name" v-else>
-                                    {{ recipient.email }}
-                                </div>
-                                <div class="button-wrapper">
-                                    <button type="button" @click="removeRecipient(index)" :title="messages['remove']"
-                                            class="appearance-none cursor-pointer text-70 hover:text-danger mr-3">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                             viewBox="0 0 20 20" aria-labelledby="delete" role="presentation"
-                                             class="fill-current">
-                                            <path fill-rule="nonzero"
-                                                  d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path>
-                                        </svg>
-                                    </button>
+                            <div v-if="recipients.length > 0 && sendToAll === false">
+                                <div class="recipient-result"
+                                 v-for="(recipient, index) of recipients" :key="index">
+                                    <div class="name" v-if="recipient.name && recipient.name.length > 0">
+                                        <strong>{{ recipient.name }}</strong>
+                                        <{{ recipient.email }}>
+                                    </div>
+                                    <div class="name" v-else>
+                                        {{ recipient.email }}
+                                    </div>
+                                    <div class="button-wrapper">
+                                        <button type="button" @click="removeRecipient(index)" :title="messages['remove']"
+                                                class="appearance-none cursor-pointer text-70 hover:text-danger mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                viewBox="0 0 20 20" aria-labelledby="delete" role="presentation"
+                                                class="fill-current">
+                                                <path fill-rule="nonzero"
+                                                    d="M6 4V2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2h5a1 1 0 0 1 0 2h-1v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6H1a1 1 0 1 1 0-2h5zM4 6v12h12V6H4zm8-2V2H8v2h4zM8 8a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v6a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
@@ -136,10 +150,12 @@
                     'italic',
                     'link',
                 ]
-            }
+            },
+            fromSelectOptions: Object
         },
         data() {
             return {
+                from: '',
                 loading: false,
                 gettingPreview: false,
                 sendToAll: false,
@@ -157,6 +173,7 @@
                 e.stopPropagation()
             }, false);
 
+            this.from = this.fromSelectOptions.options.length > 1? this.fromSelectOptions.default : this.fromSelectOptions.options[0].address;
         },
         computed: {
             quillEditorOptions() {
@@ -206,6 +223,7 @@
                 vm.setLoading();
 
                 Nova.request().post('/nova-vendor/custom-email-sender/send', {
+                    from: vm.from,
                     subject: vm.subject,
                     sendToAll: vm.sendToAll,
                     recipients: vm.recipients,

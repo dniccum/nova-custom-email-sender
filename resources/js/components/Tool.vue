@@ -5,6 +5,7 @@
         <message-form
                 :quill-configuration="config.editor"
                 :messages="messages"
+                :from-select-options="config.from"
         ></message-form>
 
         <preview-modal :close-copy="messages['close']" ></preview-modal>
