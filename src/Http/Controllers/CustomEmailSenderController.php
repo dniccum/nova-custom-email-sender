@@ -78,6 +78,7 @@ class CustomEmailSenderController
         $sender = collect( config('novaemailsender.from.options') )
                 ->push($this->getAuthUserSender()) // remember the auth select option
                 ->firstWhere('address', $requestData['from']);
+
         $content = $requestData['htmlContent'];
         $subject = $requestData['subject'];
 
@@ -126,11 +127,12 @@ class CustomEmailSenderController
     private function getAuthUserSender(){
 
         if($user = request()->user()){
-            $user_email = $config['model']['email']?? 'email';
-            $user_name = $config['model']['name']?? $config['model']['first_name']?? 'first_name';
+            $user_email = $config['model']['email'] ?? 'email';
+            $user_name = $config['model']['name'] ?? $config['model']['first_name'] ?? 'first_name';
+
             return [
-                'address' => $user->$user_email?? null,
-                'name' => $user->$user_name?? null
+                'address' => $user->$user_email ?? null,
+                'name' => $user->$user_name ?? null
             ];
         }
 
