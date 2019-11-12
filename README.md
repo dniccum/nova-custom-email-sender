@@ -258,6 +258,7 @@ After the vendor files have been published, you may edit the necessary placehold
 * [Andreas Bergqvist](https://github.com/andreasbergqvist)
 * [Samer Halawani](https://github.com/shalawani)
 * [Blake](https://github.com/StarClutch)
+* [Augustusnaz](https://github.com/augustusnaz)
 * [Matt Coleman](https://github.com/mattsplat)
 
 ## License
