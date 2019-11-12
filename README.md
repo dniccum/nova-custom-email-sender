@@ -61,6 +61,43 @@ public function tools()
 }
 ```
 
+## Upgrade from version 1.X
+
+If you are upgrading from version 1.X **AND** you have modified the tool's default configuration, some please note the changes made to the 'from' property and update your configuration file accordingly.
+
+### Send From settings
+
+Below the is the "out-of-the-box" configuration for the 'from' setting:
+
+```php
+'from' => [
+    'default' => config('mail.from.address'),
+    'options' => [
+        [
+            'address' => config('mail.from.address'),
+            'name' => config('mail.from.name'),
+        ]
+    ],
+],
+```
+
+If you have a custom from address and name, add them as an associative array to the 'options' array, and indicate the default as you see fit.
+
+### Models
+
+You can now send emails to multiple models instead of singular model like before.
+
+```php
+'model' => [
+    'classes' => [
+        \App\User::class,
+    ],
+]
+```
+
+1. The 'class' value within the 'model' configuration is no longer used.
+2. A new 'classes' value has taken it's place and accepts an array of Eloquent model classes to be passed to it.
+
 ## Configuration
 
 The configuration items listed below can be found in the `novaemailsender.php` configuration file.
