@@ -199,6 +199,24 @@ return [
 ];
 ```
 
+## Modifying "Send From" names and addresses
+
+You have the ability to indicate which email addresses and associated names that your messages come from using the `from` property in the configuration file:
+
+```php
+'from' => [
+    'default' => config('mail.from.address'),
+    'options' => [
+        [
+            'address' => config('mail.from.address'),
+            'name' => config('mail.from.name'),
+        ]
+    ],
+],
+```
+
+You can define them via associative array using hard-coded strings, environment variables or configuration variables. Once complete, you may set the default with the 'default' property.
+
 ## Adding content
 
  When adding content to your message, you have two methods in which to do so. You can either:
