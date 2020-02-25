@@ -43,7 +43,7 @@ class CustomEmailSenderController
             ];
         });
         if($user = $this->getAuthUserSender()){
-            $user['name'] = $user['name']?  _('Me') . ' (' . $user['name'] . ' | ' . $user['address'] . ')' : '—';
+            $user['name'] = $user['name']?  __('Me') . ' (' . $user['name'] . ' | ' . $user['address'] . ')' : '—';
             $from_options->push($user);
         }
         $config['from']['options'] = $from_options->toArray();
