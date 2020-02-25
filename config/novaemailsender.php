@@ -42,10 +42,6 @@ return [
                 'address' => config('mail.from.address'),
                 'name' => config('mail.from.name'),
             ],
-            [
-                'address' => 'hello@example.com',
-                'name' => config('app.name'),
-            ],
         ],
     ],
 
@@ -116,12 +112,12 @@ return [
     ],
 
     /*
-  |--------------------------------------------------------------------------
-  | Validation
-  |--------------------------------------------------------------------------
-  | Email Validation Settings
-  |
-  */
+    |--------------------------------------------------------------------------
+    | Validation
+    |--------------------------------------------------------------------------
+    | Email Validation Settings
+    |
+    */
 
     'validation' => [
         'max-characters' => 250000,

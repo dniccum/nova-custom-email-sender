@@ -254,7 +254,8 @@
                     subject: vm.subject,
                     sendToAll: vm.sendToAll,
                     recipients: vm.recipients,
-                    htmlContent: this.htmlContent
+                    htmlContent: vm.htmlContent,
+                    from: vm.from
                 }).then(response => {
                     Nova.$emit('show-email-preview', response.data.content)
                 }).catch(error => {

@@ -61,6 +61,43 @@ public function tools()
 }
 ```
 
+## Upgrade from version 1.X
+
+If you are upgrading from version 1.X **AND** you have modified the tool's default configuration, some please note the changes made to the 'from' property and update your configuration file accordingly.
+
+### Send From settings
+
+Below the is the "out-of-the-box" configuration for the 'from' setting:
+
+```php
+'from' => [
+    'default' => config('mail.from.address'),
+    'options' => [
+        [
+            'address' => config('mail.from.address'),
+            'name' => config('mail.from.name'),
+        ]
+    ],
+],
+```
+
+If you have a custom from address and name, add them as an associative array to the 'options' array, and indicate the default as you see fit.
+
+### Models
+
+You can now send emails to multiple models instead of singular model like before.
+
+```php
+'model' => [
+    'classes' => [
+        \App\User::class,
+    ],
+]
+```
+
+1. The 'class' value within the 'model' configuration is no longer used.
+2. A new 'classes' value has taken it's place and accepts an array of Eloquent model classes to be passed to it.
+
 ## Configuration
 
 The configuration items listed below can be found in the `novaemailsender.php` configuration file.
@@ -98,16 +135,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Mail Driver
+    | Mail Driver options
     |--------------------------------------------------------------------------
     |
-    | The name and associated email address from which the message will be sent.
+    | The name and associated email address options from which the message will be sent.
     |
     */
 
     'from' => [
-        'address' => config('mail.from.address'),
-        'name' => config('mail.from.name'),
+        'default' => config('mail.from.address'),
+        'options' => [
+            [
+                'address' => config('mail.from.address'),
+                'name' => config('mail.from.name'),
+            ]
+        ],
     ],
 
     /*
@@ -121,7 +163,9 @@ return [
     */
 
     'model' => [
-        'class' => \App\User::class,
+        'classes' => [
+            \App\User::class,
+        ],
         'email' => 'email',
         'name' => null,
         'first_name' => 'first_name',
@@ -174,8 +218,37 @@ return [
         ]
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Validation
+    |--------------------------------------------------------------------------
+    | Email Validation Settings
+    |
+    */
+
+    'validation' => [
+        'max-characters' => 250000,
+    ],
 ];
 ```
+
+## Modifying "Send From" names and addresses
+
+You have the ability to indicate which email addresses and associated names that your messages come from using the `from` property in the configuration file:
+
+```php
+'from' => [
+    'default' => config('mail.from.address'),
+    'options' => [
+        [
+            'address' => config('mail.from.address'),
+            'name' => config('mail.from.name'),
+        ]
+    ],
+],
+```
+
+You can define them via associative array using hard-coded strings, environment variables or configuration variables. Once complete, you may set the default with the 'default' property.
 
 ## Adding content
 
@@ -222,6 +295,7 @@ After the vendor files have been published, you may edit the necessary placehold
 * [Andreas Bergqvist](https://github.com/andreasbergqvist)
 * [Samer Halawani](https://github.com/shalawani)
 * [Blake](https://github.com/StarClutch)
+* [Augustusnaz](https://github.com/augustusnaz)
 * [Matt Coleman](https://github.com/mattsplat)
 
 ## License
