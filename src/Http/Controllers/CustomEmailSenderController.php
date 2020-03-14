@@ -35,6 +35,7 @@ class CustomEmailSenderController
     {
         $config = config('novaemailsender');
 
+
         $from_options = collect( $config['from']['options'] )->map(function($sender){
             return [
                 'address' => $sender['address'],
@@ -42,7 +43,7 @@ class CustomEmailSenderController
             ];
         });
         if($user = $this->getAuthUserSender()){
-            $user['name'] = $user['name']?  _('Me') . ' (' . $user['name'] . ' | ' . $user['address'] . ')' : '—';
+            $user['name'] = $user['name']?  __('Me') . ' (' . $user['name'] . ' | ' . $user['address'] . ')' : '—';
             $from_options->push($user);
         }
         $config['from']['options'] = $from_options->toArray();
@@ -77,7 +78,6 @@ class CustomEmailSenderController
         $sender = collect( config('novaemailsender.from.options') )
                 ->push($this->getAuthUserSender()) // remember the auth select option
                 ->firstWhere('address', $requestData['from']);
-
         $content = $requestData['htmlContent'];
         $subject = $requestData['subject'];
 
@@ -126,12 +126,11 @@ class CustomEmailSenderController
     private function getAuthUserSender(){
 
         if($user = request()->user()){
-            $user_email = $config['model']['email'] ?? 'email';
-            $user_name = $config['model']['name'] ?? $config['model']['first_name'] ?? 'first_name';
-
+            $user_email = $config['model']['email']?? 'email';
+            $user_name = $config['model']['name']?? $config['model']['first_name']?? 'first_name';
             return [
-                'address' => $user->$user_email ?? null,
-                'name' => $user->$user_name ?? null
+                'address' => $user->$user_email?? null,
+                'name' => $user->$user_name?? null
             ];
         }
 
