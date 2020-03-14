@@ -33,10 +33,14 @@ class CustomEmailSenderController
      */
     public function config()
     {
-        $config = config('novaemailsender');
+        $configuration = config('novaemailsender');
 
+        /**
+         * @var string[]|array $configurationOptions
+         */
+        $configurationFromOptions = $configuration['from']['options'];
 
-        $from_options = collect( $config['from']['options'] )->map(function($sender){
+        $fromOptions = collect($configurationFromOptions)->map(function($sender) {
             return [
                 'address' => $sender['address'],
                 'name' => $sender['name'] . ' (' . $sender['address'] . ')',
@@ -44,13 +48,15 @@ class CustomEmailSenderController
         });
         if($user = $this->getAuthUserSender()){
             $user['name'] = $user['name']?  __('Me') . ' (' . $user['name'] . ' | ' . $user['address'] . ')' : '—';
-            $from_options->push($user);
+            $fromOptions->push($user);
         }
-        $config['from']['options'] = $from_options->toArray();
+
+        $configurationFromOptions = $fromOptions->toArray();
+        $configuration['from']['options'] = $configurationFromOptions;
 
         return response()
             ->json([
-                'config' => $config,
+                'config' => $configuration,
                 'messages' => __('custom-email-sender::tool')
             ]);
     }
@@ -112,7 +118,6 @@ class CustomEmailSenderController
     public function search(Request $request)
     {
         $query = $request->get('search');
-
         $results = $this->userUtility->searchUsers($query);
 
         return response()->json($results, 200);
@@ -123,18 +128,31 @@ class CustomEmailSenderController
      *
      * @return array
      */
-    private function getAuthUserSender(){
+    private function getAuthUserSender()
+    {
+        $user = request()->user();
 
-        if($user = request()->user()){
-            $user_email = $config['model']['email']?? 'email';
-            $user_name = $config['model']['name']?? $config['model']['first_name']?? 'first_name';
-            return [
-                'address' => $user->$user_email?? null,
-                'name' => $user->$user_name?? null
-            ];
+        if ($user) {
+            if (config('novamailsender')) {
+                $email = 'email';
+                $name = 'first_name';
+
+                if (config('novamailsender.model.email')) {
+                    $email = config('novamailsender.model.email');
+                }
+                if (config('novamailsender.model.name')) {
+                    $name = 'name';
+                } elseif (config('novamailsender.model.first_name')) {
+                    $name = 'first_name';
+                }
+
+                return [
+                    'address' => $user->$email ?? null,
+                    'name' => $user->$name ?? null
+                ];
+            }
         }
 
         return null;
     }
-
 }
