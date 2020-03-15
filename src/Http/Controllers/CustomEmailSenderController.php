@@ -133,16 +133,16 @@ class CustomEmailSenderController
         $user = request()->user();
 
         if ($user) {
-            if (config('novamailsender')) {
+            if (config('novaemailsender')) {
                 $email = 'email';
                 $name = 'first_name';
 
-                if (config('novamailsender.model.email')) {
-                    $email = config('novamailsender.model.email');
+                if (config('novaemailsender.model.email')) {
+                    $email = config('novaemailsender.model.email');
                 }
-                if (config('novamailsender.model.name')) {
+                if (config('novaemailsender.model.name')) {
                     $name = 'name';
-                } elseif (config('novamailsender.model.first_name')) {
+                } elseif (config('novaemailsender.model.first_name')) {
                     $name = 'first_name';
                 }
 
