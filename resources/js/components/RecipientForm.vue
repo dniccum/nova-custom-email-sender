@@ -146,7 +146,7 @@
                 let validPaste = false;
 
                 for(let i = 0; i < pastedList.length; i++) {
-                    let target = pastedList[i];
+                    let target = pastedList[i].trim();
                     let addressExists = false;
                     for (let ii = 0; i < this.recipients.length; ii++) {
                         if (target === this.recipients[ii].email) {
