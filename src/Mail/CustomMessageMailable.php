@@ -75,7 +75,7 @@ class CustomMessageMailable extends Mailable implements ShouldQueue
         if (config('novaemailsender.template.markdown')) {
             $this->markdown($view);
         } else {
-            $this->html($view);
+            $this->view($view);
         }
 
         return $this;
