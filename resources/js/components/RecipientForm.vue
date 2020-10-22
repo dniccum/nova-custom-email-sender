@@ -17,6 +17,7 @@
                             @search="performSearch"
                             @select="selectResult"
                             @ad-hoc="addAdHocEmail"
+                            @paste="pasteAddresses"
                             :placeholder="messages['recipients-manual-input-placeholder']"
                             :messages="messages"
                     ></auto-complete-input>
@@ -31,6 +32,7 @@
     import AutoCompleteInput from './AutoCompleteInput';
     import { ToggleButton } from 'vue-js-toggle-button'
     import EmailUtility from "../services/EmailUtility";
+    import Recipient from "../interfaces/Recipient";
 
     export default {
         name: "RecipientForm",
@@ -120,7 +122,9 @@
                     },
                     timeout: $e.timeout
                 }).then(results => {
-                    this.searchResults = results.data;
+                    this.searchResults = results.data.map(result => {
+                        return new Recipient(result.email, result.name)
+                    });
                     this.loading = false;
                 })
             },
@@ -133,6 +137,37 @@
                         this.$emit('add', target);
                     }
                 }
+            },
+
+            pasteAddresses(event) {
+                let pastedContent = (event.clipboardData || window.clipboardData).getData('text');
+                let pastedList = pastedContent.split(',');
+
+                let validPaste = false;
+
+                for(let i = 0; i < pastedList.length; i++) {
+                    let target = pastedList[i].trim();
+                    let addressExists = false;
+                    for (let ii = 0; i < this.recipients.length; ii++) {
+                        if (target === this.recipients[ii].email) {
+                            addressExists = true;
+                            break;
+                        }
+                    }
+                    if (EmailUtility.validateEmailAddress(target) && !addressExists) {
+                        validPaste = true;
+                        this.$emit('add', new Recipient(target))
+                    }
+                }
+
+                setTimeout(() => {
+                    if (validPaste) {
+                        this.search = '';
+                    } else {
+                        this.$toasted.show(this.messages['invalid-paste'], {type: 'error'});
+                    }
+                    this.$forceUpdate()
+                }, 100)
             }
         }
     }

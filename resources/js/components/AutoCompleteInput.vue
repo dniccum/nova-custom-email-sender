@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <input type="text" class="w-full form-control form-input form-input-bordered"
-               :name="name" :id="name" v-model="interface" :disabled="this.$attrs.disabled" autocomplete="off" :placeholder="placeholder" @blur="blur">
+               :name="name" :id="name" v-model="interface" :disabled="this.$attrs.disabled" autocomplete="off" :placeholder="placeholder" @blur="blur" @paste="$emit('paste', $event)">
 
         <div class="auto-complete-box" v-if="showResults" v-click-outside="clickOutside">
             <div class="auto-complete-loader" v-if="loadingInterface">
