@@ -65,5 +65,6 @@ return [
 
     // toasts
     'emails-sent' => 'email(s) have been sent.',
-    'invalid-email' => 'Invalid email address.'
+    'invalid-email' => 'Invalid email address.',
+    'invalid-paste' => 'It looks like addresses you pasted were not valid, or already exist.'
 ];
