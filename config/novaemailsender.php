@@ -57,7 +57,7 @@ return [
 
     'model' => [
         'classes' => [
-            \App\User::class,
+            \App\Models\User::class,
         ],
         'email' => 'email',
         'name' => null,
