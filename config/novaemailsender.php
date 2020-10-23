@@ -115,6 +115,7 @@ return [
     |--------------------------------------------------------------------------
     | Validation
     |--------------------------------------------------------------------------
+    |
     | Email Validation Settings
     |
     */
@@ -122,4 +123,19 @@ return [
     'validation' => [
         'max-characters' => 250000,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Nebula Sender Key
+    |--------------------------------------------------------------------------
+    |
+    | If you are subscribing to Nebula Sender, provide your application key
+    | below to utilize these features.
+    |
+    | Nebula Sender is a service that will allow you to save sent messages as
+    | well as message drafts. For more information, visit: https://nebulasender.com
+    |
+    */
+
+    'nebula_sender_key' => env('NEBULA_SENDER_KEY'),
 ];

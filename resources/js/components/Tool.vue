@@ -3,9 +3,9 @@
 
     <div class="email-sender" v-else>
         <message-form
-                :quill-configuration="config.editor"
-                :messages="messages"
-                :from-select-options="config.from"
+            :quill-configuration="config.editor"
+            :messages="messages"
+            :from-select-options="config.from"
         ></message-form>
 
         <preview-modal :close-copy="messages['close']" ></preview-modal>
@@ -15,6 +15,7 @@
 <script>
     import MessageForm from './MessageForm';
     import PreviewModal from './PreviewModal';
+    import NebulaSenderService from "../services/NebulaSenderService";
 
     export default {
         name: 'CustomEmailSender',
@@ -28,7 +29,7 @@
                 config: {
                     editor: {},
                 },
-                messages: {}
+                messages: {},
             }
         },
         mounted() {
@@ -36,15 +37,17 @@
         },
         methods: {
             getConfig() {
-                let vm = this;
-
                 Nova.request().get('/nova-vendor/custom-email-sender/config').then(response => {
-                    vm.config = response.data.config;
-                    vm.messages = response.data.messages;
+                    this.config = response.data.config;
+                    this.messages = response.data.messages;
+                    if (response.data.nebula_sender_active) {
+                        NebulaSenderService.active = true;
+                        this.$router.push('/custom-email-sender/nebula-sender')
+                    }
+                    this.loading = false;
                 }).catch(error => {
                     this.$toasted.show(error.response.data, { type: 'error' })
-                }).finally(() => {
-                    vm.loading = false;
+                    this.loading = false;
                 });
             },
         }

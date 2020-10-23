@@ -2,6 +2,7 @@
 namespace Dniccum\CustomEmailSender\Http\Controllers;
 
 use Dniccum\CustomEmailSender\Http\Requests\SendCustomEmailMessage;
+use Dniccum\CustomEmailSender\Library\NebulaSenderUtility;
 use Dniccum\CustomEmailSender\Library\UserUtility;
 use Dniccum\CustomEmailSender\Mail\CustomMessageMailable;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class CustomEmailSenderController
         /**
          * @var string[]|array $configurationOptions
          */
-        $configurationFromOptions = $configuration['from']['options'];
+        $configurationFromOptions = config('novaemailsender.from.options');
 
         $fromOptions = collect($configurationFromOptions)->map(function($sender) {
             return [
@@ -54,10 +55,13 @@ class CustomEmailSenderController
         $configurationFromOptions = $fromOptions->toArray();
         $configuration['from']['options'] = $configurationFromOptions;
 
+        $nebulaSenderActive = NebulaSenderUtility::isActive();
+
         return response()
             ->json([
                 'config' => $configuration,
-                'messages' => __('custom-email-sender::tool')
+                'messages' => __('custom-email-sender::tool'),
+                'nebula_sender_active' => $nebulaSenderActive,
             ]);
     }
 
