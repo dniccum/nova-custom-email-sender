@@ -40,6 +40,7 @@
                 Nova.request().get('/nova-vendor/custom-email-sender/config').then(response => {
                     this.config = response.data.config;
                     this.messages = response.data.messages;
+                    NebulaSenderService.localization = response.data.messages;
                     if (response.data.nebula_sender_active) {
                         NebulaSenderService.active = true;
                         this.$router.push('/custom-email-sender/nebula-sender')

@@ -15,8 +15,10 @@ class NebulaSenderUtility
     {
         $nebulaSenderActive = false;
         if (config('novaemailsender.nebula_sender_key')) {
+            $route = env('NEBULA_SENDER_API_ROUTE', 'https://nebulasender.com/api');
+
             $response = Http::withToken(config('novaemailsender.nebula_sender_key'))
-                ->get('https://nebulasender.com/api/validate');
+                ->get($route.'/validate');
 
             $nebulaSenderActive = $response->status() === 200;
         }

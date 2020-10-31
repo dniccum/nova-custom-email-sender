@@ -1744,8 +1744,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_v_click_outside__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_v_click_outside___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_v_click_outside__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__ = __webpack_require__(78);
-var _this = this;
-
 
 
 
@@ -1758,22 +1756,55 @@ Nova.booting(function (Vue, router, store) {
         component: __webpack_require__(9),
         beforeEnter: function beforeEnter(to, from, next) {
             if (__WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__["a" /* default */].active) {
-                _this.$router.replace('/custom-email-sender/nebula-sender');
+                next({ path: '/custom-email-sender/nebula-sender' });
             }
 
             next();
         }
     }, {
-        name: 'nebula-sender',
         path: '/custom-email-sender/nebula-sender',
-        component: __webpack_require__(73),
+        component: __webpack_require__(84),
         beforeEnter: function beforeEnter(to, from, next) {
             if (!__WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__["a" /* default */].active) {
-                _this.$router.replace('/custom-email-sender');
+                next({ path: '/custom-email-sender' });
             }
 
             next();
-        }
+        },
+        children: [{
+            name: 'nebula-sender',
+            path: '/',
+            component: __webpack_require__(85),
+            beforeEnter: function beforeEnter(to, from, next) {
+                if (!__WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__["a" /* default */].active) {
+                    next({ path: '/custom-email-sender' });
+                }
+
+                next();
+            }
+        }, {
+            name: 'nebula-sender-drafts',
+            path: '/custom-email-sender/nebula-sender/drafts',
+            component: __webpack_require__(94),
+            beforeEnter: function beforeEnter(to, from, next) {
+                if (!__WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__["a" /* default */].active) {
+                    next({ path: '/custom-email-sender' });
+                }
+
+                next();
+            }
+        }, {
+            name: 'nebula-sender-sent',
+            path: '/custom-email-sender/nebula-sender/sent-messages',
+            component: __webpack_require__(84),
+            beforeEnter: function beforeEnter(to, from, next) {
+                if (!__WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__["a" /* default */].active) {
+                    next({ path: '/custom-email-sender' });
+                }
+
+                next();
+            }
+        }]
     }]);
 });
 
@@ -1871,7 +1902,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -1965,6 +1996,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             Nova.request().get('/nova-vendor/custom-email-sender/config').then(function (response) {
                 _this.config = response.data.config;
                 _this.messages = response.data.messages;
+                __WEBPACK_IMPORTED_MODULE_2__services_NebulaSenderService__["a" /* default */].localization = response.data.messages;
                 if (response.data.nebula_sender_active) {
                     __WEBPACK_IMPORTED_MODULE_2__services_NebulaSenderService__["a" /* default */].active = true;
                     _this.$router.push('/custom-email-sender/nebula-sender');
@@ -18922,26 +18954,76 @@ if (false) {
 
 /***/ }),
 /* 71 */,
-/* 72 */,
-/* 73 */
+/* 72 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * @name ApiService
+ * @description - A service/factory that will handle all Ajax features
+ */
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+    /**
+     * @name drafts
+     * @description Returns all of the drafts associated with this key
+     * @return {Promise<Object>}
+     */
+    drafts: function drafts() {
+        return new Promise(function (resolve, reject) {
+            Nova.request().get("/nova-vendor/custom-email-sender/nebula-sender-drafts").then(function (success) {
+                return resolve(success.data);
+            }).catch(function (error) {
+                return reject(error.response.data);
+            });
+        });
+    }
+});
+
+/***/ }),
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * @name NebulaSenderService
+ */
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+  active: false,
+
+  /**
+   * @property localization
+   * @typedef {Object}
+   */
+  localization: {}
+});
+
+/***/ }),
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(74)
+  __webpack_require__(80)
 }
 var normalizeComponent = __webpack_require__(2)
 /* script */
-var __vue_script__ = __webpack_require__(76)
+var __vue_script__ = __webpack_require__(82)
 /* template */
-var __vue_template__ = __webpack_require__(77)
+var __vue_template__ = __webpack_require__(83)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-3e23d539"
+var __vue_scopeId__ = "data-v-ff18f348"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -18952,7 +19034,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/NebulaSender/NebulaSenderView.vue"
+Component.options.__file = "resources/js/components/NebulaSender/EmailCard.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -18961,9 +19043,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3e23d539", Component.options)
+    hotAPI.createRecord("data-v-ff18f348", Component.options)
   } else {
-    hotAPI.reload("data-v-3e23d539", Component.options)
+    hotAPI.reload("data-v-ff18f348", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -18974,23 +19056,23 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 74 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(75);
+var content = __webpack_require__(81);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(1)("2259efdd", content, false, {});
+var update = __webpack_require__(1)("0118de15", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3e23d539\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./NebulaSenderView.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3e23d539\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./NebulaSenderView.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-ff18f348\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EmailCard.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-ff18f348\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EmailCard.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -19000,7 +19082,199 @@ if(false) {
 }
 
 /***/ }),
-/* 75 */
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "EmailCard"
+});
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("card", { staticClass: "px-6 py-4" }, [
+    _c("div", { staticClass: "font-bold mb-2" }, [
+      _vm._v("\n        Subject Line\n    ")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "font-light text-90 text-sm" }, [
+      _vm._v("\n        Copy\n    ")
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ff18f348", module.exports)
+  }
+}
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(89)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(91)
+/* template */
+var __vue_template__ = __webpack_require__(92)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-06d31c3e"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/NebulaSender/NebulaSenderLayout.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-06d31c3e", Component.options)
+  } else {
+    hotAPI.reload("data-v-06d31c3e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(86)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(88)
+/* template */
+var __vue_template__ = __webpack_require__(93)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-8c2f2700"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/NebulaSender/views/Home.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-8c2f2700", Component.options)
+  } else {
+    hotAPI.reload("data-v-8c2f2700", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(87);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("3af684da", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-8c2f2700\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Home.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-8c2f2700\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Home.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)(false);
@@ -19014,7 +19288,776 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 
 /***/ }),
-/* 76 */
+/* 88 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__NebulaSenderLayout__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__NebulaSenderLayout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__NebulaSenderLayout__);
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "Home",
+    components: {
+        NebulaSenderLayout: __WEBPACK_IMPORTED_MODULE_0__NebulaSenderLayout___default.a
+    }
+});
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(90);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("63396498", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-06d31c3e\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./NebulaSenderLayout.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-06d31c3e\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./NebulaSenderLayout.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 91 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__EmailCard__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__EmailCard___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__EmailCard__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "NebulaSenderView",
+    components: {
+        EmailCard: __WEBPACK_IMPORTED_MODULE_0__EmailCard___default.a
+    },
+    data: function data() {
+        return {};
+    }
+});
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "relative nebula-sender rounded overflow-hidden min-h-screen flex flex flex-row bg-white"
+    },
+    [
+      _c("div", { staticClass: "navigation max-w-2xs" }, [
+        _c(
+          "button",
+          {
+            staticClass:
+              "btn btn-default flex justify-center w-full text-center btn-primary",
+            attrs: { type: "button" }
+          },
+          [
+            _c("span", { staticClass: "flex items-center" }, [
+              _c(
+                "svg",
+                {
+                  staticClass: "w-4 h-4 mr-3",
+                  attrs: {
+                    xmlns: "http://www.w3.org/2000/svg",
+                    viewBox: "0 0 20 20",
+                    fill: "currentColor"
+                  }
+                },
+                [
+                  _c("path", {
+                    attrs: {
+                      d:
+                        "M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                    }
+                  })
+                ]
+              ),
+              _vm._v("\n                    Compose\n                ")
+            ])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "nav",
+          { staticClass: "nav-list" },
+          [
+            _c(
+              "router-link",
+              {
+                staticClass:
+                  "cursor-pointer flex items-center font-normal text-80 mb-2 p-3 text-base no-underline rounded-lg hover:bg-20",
+                attrs: {
+                  to: { name: "nebula-sender-drafts" },
+                  "active-class": "bg-40"
+                }
+              },
+              [
+                _c(
+                  "svg",
+                  {
+                    staticClass: "w-5 h-5 mr-3",
+                    attrs: {
+                      xmlns: "http://www.w3.org/2000/svg",
+                      viewBox: "0 0 20 20",
+                      fill: "currentColor"
+                    }
+                  },
+                  [
+                    _c("path", {
+                      attrs: { d: "M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" }
+                    }),
+                    _vm._v(" "),
+                    _c("path", {
+                      attrs: {
+                        "fill-rule": "evenodd",
+                        d:
+                          "M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z",
+                        "clip-rule": "evenodd"
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c("span", { staticClass: "sidebar-label" }, [
+                  _vm._v(
+                    "\n                        Drafts\n                    "
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass:
+                  "cursor-pointer flex items-center font-normal text-80 mb-2 p-3 text-base no-underline rounded-lg hover:bg-20",
+                attrs: {
+                  to: { name: "nebula-sender-sent" },
+                  "active-class": "bg-40"
+                }
+              },
+              [
+                _c(
+                  "svg",
+                  {
+                    staticClass: "w-5 h-5 mr-3",
+                    attrs: {
+                      xmlns: "http://www.w3.org/2000/svg",
+                      viewBox: "0 0 20 20",
+                      fill: "currentColor"
+                    }
+                  },
+                  [
+                    _c("path", {
+                      attrs: {
+                        d:
+                          "M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c("span", { staticClass: "sidebar-label" }, [
+                  _vm._v(
+                    "\n                        Sent Messages\n                    "
+                  )
+                ])
+              ]
+            )
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("router-view"),
+      _vm._v(" "),
+      _c("div", { staticClass: "watermark" }, [
+        _c(
+          "svg",
+          {
+            staticClass: "h-6",
+            staticStyle: {
+              "fill-rule": "evenodd",
+              "clip-rule": "evenodd",
+              "stroke-linejoin": "round",
+              "stroke-miterlimit": "2"
+            },
+            attrs: {
+              alt: "Nebula Sender Active",
+              height: "100%",
+              viewBox: "0 0 651 89",
+              version: "1.1",
+              xmlns: "http://www.w3.org/2000/svg",
+              "xmlns:xlink": "http://www.w3.org/1999/xlink",
+              "xml:space": "preserve",
+              "xmlns:serif": "http://www.serif.com/"
+            }
+          },
+          [
+            _c("g", { attrs: { transform: "matrix(1,0,0,1,-855.24,0)" } }, [
+              _c(
+                "g",
+                {
+                  attrs: {
+                    id: "Wordmark-Black",
+                    "serif:id": "Wordmark Black",
+                    transform: "matrix(1.6273,0,0,0.220543,164.805,-0.102791)"
+                  }
+                },
+                [
+                  _c("clipPath", { attrs: { id: "_clip1" } }, [
+                    _c("rect", {
+                      attrs: {
+                        x: "424.281",
+                        y: "0.466",
+                        width: "399.995",
+                        height: "399.995"
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("g", { attrs: { "clip-path": "url(#_clip1)" } }, [
+                    _c(
+                      "g",
+                      {
+                        attrs: {
+                          transform:
+                            "matrix(0.614513,-0,-0,4.53427,424.281,0.466081)"
+                        }
+                      },
+                      [
+                        _c("use", {
+                          attrs: {
+                            "xlink:href": "#_Image2",
+                            x: "0",
+                            y: "0",
+                            width: "650.913px",
+                            height: "88.216px",
+                            transform: "matrix(0.999866,0,0,0.991189,0,0)"
+                          }
+                        })
+                      ]
+                    )
+                  ])
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("defs", [
+              _c("image", {
+                attrs: {
+                  id: "_Image2",
+                  width: "651px",
+                  height: "89px",
+                  "xlink:href":
+                    "data:image/png;base64,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"
+                }
+              })
+            ])
+          ]
+        )
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-06d31c3e", module.exports)
+  }
+}
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "flex-1 flex items-center justify-center" },
+      [
+        _c("div", { staticClass: "font-medium text-60 text-4xl" }, [
+          _vm._v('\n        Select "Compose" to create a new message\n    ')
+        ])
+      ]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-8c2f2700", module.exports)
+  }
+}
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(95)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(97)
+/* template */
+var __vue_template__ = __webpack_require__(98)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-cab01a5a"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/NebulaSender/views/Drafts.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-cab01a5a", Component.options)
+  } else {
+    hotAPI.reload("data-v-cab01a5a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(96);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("25ddb4dd", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-cab01a5a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Drafts.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-cab01a5a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Drafts.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 97 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__ = __webpack_require__(104);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__NebulaSenderLayout__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__NebulaSenderLayout___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__NebulaSenderLayout__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MessageList__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MessageList___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MessageList__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__EmailCard__ = __webpack_require__(79);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__EmailCard___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__EmailCard__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_ApiService__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_NebulaSenderService__ = __webpack_require__(78);
+
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "Drafts",
+    components: {
+        MessageList: __WEBPACK_IMPORTED_MODULE_2__MessageList___default.a,
+        NebulaSenderLayout: __WEBPACK_IMPORTED_MODULE_1__NebulaSenderLayout___default.a,
+        EmailCard: __WEBPACK_IMPORTED_MODULE_3__EmailCard___default.a
+    },
+    data: function data() {
+        return {
+            loading: true,
+            drafts: []
+        };
+    },
+    mounted: function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
+            var _ref2, data;
+
+            return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+                while (1) {
+                    switch (_context.prev = _context.next) {
+                        case 0:
+                            _context.prev = 0;
+                            _context.next = 3;
+                            return __WEBPACK_IMPORTED_MODULE_4__services_ApiService__["a" /* default */].drafts();
+
+                        case 3:
+                            _ref2 = _context.sent;
+                            data = _ref2.data;
+
+                            this.drafts = data;
+                            this.loading = false;
+                            _context.next = 13;
+                            break;
+
+                        case 9:
+                            _context.prev = 9;
+                            _context.t0 = _context["catch"](0);
+
+                            console.error(_context.t0);
+                            this.$toasted.show(this.messages['general-drafts-error'], { type: 'error' });
+
+                        case 13:
+                        case "end":
+                            return _context.stop();
+                    }
+                }
+            }, _callee, this, [[0, 9]]);
+        }));
+
+        function mounted() {
+            return _ref.apply(this, arguments);
+        }
+
+        return mounted;
+    }(),
+
+    computed: {
+        messages: function messages() {
+            return __WEBPACK_IMPORTED_MODULE_5__services_NebulaSenderService__["a" /* default */].localization;
+        }
+    }
+});
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "flex flex-1" },
+    [
+      _vm.loading
+        ? _c(
+            "message-list",
+            { staticClass: "flex flex-1 items-center justify-center text-70" },
+            [_c("loader", { staticClass: "text-60" })],
+            1
+          )
+        : !_vm.loading && _vm.drafts.length === 0
+        ? _c("message-list", { staticClass: "flex" }, [
+            _c(
+              "div",
+              {
+                staticClass: "flex flex-1 items-center justify-center text-70"
+              },
+              [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.messages["no-drafts"]) +
+                    "\n        "
+                )
+              ]
+            )
+          ])
+        : !_vm.loading && _vm.drafts.length > 0
+        ? _c(
+            "message-list",
+            _vm._l(_vm.drafts, function(draft) {
+              return _c("email-card", { key: "key-" + draft.id })
+            }),
+            1
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-cab01a5a", module.exports)
+  }
+}
+
+/***/ }),
+/* 99 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(100)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(102)
+/* template */
+var __vue_template__ = __webpack_require__(103)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-5be60055"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/NebulaSender/MessageList.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5be60055", Component.options)
+  } else {
+    hotAPI.reload("data-v-5be60055", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 100 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(101);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("16dde762", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5be60055\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MessageList.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5be60055\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MessageList.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 102 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19029,54 +20072,814 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "NebulaSenderView",
-    data: function data() {
-        return {};
-    }
+    name: "MessageList"
 });
 
 /***/ }),
-/* 77 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "list max-w-xs bg-30" },
+    [_vm._t("default")],
+    2
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "p-4 bg-primary-dark rounded" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-3e23d539", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-5be60055", module.exports)
   }
 }
 
 /***/ }),
-/* 78 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 104 */
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+module.exports = __webpack_require__(105);
+
+
+/***/ }),
+/* 105 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /**
- * @name NebulaSenderService
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
-/* harmony default export */ __webpack_exports__["a"] = ({
 
-  active: false
+// This method of obtaining a reference to the global object needs to be
+// kept identical to the way it is obtained in runtime.js
+var g = (function() { return this })() || Function("return this")();
 
-});
+// Use `getOwnPropertyNames` because not all browsers support calling
+// `hasOwnProperty` on the global `self` object in a worker. See #183.
+var hadRuntime = g.regeneratorRuntime &&
+  Object.getOwnPropertyNames(g).indexOf("regeneratorRuntime") >= 0;
+
+// Save the old regeneratorRuntime in case it needs to be restored later.
+var oldRuntime = hadRuntime && g.regeneratorRuntime;
+
+// Force reevalutation of runtime.js.
+g.regeneratorRuntime = undefined;
+
+module.exports = __webpack_require__(106);
+
+if (hadRuntime) {
+  // Restore the original runtime.
+  g.regeneratorRuntime = oldRuntime;
+} else {
+  // Remove the global property added by runtime.js.
+  try {
+    delete g.regeneratorRuntime;
+  } catch(e) {
+    g.regeneratorRuntime = undefined;
+  }
+}
+
+
+/***/ }),
+/* 106 */
+/***/ (function(module, exports) {
+
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+!(function(global) {
+  "use strict";
+
+  var Op = Object.prototype;
+  var hasOwn = Op.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var $Symbol = typeof Symbol === "function" ? Symbol : {};
+  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
+  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  var inModule = typeof module === "object";
+  var runtime = global.regeneratorRuntime;
+  if (runtime) {
+    if (inModule) {
+      // If regeneratorRuntime is defined globally and we're in a module,
+      // make the exports object identical to regeneratorRuntime.
+      module.exports = runtime;
+    }
+    // Don't bother evaluating the rest of this file if the runtime was
+    // already defined globally.
+    return;
+  }
+
+  // Define the runtime globally (as expected by generated code) as either
+  // module.exports (if we're in a module) or a new, empty object.
+  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+    var generator = Object.create(protoGenerator.prototype);
+    var context = new Context(tryLocsList || []);
+
+    // The ._invoke method unifies the implementations of the .next,
+    // .throw, and .return methods.
+    generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+    return generator;
+  }
+  runtime.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  // This is a polyfill for %IteratorPrototype% for environments that
+  // don't natively support it.
+  var IteratorPrototype = {};
+  IteratorPrototype[iteratorSymbol] = function () {
+    return this;
+  };
+
+  var getProto = Object.getPrototypeOf;
+  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  if (NativeIteratorPrototype &&
+      NativeIteratorPrototype !== Op &&
+      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    // This environment has a native %IteratorPrototype%; use it instead
+    // of the polyfill.
+    IteratorPrototype = NativeIteratorPrototype;
+  }
+
+  var Gp = GeneratorFunctionPrototype.prototype =
+    Generator.prototype = Object.create(IteratorPrototype);
+  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunctionPrototype[toStringTagSymbol] =
+    GeneratorFunction.displayName = "GeneratorFunction";
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function(method) {
+      prototype[method] = function(arg) {
+        return this._invoke(method, arg);
+      };
+    });
+  }
+
+  runtime.isGeneratorFunction = function(genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor
+      ? ctor === GeneratorFunction ||
+        // For the native GeneratorFunction constructor, the best we can
+        // do is to check its .name property.
+        (ctor.displayName || ctor.name) === "GeneratorFunction"
+      : false;
+  };
+
+  runtime.mark = function(genFun) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+    } else {
+      genFun.__proto__ = GeneratorFunctionPrototype;
+      if (!(toStringTagSymbol in genFun)) {
+        genFun[toStringTagSymbol] = "GeneratorFunction";
+      }
+    }
+    genFun.prototype = Object.create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+  // meant to be awaited.
+  runtime.awrap = function(arg) {
+    return { __await: arg };
+  };
+
+  function AsyncIterator(generator) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if (record.type === "throw") {
+        reject(record.arg);
+      } else {
+        var result = record.arg;
+        var value = result.value;
+        if (value &&
+            typeof value === "object" &&
+            hasOwn.call(value, "__await")) {
+          return Promise.resolve(value.__await).then(function(value) {
+            invoke("next", value, resolve, reject);
+          }, function(err) {
+            invoke("throw", err, resolve, reject);
+          });
+        }
+
+        return Promise.resolve(value).then(function(unwrapped) {
+          // When a yielded Promise is resolved, its final value becomes
+          // the .value of the Promise<{value,done}> result for the
+          // current iteration. If the Promise is rejected, however, the
+          // result for this iteration will be rejected with the same
+          // reason. Note that rejections of yielded Promises are not
+          // thrown back into the generator function, as is the case
+          // when an awaited Promise is rejected. This difference in
+          // behavior between yield and await is important, because it
+          // allows the consumer to decide what to do with the yielded
+          // rejection (swallow it and continue, manually .throw it back
+          // into the generator, abandon iteration, whatever). With
+          // await, by contrast, there is no opportunity to examine the
+          // rejection reason outside the generator function, so the
+          // only option is to throw it from the await expression, and
+          // let the generator function handle the exception.
+          result.value = unwrapped;
+          resolve(result);
+        }, reject);
+      }
+    }
+
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      function callInvokeWithMethodAndArg() {
+        return new Promise(function(resolve, reject) {
+          invoke(method, arg, resolve, reject);
+        });
+      }
+
+      return previousPromise =
+        // If enqueue has been called before, then we want to wait until
+        // all previous Promises have been resolved before calling invoke,
+        // so that results are always delivered in the correct order. If
+        // enqueue has not been called before, then it is important to
+        // call invoke immediately, without waiting on a callback to fire,
+        // so that the async generator function has the opportunity to do
+        // any necessary setup in a predictable way. This predictability
+        // is why the Promise constructor synchronously invokes its
+        // executor callback, and why async functions synchronously
+        // execute code before the first await. Since we implement simple
+        // async functions in terms of async generators, it is especially
+        // important to get this right, even though it requires care.
+        previousPromise ? previousPromise.then(
+          callInvokeWithMethodAndArg,
+          // Avoid propagating failures to Promises returned by later
+          // invocations of the iterator.
+          callInvokeWithMethodAndArg
+        ) : callInvokeWithMethodAndArg();
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
+    return this;
+  };
+  runtime.AsyncIterator = AsyncIterator;
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  runtime.async = function(innerFn, outerFn, self, tryLocsList) {
+    var iter = new AsyncIterator(
+      wrap(innerFn, outerFn, self, tryLocsList)
+    );
+
+    return runtime.isGeneratorFunction(outerFn)
+      ? iter // If outerFn is a generator, return the full iterator.
+      : iter.next().then(function(result) {
+          return result.done ? result.value : iter.next();
+        });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      context.method = method;
+      context.arg = arg;
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+
+        if (context.method === "next") {
+          // Setting context._sent for legacy support of Babel's
+          // function.sent implementation.
+          context.sent = context._sent = context.arg;
+
+        } else if (context.method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw context.arg;
+          }
+
+          context.dispatchException(context.arg);
+
+        } else if (context.method === "return") {
+          context.abrupt("return", context.arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done
+            ? GenStateCompleted
+            : GenStateSuspendedYield;
+
+          if (record.arg === ContinueSentinel) {
+            continue;
+          }
+
+          return {
+            value: record.arg,
+            done: context.done
+          };
+
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(context.arg) call above.
+          context.method = "throw";
+          context.arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Call delegate.iterator[context.method](context.arg) and handle the
+  // result, either by returning a { value, done } result from the
+  // delegate iterator, or by modifying context.method and context.arg,
+  // setting context.delegate to null, and returning the ContinueSentinel.
+  function maybeInvokeDelegate(delegate, context) {
+    var method = delegate.iterator[context.method];
+    if (method === undefined) {
+      // A .throw or .return when the delegate iterator has no .throw
+      // method always terminates the yield* loop.
+      context.delegate = null;
+
+      if (context.method === "throw") {
+        if (delegate.iterator.return) {
+          // If the delegate iterator has a return method, give it a
+          // chance to clean up.
+          context.method = "return";
+          context.arg = undefined;
+          maybeInvokeDelegate(delegate, context);
+
+          if (context.method === "throw") {
+            // If maybeInvokeDelegate(context) changed context.method from
+            // "return" to "throw", let that override the TypeError below.
+            return ContinueSentinel;
+          }
+        }
+
+        context.method = "throw";
+        context.arg = new TypeError(
+          "The iterator does not provide a 'throw' method");
+      }
+
+      return ContinueSentinel;
+    }
+
+    var record = tryCatch(method, delegate.iterator, context.arg);
+
+    if (record.type === "throw") {
+      context.method = "throw";
+      context.arg = record.arg;
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    var info = record.arg;
+
+    if (! info) {
+      context.method = "throw";
+      context.arg = new TypeError("iterator result is not an object");
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    if (info.done) {
+      // Assign the result of the finished delegate to the temporary
+      // variable specified by delegate.resultName (see delegateYield).
+      context[delegate.resultName] = info.value;
+
+      // Resume execution at the desired location (see delegateYield).
+      context.next = delegate.nextLoc;
+
+      // If context.method was "throw" but the delegate handled the
+      // exception, let the outer generator proceed normally. If
+      // context.method was "next", forget context.arg since it has been
+      // "consumed" by the delegate iterator. If context.method was
+      // "return", allow the original .return call to continue in the
+      // outer generator.
+      if (context.method !== "return") {
+        context.method = "next";
+        context.arg = undefined;
+      }
+
+    } else {
+      // Re-yield the result returned by the delegate method.
+      return info;
+    }
+
+    // The delegate iterator is finished, so forget it and continue with
+    // the outer generator.
+    context.delegate = null;
+    return ContinueSentinel;
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  Gp[toStringTagSymbol] = "Generator";
+
+  // A Generator should always return itself as the iterator object when the
+  // @@iterator function is called on it. Some browsers' implementations of the
+  // iterator prototype chain incorrectly implement this, causing the Generator
+  // object to not be returned from this call. This ensures that doesn't happen.
+  // See https://github.com/facebook/regenerator/issues/274 for more details.
+  Gp[iteratorSymbol] = function() {
+    return this;
+  };
+
+  Gp.toString = function() {
+    return "[object Generator]";
+  };
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  runtime.keys = function(object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1, next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  runtime.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      // Resetting context._sent for legacy support of Babel's
+      // function.sent implementation.
+      this.sent = this._sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.method = "next";
+      this.arg = undefined;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" &&
+              hasOwn.call(this, name) &&
+              !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+
+        if (caught) {
+          // If the dispatched exception was caught by a catch block,
+          // then let that catch block handle the exception normally.
+          context.method = "next";
+          context.arg = undefined;
+        }
+
+        return !! caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev &&
+            hasOwn.call(entry, "finallyLoc") &&
+            this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry &&
+          (type === "break" ||
+           type === "continue") &&
+          finallyEntry.tryLoc <= arg &&
+          arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.method = "next";
+        this.next = finallyEntry.finallyLoc;
+        return ContinueSentinel;
+      }
+
+      return this.complete(record);
+    },
+
+    complete: function(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" ||
+          record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = this.arg = record.arg;
+        this.method = "return";
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+
+      return ContinueSentinel;
+    },
+
+    finish: function(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      if (this.method === "next") {
+        // Deliberately forget the last sent value so that we don't
+        // accidentally pass it on to the delegate.
+        this.arg = undefined;
+      }
+
+      return ContinueSentinel;
+    }
+  };
+})(
+  // In sloppy mode, unbound `this` refers to the global object, fallback to
+  // Function constructor if we're in global strict mode. That is sadly a form
+  // of indirect eval which violates Content Security Policy.
+  (function() { return this })() || Function("return this")()
+);
+
 
 /***/ })
 /******/ ]);

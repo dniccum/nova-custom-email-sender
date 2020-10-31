@@ -11,23 +11,60 @@ Nova.booting((Vue, router, store) => {
             component: require('./components/Tool'),
             beforeEnter: (to, from, next) => {
                 if (NebulaSenderService.active) {
-                    this.$router.replace('/custom-email-sender/nebula-sender');
+                    next({ path: '/custom-email-sender/nebula-sender' });
                 }
 
                 next();
             }
         },
         {
-            name: 'nebula-sender',
             path: '/custom-email-sender/nebula-sender',
-            component: require('./components/NebulaSender/NebulaSenderView'),
+            component: require('./components/NebulaSender/NebulaSenderLayout'),
             beforeEnter: (to, from, next) => {
                 if (!NebulaSenderService.active) {
-                    this.$router.replace('/custom-email-sender');
+                    next({ path: '/custom-email-sender' });
                 }
 
                 next();
-            }
+            },
+            children: [
+                {
+                    name: 'nebula-sender',
+                    path: '/',
+                    component: require('./components/NebulaSender/views/Home'),
+                    beforeEnter: (to, from, next) => {
+                        if (!NebulaSenderService.active) {
+                            next({ path: '/custom-email-sender' });
+                        }
+
+                        next();
+                    }
+                },
+                {
+                    name: 'nebula-sender-drafts',
+                    path: '/custom-email-sender/nebula-sender/drafts',
+                    component: require('./components/NebulaSender/views/Drafts'),
+                    beforeEnter: (to, from, next) => {
+                        if (!NebulaSenderService.active) {
+                            next({ path: '/custom-email-sender' });
+                        }
+
+                        next();
+                    }
+                },
+                {
+                    name: 'nebula-sender-sent',
+                    path: '/custom-email-sender/nebula-sender/sent-messages',
+                    component: require('./components/NebulaSender/NebulaSenderLayout'),
+                    beforeEnter: (to, from, next) => {
+                        if (!NebulaSenderService.active) {
+                            next({ path: '/custom-email-sender' });
+                        }
+
+                        next();
+                    }
+                },
+            ]
         },
     ])
 })

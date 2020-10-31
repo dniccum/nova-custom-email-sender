@@ -18,4 +18,5 @@ Route::post('/send', 'Dniccum\CustomEmailSender\Http\Controllers\CustomEmailSend
 Route::post('/preview', 'Dniccum\CustomEmailSender\Http\Controllers\CustomEmailSenderController@preview');
 Route::get('/search', 'Dniccum\CustomEmailSender\Http\Controllers\CustomEmailSenderController@search');
 
-//Route::get('/validate-nebula-sender', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderController@validate');
+// Nebula Sender specific routes
+Route::get('/nebula-sender-drafts', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderController@drafts');

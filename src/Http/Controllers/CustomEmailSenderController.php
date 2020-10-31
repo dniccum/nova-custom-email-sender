@@ -60,7 +60,7 @@ class CustomEmailSenderController
         return response()
             ->json([
                 'config' => $configuration,
-                'messages' => __('custom-email-sender::tool'),
+                'messages' => array_merge(__('custom-email-sender::tool'), __('custom-email-sender::nebula-sender')),
                 'nebula_sender_active' => $nebulaSenderActive,
             ]);
     }
