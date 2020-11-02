@@ -201,18 +201,4 @@
     .wrapper {
         position: relative;
     }
-    .auto-complete-box {
-        background-color: var(--20);
-        border: 1px solid var(--40);
-    }
-    .auto-complete-box .auto-complete-result {
-        color: var(--80)
-    }
-    .auto-complete-box .auto-complete-result:hover {
-        background-color: var(--white);
-        color: var(--primary)
-    }
-    .auto-complete-box .auto-complete-no-results {
-        color: var(--90)
-    }
 </style>

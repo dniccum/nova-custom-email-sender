@@ -1,0 +1,46 @@
+// Nebula Sender specific code
+.nebula-sender {
+
+    &.min-h-screen {
+        min-height: calc(100vh - 12.8rem);
+    }
+
+    .max-w-2xs {
+        max-width: 15rem;
+    }
+
+    .navigation {
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: 20%;
+        padding: 20px;
+
+        .nav-list {
+            margin: 50px 0 0;
+        }
+    }
+
+    .list {
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: 26%;
+        overflow-y: scroll;
+        padding: 0 20px;
+
+        & > .card {
+            margin: 16px 0;
+            cursor: pointer;
+            transition: transform .15s ease-in-out;
+
+            &:hover {
+                transform: scale(1.08);
+            }
+        }
+    }
+
+    .watermark {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+    }
+}

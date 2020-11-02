@@ -16,6 +16,8 @@
     import MessageForm from './MessageForm';
     import PreviewModal from './PreviewModal';
     import NebulaSenderService from "../services/NebulaSenderService";
+    import TranslationService from "../services/TranslationService";
+    import StorageService from "../services/StorageService";
 
     export default {
         name: 'CustomEmailSender',
@@ -40,7 +42,10 @@
                 Nova.request().get('/nova-vendor/custom-email-sender/config').then(response => {
                     this.config = response.data.config;
                     this.messages = response.data.messages;
-                    NebulaSenderService.localization = response.data.messages;
+
+                    TranslationService.localization = response.data.messages;
+                    StorageService.configuration = response.data.config;
+
                     if (response.data.nebula_sender_active) {
                         NebulaSenderService.active = true;
                         this.$router.push('/custom-email-sender/nebula-sender')

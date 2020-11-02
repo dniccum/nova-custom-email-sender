@@ -16,7 +16,7 @@ return [
 
     // from
     'from-header' => 'From',
-    'from-copy' => 'Send as',
+    'from-copy' => 'Send this new message as:',
     'from-placeholder' => 'From',
 
     // subject
@@ -36,6 +36,7 @@ return [
     'recipients-send-all' => 'Message will be sent to all users.',
 
     // content
+    'choose-an-option' => 'Choose an option',
     'content-header' => 'Content',
     'content-copy' => 'Add the content for the message that you would like to send.',
     'content-placeholder' => 'Insert text here ...',

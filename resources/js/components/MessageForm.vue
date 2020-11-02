@@ -126,7 +126,7 @@
     import CounterInput from './CounterInput';
     import SuccessPanel from './SuccessPanel';
     import RecipientForm from './RecipientForm';
-    import {ToggleButton} from 'vue-js-toggle-button'
+    import { ToggleButton } from 'vue-js-toggle-button'
     import FileSelect from './FileSelect';
 
     export default {

@@ -1,3 +1,144 @@
+.auto-complete-box {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  margin: 5px 0 0;
+  border-radius: 10px;
+  background-color: var(--20);
+  border: 1px solid var(--40);
+  z-index: 10;
+}
+
+.auto-complete-box .auto-complete-result {
+  position: relative;
+  padding: 8px 10px;
+  color: var(--80);
+  font-size: 1rem;
+  font-weight: 300;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.auto-complete-box .auto-complete-result:first-child {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.auto-complete-box .auto-complete-result:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.auto-complete-box .auto-complete-result:hover {
+  background-color: var(--white);
+  color: var(--primary);
+}
+
+.auto-complete-box .auto-complete-loader .typing_loader {
+  margin: 20px auto;
+}
+
+.auto-complete-box .auto-complete-no-results {
+  position: relative;
+  padding: 20px 0;
+  text-align: center;
+  font-size: .9rem;
+  line-height: 1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--90);
+}
+
+.quill-editor {
+  position: relative;
+  background-color: var(--white);
+}
+
+.ql-editor {
+  height: 200px;
+}
+
+.ql-editor p,
+.ql-editor ol,
+.ql-editor ul,
+.ql-editor pre,
+.ql-editor blockquote,
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  margin-bottom: 18px;
+}
+
+.nebula-sender.min-h-screen {
+  min-height: calc(100vh - 12.8rem);
+}
+
+.nebula-sender .max-w-2xs {
+  max-width: 15rem;
+}
+
+.nebula-sender .navigation {
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-preferred-size: 20%;
+      flex-basis: 20%;
+  padding: 20px;
+}
+
+.nebula-sender .navigation .nav-list {
+  margin: 50px 0 0;
+}
+
+.nebula-sender .list {
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-preferred-size: 26%;
+      flex-basis: 26%;
+  overflow-y: scroll;
+  padding: 0 20px;
+}
+
+.nebula-sender .list > .card {
+  margin: 16px 0;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform .15s ease-in-out;
+  transition: -webkit-transform .15s ease-in-out;
+  transition: transform .15s ease-in-out;
+  transition: transform .15s ease-in-out, -webkit-transform .15s ease-in-out;
+}
+
+.nebula-sender .list > .card:hover {
+  -webkit-transform: scale(1.08);
+          transform: scale(1.08);
+}
+
+.nebula-sender .watermark {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+}
+
+.btn-secondary {
+  background-color: var(--info);
+  color: var(--white);
+}
+
+.btn-secondary:not(:disabled):hover {
+  opacity: .8;
+}
+
 .email-sender .input-wrapper {
   position: relative;
   display: block;
@@ -70,145 +211,5 @@
 
 .email-sender .vue-input-tag-wrapper .input-tag .remove::before {
   content: " x";
-}
-
-.email-sender .recipients-list {
-  margin: 1rem 0 0 3rem;
-}
-
-.email-sender .recipients-list .recipient-result {
-  position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  padding: .75rem 0;
-  border-bottom: 1px solid #CCC;
-}
-
-.email-sender .recipients-list .recipient-result .name {
-  -webkit-box-ordinal-group: 1;
-      -ms-flex-order: 0;
-          order: 0;
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-}
-
-.email-sender .recipients-list .recipient-result .button-wrapper {
-  -webkit-box-ordinal-group: 2;
-      -ms-flex-order: 1;
-          order: 1;
-  margin-left: 16px;
-}
-
-.email-sender .recipients-list .recipient-result:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.email-sender .auto-complete-box {
-  position: absolute;
-  width: 93%;
-  left: 3%;
-  margin: 5px 0 0;
-  border-radius: 10px;
-  background-color: white;
-  border: 1px solid lightgray;
-  z-index: 10;
-}
-
-.email-sender .auto-complete-box .auto-complete-result {
-  position: relative;
-  padding: 4px 10px;
-  font-size: 1rem;
-  font-weight: 300;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-}
-
-.email-sender .auto-complete-box .auto-complete-result:first-child {
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-.email-sender .auto-complete-box .auto-complete-result:last-child {
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-.email-sender .auto-complete-box .auto-complete-loader .typing_loader {
-  margin: 20px auto;
-}
-
-.email-sender .auto-complete-box .auto-complete-no-results {
-  position: relative;
-  padding: 20px 0;
-  text-align: center;
-  font-size: .9rem;
-  line-height: 1rem;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.nebula-sender.min-h-screen {
-  min-height: calc(100vh - 12.8rem);
-}
-
-.nebula-sender .max-w-2xs {
-  max-width: 15rem;
-}
-
-.nebula-sender .navigation {
-  -webkit-box-flex: 0;
-      -ms-flex-positive: 0;
-          flex-grow: 0;
-  -ms-flex-negative: 0;
-      flex-shrink: 0;
-  -ms-flex-preferred-size: 20%;
-      flex-basis: 20%;
-  padding: 20px;
-}
-
-.nebula-sender .navigation .nav-list {
-  margin: 50px 0 0;
-}
-
-.nebula-sender .list {
-  -webkit-box-flex: 0;
-      -ms-flex-positive: 0;
-          flex-grow: 0;
-  -ms-flex-negative: 0;
-      flex-shrink: 0;
-  -ms-flex-preferred-size: 26%;
-      flex-basis: 26%;
-  overflow-y: scroll;
-  padding: 0 20px;
-}
-
-.nebula-sender .list > .card {
-  margin: 16px 0;
-  cursor: pointer;
-  -webkit-transition: -webkit-transform .15s ease-in-out;
-  transition: -webkit-transform .15s ease-in-out;
-  transition: transform .15s ease-in-out;
-  transition: transform .15s ease-in-out, -webkit-transform .15s ease-in-out;
-}
-
-.nebula-sender .list > .card:hover {
-  -webkit-transform: scale(1.08);
-          transform: scale(1.08);
-}
-
-.nebula-sender .watermark {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
 }
 

@@ -1774,36 +1774,19 @@ Nova.booting(function (Vue, router, store) {
         children: [{
             name: 'nebula-sender',
             path: '/',
-            component: __webpack_require__(85),
-            beforeEnter: function beforeEnter(to, from, next) {
-                if (!__WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__["a" /* default */].active) {
-                    next({ path: '/custom-email-sender' });
-                }
-
-                next();
-            }
+            component: __webpack_require__(85)
         }, {
             name: 'nebula-sender-drafts',
             path: '/custom-email-sender/nebula-sender/drafts',
-            component: __webpack_require__(94),
-            beforeEnter: function beforeEnter(to, from, next) {
-                if (!__WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__["a" /* default */].active) {
-                    next({ path: '/custom-email-sender' });
-                }
-
-                next();
-            }
+            component: __webpack_require__(94)
+        }, {
+            name: 'nebula-sender-new',
+            path: '/custom-email-sender/nebula-sender/new',
+            component: __webpack_require__(107)
         }, {
             name: 'nebula-sender-sent',
             path: '/custom-email-sender/nebula-sender/sent-messages',
-            component: __webpack_require__(84),
-            beforeEnter: function beforeEnter(to, from, next) {
-                if (!__WEBPACK_IMPORTED_MODULE_1__services_NebulaSenderService__["a" /* default */].active) {
-                    next({ path: '/custom-email-sender' });
-                }
-
-                next();
-            }
+            component: __webpack_require__(84)
         }]
     }]);
 });
@@ -1902,7 +1885,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -1951,6 +1934,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PreviewModal__ = __webpack_require__(64);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__PreviewModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__PreviewModal__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_NebulaSenderService__ = __webpack_require__(78);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_TranslationService__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_StorageService__ = __webpack_require__(119);
 //
 //
 //
@@ -1965,6 +1950,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -1996,7 +1983,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             Nova.request().get('/nova-vendor/custom-email-sender/config').then(function (response) {
                 _this.config = response.data.config;
                 _this.messages = response.data.messages;
-                __WEBPACK_IMPORTED_MODULE_2__services_NebulaSenderService__["a" /* default */].localization = response.data.messages;
+
+                __WEBPACK_IMPORTED_MODULE_3__services_TranslationService__["a" /* default */].localization = response.data.messages;
+                __WEBPACK_IMPORTED_MODULE_4__services_StorageService__["a" /* default */].configuration = response.data.config;
+
                 if (response.data.nebula_sender_active) {
                     __WEBPACK_IMPORTED_MODULE_2__services_NebulaSenderService__["a" /* default */].active = true;
                     _this.$router.push('/custom-email-sender/nebula-sender');
@@ -17566,7 +17556,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n.wrapper[data-v-4f3704c7] {\n    position: relative;\n}\n.auto-complete-box[data-v-4f3704c7] {\n    background-color: var(--20);\n    border: 1px solid var(--40);\n}\n.auto-complete-box .auto-complete-result[data-v-4f3704c7] {\n    color: var(--80)\n}\n.auto-complete-box .auto-complete-result[data-v-4f3704c7]:hover {\n    background-color: var(--white);\n    color: var(--primary)\n}\n.auto-complete-box .auto-complete-no-results[data-v-4f3704c7] {\n    color: var(--90)\n}\n", ""]);
+exports.push([module.i, "\n.wrapper[data-v-4f3704c7] {\n    position: relative;\n}\n", ""]);
 
 // exports
 
@@ -18787,6 +18777,7 @@ exports.push([module.i, "\n.iframe-wrapper[data-v-cf8d65a0] {\n    width: 600px;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_Translations__ = __webpack_require__(118);
 //
 //
 //
@@ -18803,14 +18794,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "PreviewModal",
-    props: {
-        closeCopy: String
-    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_Translations__["a" /* default */]],
     data: function data() {
         return {
-            visible: false
+            visible: false,
+            previewContent: null
         };
     },
     mounted: function mounted() {
@@ -18822,10 +18814,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
     },
 
+    computed: {
+        /**
+         * @return {string}
+         */
+        closeCopy: function closeCopy() {
+            return this.messages['close'];
+        }
+    },
     methods: {
         close: function close() {
             this.visible = false;
             document.getElementById('preview-frame').contentWindow.document.body.innerHTML = '';
+        },
+        preview: function preview() {
+            var _this = this;
+
+            var vm = this;
+
+            this.$emit('preview', true);
+
+            Nova.request().post('/nova-vendor/custom-email-sender/preview', {
+                subject: vm.subject,
+                sendToAll: vm.sendToAll,
+                recipients: vm.recipients,
+                htmlContent: vm.htmlContent,
+                from: vm.from
+            }).then(function (response) {
+                document.getElementById('preview-frame').contentWindow.document.write(response);
+                vm.visible = true;
+            }).catch(function (error) {
+                var response = error.response;
+                var status = response.status;
+
+                if (status === 422) {
+                    _this.$toasted.show(response.data.message, { type: 'error' });
+                } else {
+                    _this.$toasted.show(response.statusText, { type: 'error' });
+                }
+                _this.$emit('preview', false);
+            });
         }
     }
 });
@@ -18995,13 +19023,13 @@ if (false) {
  */
 /* harmony default export */ __webpack_exports__["a"] = ({
 
-  active: false,
-
   /**
-   * @property localization
-   * @typedef {Object}
+   * @description If the Nebula Sender service is active
+   * @property active
+   * @typedef {boolean}
    */
-  localization: {}
+  active: false
+
 });
 
 /***/ }),
@@ -19348,7 +19376,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -19361,6 +19389,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__EmailCard__ = __webpack_require__(79);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__EmailCard___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__EmailCard__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_Translations__ = __webpack_require__(118);
 //
 //
 //
@@ -19417,11 +19446,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "NebulaSenderView",
+    mixins: [__WEBPACK_IMPORTED_MODULE_1__mixins_Translations__["a" /* default */]],
     components: {
         EmailCard: __WEBPACK_IMPORTED_MODULE_0__EmailCard___default.a
     },
@@ -19445,131 +19476,147 @@ var render = function() {
         "relative nebula-sender rounded overflow-hidden min-h-screen flex flex flex-row bg-white"
     },
     [
-      _c("div", { staticClass: "navigation max-w-2xs" }, [
-        _c(
-          "button",
-          {
-            staticClass:
-              "btn btn-default flex justify-center w-full text-center btn-primary",
-            attrs: { type: "button" }
-          },
-          [
-            _c("span", { staticClass: "flex items-center" }, [
+      _c(
+        "div",
+        { staticClass: "navigation max-w-2xs" },
+        [
+          _c(
+            "router-link",
+            {
+              staticClass:
+                "btn btn-default flex justify-center w-full text-center btn-primary",
+              attrs: {
+                to: { name: "nebula-sender-new" },
+                "active-class": "bg-primary-dark"
+              }
+            },
+            [
+              _c("span", { staticClass: "flex items-center" }, [
+                _c(
+                  "svg",
+                  {
+                    staticClass: "w-4 h-4 mr-3",
+                    attrs: {
+                      xmlns: "http://www.w3.org/2000/svg",
+                      viewBox: "0 0 20 20",
+                      fill: "currentColor"
+                    }
+                  },
+                  [
+                    _c("path", {
+                      attrs: {
+                        d:
+                          "M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.messages["compose"]) +
+                    "\n                "
+                )
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "nav",
+            { staticClass: "nav-list" },
+            [
               _c(
-                "svg",
+                "router-link",
                 {
-                  staticClass: "w-4 h-4 mr-3",
+                  staticClass:
+                    "cursor-pointer flex items-center font-normal text-80 mb-2 p-3 text-base no-underline rounded-lg hover:bg-20",
                   attrs: {
-                    xmlns: "http://www.w3.org/2000/svg",
-                    viewBox: "0 0 20 20",
-                    fill: "currentColor"
+                    to: { name: "nebula-sender-drafts" },
+                    "active-class": "bg-40"
                   }
                 },
                 [
-                  _c("path", {
-                    attrs: {
-                      d:
-                        "M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-                    }
-                  })
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "w-5 h-5 mr-3",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        viewBox: "0 0 20 20",
+                        fill: "currentColor"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: { d: "M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" }
+                      }),
+                      _vm._v(" "),
+                      _c("path", {
+                        attrs: {
+                          "fill-rule": "evenodd",
+                          d:
+                            "M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z",
+                          "clip-rule": "evenodd"
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "sidebar-label" }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.messages["drafts"]) +
+                        "\n                    "
+                    )
+                  ])
                 ]
               ),
-              _vm._v("\n                    Compose\n                ")
-            ])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "nav",
-          { staticClass: "nav-list" },
-          [
-            _c(
-              "router-link",
-              {
-                staticClass:
-                  "cursor-pointer flex items-center font-normal text-80 mb-2 p-3 text-base no-underline rounded-lg hover:bg-20",
-                attrs: {
-                  to: { name: "nebula-sender-drafts" },
-                  "active-class": "bg-40"
-                }
-              },
-              [
-                _c(
-                  "svg",
-                  {
-                    staticClass: "w-5 h-5 mr-3",
-                    attrs: {
-                      xmlns: "http://www.w3.org/2000/svg",
-                      viewBox: "0 0 20 20",
-                      fill: "currentColor"
-                    }
-                  },
-                  [
-                    _c("path", {
-                      attrs: { d: "M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" }
-                    }),
-                    _vm._v(" "),
-                    _c("path", {
+              _vm._v(" "),
+              _c(
+                "router-link",
+                {
+                  staticClass:
+                    "cursor-pointer flex items-center font-normal text-80 mb-2 p-3 text-base no-underline rounded-lg hover:bg-20",
+                  attrs: {
+                    to: { name: "nebula-sender-sent" },
+                    "active-class": "bg-40"
+                  }
+                },
+                [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "w-5 h-5 mr-3",
                       attrs: {
-                        "fill-rule": "evenodd",
-                        d:
-                          "M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z",
-                        "clip-rule": "evenodd"
+                        xmlns: "http://www.w3.org/2000/svg",
+                        viewBox: "0 0 20 20",
+                        fill: "currentColor"
                       }
-                    })
-                  ]
-                ),
-                _vm._v(" "),
-                _c("span", { staticClass: "sidebar-label" }, [
-                  _vm._v(
-                    "\n                        Drafts\n                    "
-                  )
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "router-link",
-              {
-                staticClass:
-                  "cursor-pointer flex items-center font-normal text-80 mb-2 p-3 text-base no-underline rounded-lg hover:bg-20",
-                attrs: {
-                  to: { name: "nebula-sender-sent" },
-                  "active-class": "bg-40"
-                }
-              },
-              [
-                _c(
-                  "svg",
-                  {
-                    staticClass: "w-5 h-5 mr-3",
-                    attrs: {
-                      xmlns: "http://www.w3.org/2000/svg",
-                      viewBox: "0 0 20 20",
-                      fill: "currentColor"
-                    }
-                  },
-                  [
-                    _c("path", {
-                      attrs: {
-                        d:
-                          "M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
-                      }
-                    })
-                  ]
-                ),
-                _vm._v(" "),
-                _c("span", { staticClass: "sidebar-label" }, [
-                  _vm._v(
-                    "\n                        Sent Messages\n                    "
-                  )
-                ])
-              ]
-            )
-          ],
-          1
-        )
-      ]),
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          d:
+                            "M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"
+                        }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "sidebar-label" }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.messages["sent-messages"]) +
+                        "\n                    "
+                    )
+                  ])
+                ]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
       _c("router-view"),
       _vm._v(" "),
@@ -20880,6 +20927,1251 @@ if (hadRuntime) {
   (function() { return this })() || Function("return this")()
 );
 
+
+/***/ }),
+/* 107 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(108)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(110)
+/* template */
+var __vue_template__ = __webpack_require__(111)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-62a11328"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/NebulaSender/views/NewMessage.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-62a11328", Component.options)
+  } else {
+    hotAPI.reload("data-v-62a11328", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(109);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("3a39e093", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-62a11328\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./NewMessage.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-62a11328\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./NewMessage.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 110 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_Translations__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MessageForm__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MessageForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__MessageForm__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__PreviewModal__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__PreviewModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__PreviewModal__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_NebulaSenderService__ = __webpack_require__(78);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "NewMessage",
+    mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_Translations__["a" /* default */]],
+    components: {
+        MessageForm: __WEBPACK_IMPORTED_MODULE_1__MessageForm___default.a,
+        PreviewModal: __WEBPACK_IMPORTED_MODULE_2__PreviewModal___default.a
+    },
+    data: function data() {
+        return {
+            complete: false
+        };
+    },
+
+    computed: {
+        config: function config() {
+            return __WEBPACK_IMPORTED_MODULE_3__services_NebulaSenderService__["a" /* default */].configuration;
+        }
+    }
+});
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return !_vm.complete
+    ? _c("div", { staticClass: "flex-1 flex-row mb-8 lg:mb-20 p-8" }, [
+        _c("div", { staticClass: "flex flex-wrap md:w-full" }, [
+          _c(
+            "div",
+            { staticClass: "w-full mb-6 md:mb-0 lg:pr-10" },
+            [
+              _c("heading", { staticClass: "mb-6" }, [
+                _vm._v(_vm._s(_vm.messages["create-new-message"]))
+              ]),
+              _vm._v(" "),
+              _c("message-form")
+            ],
+            1
+          )
+        ])
+      ])
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-62a11328", module.exports)
+  }
+}
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(113)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(115)
+/* template */
+var __vue_template__ = __webpack_require__(116)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-27ecd97b"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/NebulaSender/MessageForm.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-27ecd97b", Component.options)
+  } else {
+    hotAPI.reload("data-v-27ecd97b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(114);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("39ce86ec", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-27ecd97b\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MessageForm.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-27ecd97b\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MessageForm.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 115 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_quill_dist_quill_core_css__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_quill_dist_quill_core_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_quill_dist_quill_core_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_quill_dist_quill_snow_css__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_quill_dist_quill_snow_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_quill_dist_quill_snow_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_quill_dist_quill_bubble_css__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_quill_dist_quill_bubble_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_quill_dist_quill_bubble_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_quill_editor__ = __webpack_require__(25);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_vue_quill_editor___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_vue_quill_editor__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_Translations__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__CounterInput__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__CounterInput___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__CounterInput__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__RecipientForm__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__RecipientForm___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__RecipientForm__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__FileSelect__ = __webpack_require__(58);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__FileSelect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__FileSelect__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__PreviewModal__ = __webpack_require__(64);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__PreviewModal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__PreviewModal__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__RecipientItem__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__RecipientItem___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__RecipientItem__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__services_StorageService__ = __webpack_require__(119);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_vue_js_toggle_button__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_vue_js_toggle_button___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_vue_js_toggle_button__);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=7F9CF5&background=EBF4FF';
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "MessageForm",
+    mixins: [__WEBPACK_IMPORTED_MODULE_4__mixins_Translations__["a" /* default */]],
+    components: {
+        PreviewModal: __WEBPACK_IMPORTED_MODULE_8__PreviewModal___default.a,
+        CounterInput: __WEBPACK_IMPORTED_MODULE_5__CounterInput___default.a,
+        RecipientForm: __WEBPACK_IMPORTED_MODULE_6__RecipientForm___default.a,
+        FileSelect: __WEBPACK_IMPORTED_MODULE_7__FileSelect___default.a,
+        quillEditor: __WEBPACK_IMPORTED_MODULE_3_vue_quill_editor__["quillEditor"],
+        ToggleButton: __WEBPACK_IMPORTED_MODULE_11_vue_js_toggle_button__["ToggleButton"],
+        RecipientItem: __WEBPACK_IMPORTED_MODULE_9__RecipientItem___default.a
+    },
+    data: function data() {
+        return {
+            from: '',
+            subject: '',
+            sendToAll: false,
+            useFileContent: false,
+            gettingPreview: false,
+            recipients: [],
+            htmlFile: null,
+            htmlContent: ''
+        };
+    },
+
+    computed: {
+        /**
+         * @return {Object}
+         */
+        config: function config() {
+            return __WEBPACK_IMPORTED_MODULE_10__services_StorageService__["a" /* default */].configuration;
+        },
+
+        /**
+         * @return {boolean}
+         */
+        isThinking: function isThinking() {
+            if (this.loading || this.gettingPreview) {
+                return true;
+            }
+
+            return false;
+        },
+
+        /**
+         * @return {Object}
+         */
+        quillConfiguration: function quillConfiguration() {
+            if (!__WEBPACK_IMPORTED_MODULE_10__services_StorageService__["a" /* default */].configuration.editor) {
+                return {
+                    toolbar: [{
+                        'header': 1
+                    }, {
+                        'header': 2
+                    }, {
+                        'list': 'ordered'
+                    }, {
+                        'list': 'bullet'
+                    }, 'bold', 'italic', 'link']
+                };
+            }
+
+            return __WEBPACK_IMPORTED_MODULE_10__services_StorageService__["a" /* default */].configuration.editor;
+        },
+
+        /**
+         * @return {Object}
+         */
+        quillEditorOptions: function quillEditorOptions() {
+            return {
+                modules: _extends({}, this.quillConfiguration),
+                placeholder: this.messages['content-placeholder']
+            };
+        },
+        quillEditor: function quillEditor() {
+            return this.$refs.myQuillEditor.quill;
+        }
+    },
+    methods: {
+        /**
+         * @name addAddress
+         * @description Add recipient to the list
+         * @param {Object} userObject
+         */
+        addAddress: function addAddress(userObject) {
+            this.recipients.push(userObject);
+        },
+        loadFile: function loadFile(file) {
+            var _this = this;
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                _this.$emit("load", e.target.result);
+                _this.htmlContent = e.target.result;
+            };
+            reader.readAsText(file);
+        },
+
+        /**
+         * @name formIsValid
+         * @description Is the form ready to be sent/submitted
+         * @return {boolean}
+         */
+        formIsValid: function formIsValid() {
+            if (this.subject.length === 0 || this.htmlContent.length === 0) {
+                return false;
+            }
+
+            if (this.recipients.length === 0 && !this.sendToAll) {
+                return false;
+            }
+
+            return true;
+        },
+
+        /**
+         * @param {boolean} loading
+         * @return {void}
+         */
+        setLoading: function setLoading() {
+            var loading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+            if (!this.useFileContent) {
+                this.quillEditor.enable(!loading);
+            }
+            this.loading = loading;
+        },
+
+        /**
+         * @name sendMessage
+         * @description Sends the message with the defined
+         * @return {void}
+         */
+        sendMessage: function sendMessage() {
+            var _this2 = this;
+
+            var vm = this;
+
+            vm.setLoading();
+
+            Nova.request().post('/nova-vendor/custom-email-sender/send', {
+                from: vm.from,
+                subject: vm.subject,
+                sendToAll: vm.sendToAll,
+                recipients: vm.recipients,
+                htmlContent: this.htmlContent
+            }).then(function (response) {
+                vm.$toasted.show(response.data, { type: 'success' });
+                vm.complete = true;
+                vm.setLoading(false);
+            }).catch(function (error) {
+                var response = error.response;
+                var status = response.status;
+
+                if (status === 422) {
+                    _this2.$toasted.show(response.data.message, { type: 'error' });
+                } else {
+                    _this2.$toasted.show(response.statusText, { type: 'error' });
+                }
+
+                vm.setLoading(false);
+            });
+        },
+
+        /**
+         * @param {boolean} loading
+         */
+        setGettingPreview: function setGettingPreview() {
+            var loading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+            if (!this.useFileContent) {
+                this.quillEditor.enable(!loading);
+            }
+            this.gettingPreview = loading;
+        },
+        preview: function preview() {
+            this.$refs.previewModal.preview();
+        },
+        reset: function reset() {
+            this.subject = '';
+            this.sendToAll = false;
+            this.complete = false;
+            this.recipients = [];
+            this.htmlContent = '';
+            this.useFileContent = false;
+        },
+
+
+        /**
+         * @name removeRecipient
+         * @param {Number} index
+         * @return {void}
+         */
+        removeRecipient: function removeRecipient(index) {
+            this.recipients.splice(index, 1);
+        }
+    }
+});
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "flex" },
+    [
+      _c("div", { staticClass: "w-3/5" }, [
+        _c("h3", { staticClass: "text-base text-80 font-bold mb-3" }, [
+          _vm._v(_vm._s(_vm.messages["from-header"]))
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "mb-8" },
+          [
+            _c("p", { staticClass: "mb-2 italic" }, [
+              _vm._v(_vm._s(_vm.messages["from-copy"]))
+            ]),
+            _vm._v(" "),
+            _c(
+              "select-control",
+              {
+                staticClass: "w-full form-control form-select",
+                attrs: {
+                  disabled:
+                    _vm.config.from.options.length <= 1 || _vm.isThinking
+                },
+                model: {
+                  value: _vm.from,
+                  callback: function($$v) {
+                    _vm.from = $$v
+                  },
+                  expression: "from"
+                }
+              },
+              [
+                _c(
+                  "option",
+                  { attrs: { value: "", selected: "", disabled: "" } },
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.messages["choose-an-option"]) +
+                        "\n                "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.config.from.options, function(option) {
+                  return _c(
+                    "option",
+                    {
+                      key: option.address,
+                      domProps: { value: option.address }
+                    },
+                    [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(option.name) +
+                          "\n                "
+                      )
+                    ]
+                  )
+                })
+              ],
+              2
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-8" }, [
+          _c("h3", { staticClass: "text-base text-80 font-bold mb-3" }, [
+            _vm._v(_vm._s(_vm.messages["subject-header"]))
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mb-8" },
+            [
+              _c("p", { staticClass: "mb-2 italic" }, [
+                _vm._v(_vm._s(_vm.messages["subject-copy"]))
+              ]),
+              _vm._v(" "),
+              _c("counter-input", {
+                attrs: {
+                  placeholder: _vm.messages["subject-placeholder"],
+                  model: _vm.subject,
+                  disabled: _vm.isThinking
+                },
+                on: {
+                  "update:model": function($event) {
+                    _vm.subject = $event
+                  }
+                }
+              })
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "mb-8" },
+          [
+            _c("h3", { staticClass: "text-base text-80 font-bold mb-3" }, [
+              _vm._v(_vm._s(_vm.messages["recipients-header"]))
+            ]),
+            _vm._v(" "),
+            _c("recipient-form", {
+              attrs: {
+                messages: _vm.messages,
+                "send-to-all": _vm.sendToAll,
+                loading: _vm.isThinking,
+                recipients: _vm.recipients
+              },
+              on: {
+                add: _vm.addAddress,
+                "update:sendToAll": function($event) {
+                  _vm.sendToAll = $event
+                },
+                "update:send-to-all": function($event) {
+                  _vm.sendToAll = $event
+                }
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "mb-8" }, [
+          _c("h3", { staticClass: "text-base text-80 font-bold mb-3" }, [
+            _vm._v(_vm._s(_vm.messages["content-header"]))
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "mb-6" },
+            [
+              _c("p", { staticClass: "mb-2" }, [
+                _vm._v(_vm._s(_vm.messages["toggle-use-file"]))
+              ]),
+              _vm._v(" "),
+              _c("toggle-button", {
+                attrs: {
+                  width: 60,
+                  height: 26,
+                  color: "var(--primary)",
+                  disabled: _vm.loading
+                },
+                model: {
+                  value: _vm.useFileContent,
+                  callback: function($$v) {
+                    _vm.useFileContent = $$v
+                  },
+                  expression: "useFileContent"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.useFileContent
+            ? _c(
+                "div",
+                { staticClass: "mb-8" },
+                [
+                  _c("file-select", {
+                    attrs: { messages: _vm.messages },
+                    on: { input: _vm.loadFile },
+                    model: {
+                      value: _vm.htmlFile,
+                      callback: function($$v) {
+                        _vm.htmlFile = $$v
+                      },
+                      expression: "htmlFile"
+                    }
+                  })
+                ],
+                1
+              )
+            : _c("div", { staticClass: "mb-8" }, [
+                _c("p", { staticClass: "mb-2" }, [
+                  _vm._v(_vm._s(_vm.messages["content-copy"]))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "input-wrapper" },
+                  [
+                    _c("quill-editor", {
+                      ref: "myQuillEditor",
+                      staticClass: "quill-editor",
+                      attrs: { options: _vm.quillEditorOptions },
+                      model: {
+                        value: _vm.htmlContent,
+                        callback: function($$v) {
+                          _vm.htmlContent = $$v
+                        },
+                        expression: "htmlContent"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mt-4" }, [
+          _c("h3", { staticClass: "text-base text-80 font-bold mb-3" }, [
+            _vm._v(_vm._s(_vm.messages["send-preview"]))
+          ]),
+          _vm._v(" "),
+          _c("p", { staticClass: "mb-2" }, [
+            _vm._v(_vm._s(_vm.messages["preview-copy"]))
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-default btn-primary",
+              attrs: { disabled: _vm.isThinking || !_vm.formIsValid() },
+              on: { click: _vm.sendMessage }
+            },
+            [
+              _vm._v(
+                "\n                " +
+                  _vm._s(
+                    _vm.loading
+                      ? _vm.messages["send-message-loading"]
+                      : _vm.messages["send-message"]
+                  ) +
+                  "\n            "
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-default btn-secondary",
+              attrs: { disabled: _vm.isThinking || !_vm.formIsValid() },
+              on: { click: _vm.preview }
+            },
+            [
+              _vm._v(
+                "\n                " +
+                  _vm._s(
+                    _vm.gettingPreview
+                      ? _vm.messages["preview-loading"]
+                      : _vm.messages["preview"]
+                  ) +
+                  "\n            "
+              )
+            ]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "w-2/5" }, [
+        _c("div", { staticClass: "recipients-list px-6" }, [
+          _c("h3", { staticClass: "text-base text-80 font-bold mb-3" }, [
+            _vm._v(_vm._s(_vm.messages["recipients-list-header"]))
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "ul",
+              {
+                staticClass: "divide-y divide-gray-200",
+                staticStyle: { "padding-left": "0" }
+              },
+              _vm._l(_vm.recipients, function(recipient, index) {
+                return _c("recipient-item", {
+                  key: index,
+                  attrs: { recipient: recipient },
+                  on: {
+                    delete: function($event) {
+                      return _vm.removeRecipient(index)
+                    }
+                  }
+                })
+              }),
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _vm.recipients.length === 0 && _vm.sendToAll === false
+            ? _c("div", { staticClass: "p-4 bg-danger rounded" }, [
+                _c("p", { staticClass: "text-white" }, [
+                  _vm._v(_vm._s(_vm.messages["recipients-no-address-found"]))
+                ])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.sendToAll === true
+            ? _c("div", { staticClass: "p-4 bg-primary rounded" }, [
+                _c("p", { staticClass: "text-white" }, [
+                  _vm._v(_vm._s(_vm.messages["recipients-send-all"]))
+                ])
+              ])
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("preview-modal", {
+        ref: "previewModal",
+        on: { preview: _vm.setGettingPreview }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-27ecd97b", module.exports)
+  }
+}
+
+/***/ }),
+/* 117 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * @name TranslationService
+ */
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+  /**
+   * @description Localization dictionary values
+   * @property localization
+   * @typedef {Object}
+   */
+  localization: {}
+
+});
+
+/***/ }),
+/* 118 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__services_TranslationService__ = __webpack_require__(117);
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    computed: {
+        /**
+         * @name messages
+         * @description Returns an object of available translation properties and strings
+         * @return {Object}
+         */
+        messages: function messages() {
+            return __WEBPACK_IMPORTED_MODULE_0__services_TranslationService__["a" /* default */].localization;
+        }
+    }
+});
+
+/***/ }),
+/* 119 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * @name StorageService
+ */
+/* harmony default export */ __webpack_exports__["a"] = ({
+
+  /**
+   * @description The configuration options/properties
+   * @property configuration
+   * @typedef {Object}
+   */
+  configuration: {}
+});
+
+/***/ }),
+/* 120 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(121)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(123)
+/* template */
+var __vue_template__ = __webpack_require__(124)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-4964ea5c"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/NebulaSender/RecipientItem.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4964ea5c", Component.options)
+  } else {
+    hotAPI.reload("data-v-4964ea5c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 121 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(122);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("7a593300", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4964ea5c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RecipientItem.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4964ea5c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RecipientItem.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 122 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 123 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_Translations__ = __webpack_require__(118);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "RecipientItem",
+    mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_Translations__["a" /* default */]],
+    props: {
+        recipient: Object
+    },
+    computed: {
+        imageUrl: function imageUrl() {
+            var name = '';
+            if (this.recipient.name && this.recipient.name.length > 0) {
+                name = this.recipient.name;
+            } else {
+                name = this.recipient.email.slice(0, 2);
+            }
+            return "https://ui-avatars.com/api/?name=" + encodeURI(name) + "&color=7F9CF5&background=EBF4FF";
+        }
+    }
+});
+
+/***/ }),
+/* 124 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "li",
+    { staticClass: "py-4 flex items-center border-b border-50" },
+    [
+      _c("img", {
+        staticClass: "h-9 w-9 rounded-full",
+        attrs: { src: _vm.imageUrl, alt: "" }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "flex flex-col flex-1 mx-3" }, [
+        _vm.recipient.name && _vm.recipient.name.length > 0
+          ? _c("span", { staticClass: "text-sm leading-5 font-bold text-80" }, [
+              _vm._v(
+                "\n            " + _vm._s(_vm.recipient.name) + "\n        "
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("span", { staticClass: "text-sm leading-5 text-60" }, [
+          _vm._v(_vm._s(_vm.recipient.email))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c(
+          "button",
+          {
+            staticClass:
+              "appearance-none cursor-pointer text-70 hover:text-danger mr-3",
+            attrs: { type: "button", title: _vm.messages["remove"] },
+            on: {
+              click: function($event) {
+                return _vm.$emit("delete")
+              }
+            }
+          },
+          [
+            _c(
+              "svg",
+              {
+                staticClass: "w-6 h-6",
+                attrs: {
+                  xmlns: "http://www.w3.org/2000/svg",
+                  viewBox: "0 0 20 20",
+                  fill: "currentColor"
+                }
+              },
+              [
+                _c("path", {
+                  attrs: {
+                    "fill-rule": "evenodd",
+                    d:
+                      "M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z",
+                    "clip-rule": "evenodd"
+                  }
+                })
+              ]
+            )
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4964ea5c", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
