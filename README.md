@@ -1,4 +1,4 @@
-# Custom Email Sender for Laravel Nova
+![Nova Custom Email Sender](https://github.com/dniccum/nova-custom-email-sender/blob/master/screenshots/nova-custom-email-sender-social-image.png?raw=true)
 
 [![Latest Version on Packagist](https://poser.pugx.org/dniccum/custom-email-sender/v/stable?format=flat-square&color=#0E7FC0)](https://packagist.org/packages/dniccum/custom-email-sender)
 [![License](https://poser.pugx.org/dniccum/custom-email-sender/license?format=flat-square)](https://packagist.org/packages/dniccum/custom-email-sender)
