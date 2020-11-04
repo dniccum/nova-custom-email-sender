@@ -21,10 +21,13 @@
     import MessageList from "../MessageList";
     import EmailCard from "../EmailCard";
     import ApiService from "../../../services/ApiService";
-    import NebulaSenderService from "../../../services/NebulaSenderService";
+    import Translations from "../../../mixins/Translations";
 
     export default {
         name: "Drafts",
+        mixins: [
+            Translations,
+        ],
         components: {
             MessageList,
             NebulaSenderLayout,
@@ -44,11 +47,6 @@
             } catch (e) {
                 console.error(e);
                 this.$toasted.show(this.messages['general-drafts-error'], {type: 'error'});
-            }
-        },
-        computed: {
-            messages() {
-                return NebulaSenderService.localization;
             }
         }
     }

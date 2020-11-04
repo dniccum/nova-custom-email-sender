@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <success-panel v-else @reset="reset" :messages="messages"></success-panel>
+    <success-panel v-else @reset="reset"></success-panel>
 </template>
 
 <script>

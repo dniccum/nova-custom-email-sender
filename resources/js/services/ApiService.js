@@ -17,6 +17,31 @@ export default {
                 return reject(error.response.data);
             });
         });
-    }
+    },
 
+    /**
+     * @name sendMessage
+     * @description Sends the message
+     * @param {string} from
+     * @param {string} subject
+     * @param {boolean} sendToAll
+     * @param {array} recipients
+     * @param {string} htmlContent
+     * @return {Promise<Object>}
+     */
+    sendMessage(from, subject, sendToAll, recipients= [], htmlContent) {
+        return new Promise((resolve, reject) => {
+            Nova.request().post('/nova-vendor/custom-email-sender/send', {
+                from,
+                subject,
+                sendToAll,
+                recipients,
+                htmlContent,
+            }).then(response => {
+                return resolve(response.data)
+            }).catch(error => {
+                return reject(error.response);
+            });
+        })
+    }
 }

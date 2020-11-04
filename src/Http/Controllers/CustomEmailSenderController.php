@@ -96,6 +96,12 @@ class CustomEmailSenderController
                  ->send(new CustomMessageMailable($subject, $content, $sender));
         });
 
+        if (config('novaemailsender.nebula_sender_key')) {
+            $template = config('novaemailsender.template.view');
+            $fullContent = (new CustomMessageMailable($subject, $content, $sender))->render();
+            NebulaSenderUtility::logSentMessage($subject, $template, $users->toArray(), $content, $fullContent);
+        }
+
         return response()->json($users->count(). ' '.__('custom-email-sender::tool.emails-sent'), 200);
     }
 

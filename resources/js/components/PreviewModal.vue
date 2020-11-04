@@ -49,20 +49,29 @@
                 document.getElementById('preview-frame').contentWindow.document.body.innerHTML = '';
             },
 
-            preview() {
+            /**
+             * @name preview
+             * @param {string} from
+             * @param {string} subject
+             * @param {array} recipients
+             * @param {string} htmlContent
+             * @param {boolean} sendToAll
+             */
+            preview(from, subject, recipients, htmlContent, sendToAll = false) {
                 let vm = this;
 
                 this.$emit('preview', true)
 
                 Nova.request().post('/nova-vendor/custom-email-sender/preview', {
-                    subject: vm.subject,
-                    sendToAll: vm.sendToAll,
-                    recipients: vm.recipients,
-                    htmlContent: vm.htmlContent,
-                    from: vm.from
+                    from,
+                    subject,
+                    recipients,
+                    htmlContent,
+                    sendToAll,
                 }).then(response => {
-                    document.getElementById('preview-frame').contentWindow.document.write(response);
+                    document.getElementById('preview-frame').contentWindow.document.write(response.data.content);
                     vm.visible = true;
+                    this.$emit('preview', false)
                 }).catch(error => {
                     let response = error.response;
                     let status = response.status

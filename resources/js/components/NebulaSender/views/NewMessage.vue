@@ -4,29 +4,18 @@
             <div class="w-full mb-6 md:mb-0 lg:pr-10">
                 <heading class="mb-6">{{ messages['create-new-message'] }}</heading>
 
-                <message-form></message-form>
+                <message-form ref="messageForm" @success="success"></message-form>
             </div>
         </div>
     </div>
 
-
-    <!--
-    <div class="email-sender">
-        <message-form
-            :quill-configuration="config.editor"
-            :messages="messages"
-            :from-select-options="config.from"
-        ></message-form>
-
-        <preview-modal :close-copy="messages['close']" ></preview-modal>
-    </div>
-    -->
+    <success-panel v-else @reset="reset"></success-panel>
 </template>
 
 <script>
     import Translations from "../../../mixins/Translations";
     import MessageForm from '../MessageForm';
-    import PreviewModal from '../../PreviewModal';
+    import SuccessPanel from '../../SuccessPanel';
     import NebulaSenderService from "../../../services/NebulaSenderService";
 
     export default {
@@ -36,16 +25,27 @@
         ],
         components: {
             MessageForm,
-            PreviewModal,
+            SuccessPanel,
         },
         data() {
             return {
-                complete: false
+                complete: false,
             }
         },
         computed: {
             config() {
                 return NebulaSenderService.configuration;
+            }
+        },
+        methods: {
+            reset() {
+                this.complete = false;
+                this.$nextTick(() => {
+                    this.$refs.messageForm.reset();
+                })
+            },
+            success() {
+                this.complete = true;
             }
         }
     }

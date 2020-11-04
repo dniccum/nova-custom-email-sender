@@ -64,17 +64,48 @@
             </div>
 
             <div class="mt-4">
-                <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview'] }}</h3>
-                <p class="mb-2">{{ messages['preview-copy'] }}</p>
+                <div v-if="nebulaSenderActive">
+                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview-draft'] }}</h3>
+                    <p class="mb-2">{{ messages['preview-draft-copy'] }}</p>
+                </div>
+                <div v-else>
+                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview'] }}</h3>
+                    <p class="mb-2">{{ messages['preview-copy'] }}</p>
+                </div>
 
-                <button class="btn btn-default btn-primary" @click="sendMessage"
-                        :disabled="isThinking || !formIsValid()">
-                    {{ loading ? messages['send-message-loading'] : messages['send-message'] }}
-                </button>
-                <button class="btn btn-default btn-secondary" @click="preview"
-                        :disabled="isThinking || !formIsValid()">
-                    {{ gettingPreview ? messages['preview-loading'] : messages['preview'] }}
-                </button>
+                <div class="flex" v-if="nebulaSenderActive">
+                    <div class="flex-1">
+                        <button class="btn btn-default btn-primary" @click="sendMessage"
+                                :disabled="isThinking || !formIsValid()">
+                            {{ loading ? messages['send-message-loading'] : messages['send-message'] }}
+                        </button>
+                        <button class="btn btn-default btn-primary" @click="saveDraft"
+                                :disabled="isThinking || !draftIsValid()">
+                            <span v-if="draftSaved">
+                                {{ loading ? messages['updating'] : messages['update-draft'] }}
+                            </span>
+                            <span v-else>
+                                {{ loading ? messages['saving'] : messages['save-draft'] }}
+                            </span>
+                        </button>
+                    </div>
+                    <div class="text-right">
+                        <button class="btn btn-default btn-secondary" @click="preview"
+                                :disabled="isThinking || !formIsValid()">
+                            {{ gettingPreview ? messages['preview-loading'] : messages['preview'] }}
+                        </button>
+                    </div>
+                </div>
+                <div v-else>
+                    <button class="btn btn-default btn-primary" @click="sendMessage"
+                            :disabled="isThinking || !formIsValid()">
+                        {{ loading ? messages['send-message-loading'] : messages['send-message'] }}
+                    </button>
+                    <button class="btn btn-default btn-secondary" @click="preview"
+                            :disabled="isThinking || !formIsValid()">
+                        {{ gettingPreview ? messages['preview-loading'] : messages['preview'] }}
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -90,8 +121,21 @@
                         ></recipient-item>
                     </ul>
                 </div>
-                <div v-if="recipients.length === 0 && sendToAll === false" class="p-4 bg-danger rounded">
-                    <p class="text-white">{{ messages['recipients-no-address-found'] }}</p>
+
+                <div v-if="recipients.length === 0 && sendToAll === false" class="relative rounded-md p-4 overflow-hidden">
+                    <div class="absolute w-full h-full bg-danger opacity-25" style="left: 0; top: 0;"></div>
+                    <div class="relative flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-danger" x-description="Heroicon name: x-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm leading-5 font-medium text-danger">
+                                {{ messages['recipients-no-address-found'] }}
+                            </h3>
+                        </div>
+                    </div>
                 </div>
                 <div v-if="sendToAll === true" class="p-4 bg-primary rounded">
                     <p class="text-white">{{ messages['recipients-send-all'] }}</p>
@@ -120,8 +164,8 @@
     import StorageService from "../../services/StorageService";
 
     import { ToggleButton } from 'vue-js-toggle-button'
-
-    // 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=7F9CF5&background=EBF4FF';
+    import NebulaSenderService from "../../services/NebulaSenderService";
+    import ApiService from "../../services/ApiService";
 
     export default {
         name: "MessageForm",
@@ -139,6 +183,7 @@
         },
         data() {
             return {
+                loading: false,
                 from: '',
                 subject: '',
                 sendToAll: false,
@@ -147,6 +192,7 @@
                 recipients: [],
                 htmlFile: null,
                 htmlContent: '',
+                draftSaved: false,
             }
         },
         computed: {
@@ -207,6 +253,12 @@
             },
             quillEditor() {
                 return this.$refs.myQuillEditor.quill
+            },
+            /**
+             * @return {boolean}
+             */
+            nebulaSenderActive() {
+                return NebulaSenderService.active;
             }
         },
         methods: {
@@ -243,6 +295,18 @@
                 return true;
             },
             /**
+             * @name draftIsValid
+             * @description Is the form ready to be saved to a draft
+             * @return {boolean}
+             */
+            draftIsValid() {
+                if (this.htmlContent.length === 0) {
+                    return false;
+                }
+
+                return true;
+            },
+            /**
              * @param {boolean} loading
              * @return {void}
              */
@@ -262,24 +326,23 @@
 
                 vm.setLoading();
 
-                Nova.request().post('/nova-vendor/custom-email-sender/send', {
-                    from: vm.from,
-                    subject: vm.subject,
-                    sendToAll: vm.sendToAll,
-                    recipients: vm.recipients,
-                    htmlContent: this.htmlContent
-                }).then(response => {
-                    vm.$toasted.show(response.data, {type: 'success'});
-                    vm.complete = true;
+                ApiService.sendMessage(
+                    this.from,
+                    this.subject,
+                    this.sendToAll,
+                    this.recipients,
+                    this.htmlContent
+                ).then(response => {
+                    vm.$toasted.show(response, {type: 'success'});
+                    vm.$emit('success')
                     vm.setLoading(false);
                 }).catch(error => {
-                    let response = error.response;
-                    let status = response.status
+                    let status = error.status
 
                     if (status === 422) {
-                        this.$toasted.show(response.data.message, {type: 'error'})
+                        this.$toasted.show(error.data.message, {type: 'error'})
                     } else {
-                        this.$toasted.show(response.statusText, {type: 'error'})
+                        this.$toasted.show(error.statusText, {type: 'error'})
                     }
 
                     vm.setLoading(false);
@@ -296,7 +359,13 @@
             },
 
             preview() {
-                this.$refs.previewModal.preview();
+                this.$refs.previewModal.preview(
+                    this.from,
+                    this.subject,
+                    this.recipients,
+                    this.htmlContent,
+                    this.sendToAll
+                );
             },
 
             reset() {
@@ -316,6 +385,10 @@
             removeRecipient(index) {
                 this.recipients.splice(index, 1);
             },
+
+            saveDraft() {
+
+            }
         }
     }
 </script>
