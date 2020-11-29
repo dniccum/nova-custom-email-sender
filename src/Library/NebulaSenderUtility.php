@@ -14,10 +14,10 @@ class NebulaSenderUtility
     public static function isActive() : bool
     {
         $nebulaSenderActive = false;
-        if (config('novaemailsender.nebula_sender_key')) {
+        if (config('novaemailsender.nebula_sender.key')) {
             $route = env('NEBULA_SENDER_API_ROUTE', 'https://nebulasender.com/api');
 
-            $response = Http::withToken(config('novaemailsender.nebula_sender_key'))
+            $response = Http::withToken(config('novaemailsender.nebula_sender.key'))
                 ->get($route.'/validate');
 
             $nebulaSenderActive = $response->status() === 200;
@@ -27,6 +27,7 @@ class NebulaSenderUtility
     }
 
     /**
+     * @param string $from
      * @param string $subject
      * @param string $template
      * @param array|Object[] $recipients
@@ -34,13 +35,14 @@ class NebulaSenderUtility
      * @param string $fullHtml
      * @return void
      */
-    public static function logSentMessage(string $subject, string $template, array $recipients, string $content, string $fullHtml) : void
+    public static function logSentMessage(string $from, string $subject, string $template, array $recipients, string $content, string $fullHtml) : void
     {
-        if (config('novaemailsender.nebula_sender_key')) {
+        if (config('novaemailsender.nebula_sender.key')) {
             $route = env('NEBULA_SENDER_API_ROUTE', 'https://nebulasender.com/api');
 
-            Http::withToken(config('novaemailsender.nebula_sender_key'))
+            $response = Http::withToken(config('novaemailsender.nebula_sender.key'))
                 ->post($route.'/message', [
+                    'from' => $from,
                     'subject' => $subject,
                     'template' => $template,
                     'recipients' => $recipients,
