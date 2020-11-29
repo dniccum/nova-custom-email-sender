@@ -126,16 +126,46 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Nebula Sender Key
+    | Nebula Sender
     |--------------------------------------------------------------------------
-    |
-    | If you are subscribing to Nebula Sender, provide your application key
-    | below to utilize these features.
     |
     | Nebula Sender is a service that will allow you to save sent messages as
     | well as message drafts. For more information, visit: https://nebulasender.com
     |
     */
+    'nebula_sender' => [
 
-    'nebula_sender_key' => env('NEBULA_SENDER_KEY'),
+        /*
+        |--------------------------------------------------------------------------
+        | Nebula Sender Key
+        |--------------------------------------------------------------------------
+        |
+        | If you are subscribing to Nebula Sender, provide your application key
+        | below to utilize these features.
+        |
+        */
+        'key' => env('NEBULA_SENDER_KEY'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Timezone
+        |--------------------------------------------------------------------------
+        |
+        | The Timezone should the application use to parse it's dates
+        |
+        */
+        'timezone' => env('NEBULA_SENDER_TIMEZONE', config('app.timezone')),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Timezone
+        |--------------------------------------------------------------------------
+        |
+        | The Moment.js date formatting that will be used to display dates. Refer to the
+        | Moment.js documentation for further details: https://momentjs.com/docs/#/displaying/
+        |
+        */
+        'date_format' => env('NEBULA_SENDER_DATE_FORMAT', 'MMM D, YYYY \a\t h:m A'),
+    ],
+
 ];
