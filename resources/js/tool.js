@@ -1,8 +1,16 @@
 import vClickOutside from 'v-click-outside'
+import VTooltip from 'v-tooltip'
+import Filters from './filters';
 import NebulaSenderService from "./services/NebulaSenderService";
 
 Nova.booting((Vue, router, store) => {
     Vue.use(vClickOutside);
+    Vue.use(VTooltip, {
+        defaultClass: 'nebula-sender',
+    });
+
+    Vue.filter('limit', Filters.limit);
+    Vue.filter('stripped', Filters.stripped);
 
     router.addRoutes([
         {
@@ -39,6 +47,11 @@ Nova.booting((Vue, router, store) => {
                     component: require('./components/NebulaSender/views/Drafts')
                 },
                 {
+                    name: 'nebula-sender-drafts-edit',
+                    path: '/custom-email-sender/nebula-sender/drafts/:id',
+                    component: require('./components/NebulaSender/views/DraftEdit')
+                },
+                {
                     name: 'nebula-sender-new',
                     path: '/custom-email-sender/nebula-sender/new',
                     component: require('./components/NebulaSender/views/NewMessage')
@@ -46,7 +59,7 @@ Nova.booting((Vue, router, store) => {
                 {
                     name: 'nebula-sender-sent',
                     path: '/custom-email-sender/nebula-sender/sent-messages',
-                    component: require('./components/NebulaSender/NebulaSenderLayout')
+                    component: require('./components/NebulaSender/views/SentMessages')
                 },
             ]
         },

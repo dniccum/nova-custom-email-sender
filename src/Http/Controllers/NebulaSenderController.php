@@ -9,37 +9,11 @@ use Illuminate\Support\Facades\Http;
 
 class NebulaSenderController
 {
-    private $apiRoute;
+    use ApiController;
 
     /**
-     * @var string
-     */
-    private $key;
-
-    /**
-     * NebulaSenderController constructor.
-     */
-    public function __construct()
-    {
-        $this->apiRoute = env('NEBULA_SENDER_API_ROUTE', 'https://nebulasender.com/api');
-        $this->key = config('novaemailsender.nebula_sender.key');
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function drafts(Request $request)
-    {
-        $response = Http::withToken($this->key)
-            ->get($this->apiRoute.'/draft');
-
-        return response()->json([
-            'data' => $response->json('data')
-        ]);
-    }
-
-    /**
+     * Gets the list of sent messages
+     *
      * @param Request $request
      * @return mixed
      */
@@ -47,6 +21,23 @@ class NebulaSenderController
     {
         $response = Http::withToken($this->key)
             ->get($this->apiRoute.'/message');
+
+        return response()->json([
+            'data' => $response->json('data')
+        ]);
+    }
+
+    /**
+     * Clones a message (draft or sent) to create a new draft
+     *
+     * @param string $message
+     * @param Request $request
+     * @return mixed
+     */
+    public function clone(string $message, Request $request)
+    {
+        $response = Http::withToken($this->key)
+            ->post($this->apiRoute.'/message/'.$message.'/clone');
 
         return response()->json([
             'data' => $response->json('data')

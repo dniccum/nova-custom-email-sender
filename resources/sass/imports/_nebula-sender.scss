@@ -46,6 +46,25 @@
                 transform: scale(1.1);
                 background-color: #{'var(--20)'};
             }
+            &.show-drafts {
+                padding-bottom: 50px;
+
+                .button-wrapper {
+                    position: absolute;
+                    right: 10px;
+                    bottom: 10px;
+
+                    .action-button {
+                        outline: none;
+                        height: 26px;
+                        width: 26px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: color .15s ease-in-out, background-color .15s ease-in-out;
+                    }
+                }
+            }
             .card-click-overlay {
                 position: absolute;
                 left: 0;

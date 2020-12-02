@@ -19,4 +19,11 @@ Route::post('/preview', 'Dniccum\CustomEmailSender\Http\Controllers\CustomEmailS
 Route::get('/search', 'Dniccum\CustomEmailSender\Http\Controllers\CustomEmailSenderController@search');
 
 // Nebula Sender specific routes
-Route::get('/nebula-sender-drafts', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderController@drafts');
+Route::get('/nebula-sender-messages', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderController@messages');
+Route::post('/nebula-sender-clone/{message}', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderController@clone');
+
+Route::get('/nebula-sender-drafts', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderDraftController@index');
+Route::post('/nebula-sender-drafts', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderDraftController@store');
+Route::get('/nebula-sender-drafts/{draft}', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderDraftController@show');
+Route::put('/nebula-sender-drafts/{draft}', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderDraftController@update');
+Route::delete('/nebula-sender-drafts/{draft}', 'Dniccum\CustomEmailSender\Http\Controllers\NebulaSenderDraftController@destroy');

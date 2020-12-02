@@ -55,7 +55,10 @@ export default {
         working: Boolean,
         type: {
             type: String,
-            default: 'danger',
+            default: 'primary',
+            validator: (value) => {
+                return ['success', 'primary', 'danger', 'white'].indexOf(value) !== -1
+            }
         },
         confirmText: {
             type: String,
