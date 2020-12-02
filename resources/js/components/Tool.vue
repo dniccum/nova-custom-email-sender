@@ -1,37 +1,37 @@
 <template>
     <loading-card v-if="loading" class="flex flex-col px-6 py-4" style="min-height: 400px;"></loading-card>
 
-    <div class="email-sender" v-else>
-        <message-form
-            :quill-configuration="config.editor"
-            :messages="messages"
-            :from-select-options="config.from"
-        ></message-form>
+    <div class="relative rounded overflow-hidden min-h-screen flex flex-row bg-white email-sender" v-else>
+        <div class="flex-1 flex-row mb-8 lg:mb-20 p-8" v-if="!complete">
+            <div class="flex flex-wrap md:w-full">
+                <div class="w-full mb-6 md:mb-0 lg:pr-10">
+                    <heading class="mb-6">{{ messages['create-new-message'] }}</heading>
 
-        <preview-modal :close-copy="messages['close']" ></preview-modal>
+                    <message-form ref="messageForm" @success="success"></message-form>
+                </div>
+            </div>
+        </div>
+
+        <success-panel v-else @reset="reset"></success-panel>
     </div>
 </template>
 
 <script>
-    import MessageForm from './MessageForm';
-    import PreviewModal from './PreviewModal';
     import NebulaSenderService from "../services/NebulaSenderService";
+    import Translations from "../mixins/Translations";
+    import CreateNewMessage from "../mixins/CreateNewMessage";
     import TranslationService from "../services/TranslationService";
     import StorageService from "../services/StorageService";
 
     export default {
         name: 'CustomEmailSender',
-        components: {
-            MessageForm,
-            PreviewModal,
-        },
+        mixins: [
+            Translations,
+            CreateNewMessage,
+        ],
         data() {
             return {
                 loading: true,
-                config: {
-                    editor: {},
-                },
-                messages: {},
             }
         },
         mounted() {
@@ -41,7 +41,7 @@
             getConfig() {
                 Nova.request().get('/nova-vendor/custom-email-sender/config').then(response => {
                     this.config = response.data.config;
-                    this.messages = response.data.messages;
+                    // this.messages = response.data.messages;
 
                     TranslationService.localization = response.data.messages;
                     StorageService.configuration = response.data.config;
@@ -56,6 +56,7 @@
                     this.loading = false;
                 });
             },
+
         }
     }
 </script>

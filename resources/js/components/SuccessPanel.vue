@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-row m-6">
+    <div class="flex-row flex-1 m-6">
         <div class="flex flex-wrap h-full w-full border-success rounded-lg relative overflow-hidden">
             <div class="success-background z-0"></div>
             <div class="content-wrapper flex items-center flex-col justify-center w-full p-8 relative z-10">

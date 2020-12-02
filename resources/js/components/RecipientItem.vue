@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import Translations from "../../mixins/Translations";
+    import Translations from "../mixins/Translations";
 
     export default {
         name: "RecipientItem",

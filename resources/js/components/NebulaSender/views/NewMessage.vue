@@ -14,19 +14,15 @@
 
 <script>
     import Translations from "../../../mixins/Translations";
-    import MessageForm from '../MessageForm';
-    import SuccessPanel from '../../SuccessPanel';
+    import CreateNewMessage from "../../../mixins/CreateNewMessage";
     import NebulaSenderService from "../../../services/NebulaSenderService";
 
     export default {
         name: "NewMessage",
         mixins: [
             Translations,
+            CreateNewMessage,
         ],
-        components: {
-            MessageForm,
-            SuccessPanel,
-        },
         data() {
             return {
                 complete: false,
@@ -38,15 +34,7 @@
             }
         },
         methods: {
-            reset() {
-                this.complete = false;
-                this.$nextTick(() => {
-                    this.$refs.messageForm.reset();
-                })
-            },
-            success() {
-                this.complete = true;
-            }
+            //
         }
     }
 </script>
