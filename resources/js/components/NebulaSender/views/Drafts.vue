@@ -42,7 +42,7 @@
             </template>
             {{ messages['are-you-sure-delete-draft'] }}
             <div class="p-2 bg-30 border border-50 rounded mt-2 mb-2">
-                {{ confirmDelete.message.subject }}
+                {{ confirmDelete.message.subject ? confirmDelete.message.subject : messages['no-subject'] }}
             </div>
         </confirm-modal>
     </div>
