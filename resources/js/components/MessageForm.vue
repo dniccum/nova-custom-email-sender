@@ -85,7 +85,7 @@
                                 {{ loading ? messages['updating'] : messages['update-draft'] }}
                             </span>
                             <span v-else>
-                                {{ loading ? messages['saving'] : messages['save-draft'] }}
+                                {{ draftSaving ? messages['saving'] : messages['save-draft'] }}
                             </span>
                         </button>
                     </div>
@@ -184,6 +184,7 @@ export default {
     data() {
         return {
             loading: false,
+            draftSaving: false,
             from: '',
             subject: '',
             sendToAll: false,
@@ -206,7 +207,7 @@ export default {
          * @return {boolean}
          */
         isThinking() {
-            if (this.loading || this.gettingPreview) {
+            if (this.loading || this.gettingPreview || this.draftSaving) {
                 return true
             }
 
@@ -300,7 +301,7 @@ export default {
          * @return {boolean}
          */
         draftIsValid() {
-            if (this.htmlContent.length === 0) {
+            if (this.htmlContent.length === 0 || this.from.length === 0) {
                 return false;
             }
 
@@ -308,13 +309,18 @@ export default {
         },
         /**
          * @param {boolean} loading
+         * @param {boolean} isDraft
          * @return {void}
          */
-        setLoading(loading = true) {
+        setLoading(loading = true, isDraft = false) {
             if(!this.useFileContent) {
                 this.quillEditor.enable(!loading)
             }
-            this.loading = loading;
+            if (isDraft) {
+                this.draftSaving = loading;
+            } else {
+                this.loading = loading;
+            }
         },
         /**
          * @name sendMessage
@@ -387,7 +393,31 @@ export default {
         },
 
         saveDraft() {
+            this.setLoading(true, true);
+            let template = StorageService.configuration.template.view;
 
+            // TODO handle updating a draft
+            ApiService.createDraft(
+                this.from,
+                template,
+                this.htmlContent,
+                this.subject,
+                this.recipients,
+                this.sendToAll
+            ).then(response => {
+                this.$toasted.show(this.messages['draft-saved'], {type: 'success'})
+                this.$router.push({ name: 'nebula-sender-drafts-edit', params: { id: response.data.id }})
+            }).catch(error => {
+                let status = error.status
+
+                if (status === 422) {
+                    this.$toasted.show(error.data.message, {type: 'error'})
+                } else {
+                    this.$toasted.show(error.statusText, {type: 'error'})
+                }
+
+                this.setLoading(false, true);
+            })
         }
     }
 }
