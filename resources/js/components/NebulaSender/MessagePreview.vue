@@ -8,7 +8,14 @@
         <div v-else-if="message">
             <header class="flex items-start border-b border-40 pb-4 mb-5">
                 <div class="flex-1">
-                    <h2 class="font-bold text-90 text-3xl">{{ message.subject }}</h2>
+                    <h2 class="font-bold text-90 text-3xl">
+                        <span v-if="message.subject && message.subject.length > 0">
+                            {{ message.subject }}
+                        </span>
+                        <span class="italic" v-else>
+                            {{ messages['no-subject'] }}
+                        </span>
+                    </h2>
                     <div class="mt-2 text-80">
                         <h4 class="font-normal text-base pb-2">
                             {{ messages['from'] }}: {{ message.from }}
@@ -22,7 +29,10 @@
                             {{ messages['message-sent-to-all-users'] }}
                         </div>
                         <div v-else>
-                            <span class="text-sm" v-for="(recipient, index) of message.recipients">
+                            <span class="italic text-70" v-if="message.recipients.length === 0">
+                                {{ messages['no-recipients'] }}
+                            </span>
+                            <span v-else class="text-sm" v-for="(recipient, index) of message.recipients">
                                 <span v-if="recipient.name">
                                     {{ recipient.name }} <<a :href="`mailto:${recipient.email}`" class="underline text-primary hover:text-80">{{ recipient.email }}</a>>{{ index < message.recipients.length - 1 ? ', ' : ''  }}
                                 </span>

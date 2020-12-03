@@ -15,7 +15,12 @@
         </div>
         <div class="mb-3">
             <div class="font-bold mb-1">
-                {{ message.subject }}
+                <span v-if="message.subject && message.subject.length > 0">
+                    {{ message.subject }}
+                </span>
+                <span class="italic" v-else>
+                    {{ messages['no-subject'] }}
+                </span>
             </div>
             <div class="text-80 font-light font-italic text-xs">
                 {{ timestamp(message.created) }}
