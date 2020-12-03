@@ -41,7 +41,6 @@
             getConfig() {
                 Nova.request().get('/nova-vendor/custom-email-sender/config').then(response => {
                     this.config = response.data.config;
-                    // this.messages = response.data.messages;
 
                     TranslationService.localization = response.data.messages;
                     StorageService.configuration = response.data.config;
