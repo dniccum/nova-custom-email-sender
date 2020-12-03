@@ -12,6 +12,14 @@ Nova.booting((Vue, router, store) => {
     Vue.filter('limit', Filters.limit);
     Vue.filter('stripped', Filters.stripped);
 
+    // Sets page title
+    const BASE_TITLE = document.title;
+    router.afterEach((to, from) => {
+        Vue.nextTick(() => {
+            document.title = `${to.meta.title} | ${BASE_TITLE}`;
+        });
+    });
+
     router.addRoutes([
         {
             name: 'custom-email-sender',
@@ -23,7 +31,8 @@ Nova.booting((Vue, router, store) => {
                 }
 
                 next();
-            }
+            },
+            meta: { title: 'Custom Email Sender' }
         },
         {
             path: '/custom-email-sender/nebula-sender',
@@ -39,27 +48,32 @@ Nova.booting((Vue, router, store) => {
                 {
                     name: 'nebula-sender',
                     path: '/',
-                    component: require('./components/NebulaSender/views/Home')
+                    component: require('./components/NebulaSender/views/Home'),
+                    meta: { title: 'Nebula Sender' }
                 },
                 {
                     name: 'nebula-sender-drafts',
                     path: '/custom-email-sender/nebula-sender/drafts',
-                    component: require('./components/NebulaSender/views/Drafts')
+                    component: require('./components/NebulaSender/views/Drafts'),
+                    meta: { title: 'Drafts' }
                 },
                 {
                     name: 'nebula-sender-drafts-edit',
                     path: '/custom-email-sender/nebula-sender/drafts/:id',
-                    component: require('./components/NebulaSender/views/DraftEdit')
+                    component: require('./components/NebulaSender/views/DraftEdit'),
+                    meta: { title: 'Edit Draft' }
                 },
                 {
                     name: 'nebula-sender-new',
                     path: '/custom-email-sender/nebula-sender/new',
-                    component: require('./components/NebulaSender/views/NewMessage')
+                    component: require('./components/NebulaSender/views/NewMessage'),
+                    meta: { title: 'New Message' }
                 },
                 {
                     name: 'nebula-sender-sent',
                     path: '/custom-email-sender/nebula-sender/sent-messages',
-                    component: require('./components/NebulaSender/views/SentMessages')
+                    component: require('./components/NebulaSender/views/SentMessages'),
+                    meta: { title: 'Sent Messages' }
                 },
             ]
         },
