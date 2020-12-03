@@ -165,7 +165,7 @@ return [
         | Moment.js documentation for further details: https://momentjs.com/docs/#/displaying/
         |
         */
-        'date_format' => env('NEBULA_SENDER_DATE_FORMAT', 'MMM D, YYYY \a\t h:m A'),
+        'date_format' => env('NEBULA_SENDER_DATE_FORMAT', 'MMM D, YYYY \a\t h:mm A'),
     ],
 
 ];
