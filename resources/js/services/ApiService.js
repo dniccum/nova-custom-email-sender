@@ -7,11 +7,18 @@ export default {
     /**
      * @name drafts
      * @description Returns all of the drafts associated with this key
+     * @param {Number|null} offset
+     * @param {Number|null} limit
      * @return {Promise<Object>}
      */
-    drafts() {
+    drafts(offset = null, limit = null) {
         return new Promise((resolve, reject) => {
-            Nova.request().get(`/nova-vendor/custom-email-sender/nebula-sender-drafts`).then(success => {
+            Nova.request().get(`/nova-vendor/custom-email-sender/nebula-sender-drafts`, {
+                params: {
+                    offset,
+                    limit,
+                }
+            }).then(success => {
                 return resolve(success.data)
             }).catch(error => {
                 return reject(error.response.data);
@@ -111,13 +118,16 @@ export default {
     /**
      * @name messages
      * @description Returns a list of available messages
+     * @param {Number|null} offset
+     * @param {Number|null} limit
      * @return {Promise<Object>}
      */
-    messages() {
+    messages(offset = null, limit = null) {
         return new Promise((resolve, reject) => {
             Nova.request().get(`/nova-vendor/custom-email-sender/nebula-sender-messages`, {
                 params: {
-                    //
+                    offset,
+                    limit,
                 }
             }).then(success => {
                 return resolve(success.data)

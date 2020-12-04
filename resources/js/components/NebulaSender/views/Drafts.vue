@@ -18,6 +18,11 @@
                         @delete="showDelete"
                         :active="activeMessage && activeMessage.id === draft.id"
             ></email-card>
+
+            <infinite-loading spinner="spiral" direction="bottom" @infinite="infiniteHandler" v-if="drafts.length >= requestLimit">
+                <span slot="no-more"></span>
+                <span slot="no-results"></span>
+            </infinite-loading>
         </message-list>
 
         <message-preview :message="activeMessage"
@@ -54,6 +59,7 @@
     import ApiService from "../../../services/ApiService";
     import Translations from "../../../mixins/Translations";
     import PreviewMessage from "../../../mixins/PreviewMessage";
+    import Scroller from "../../../mixins/Scroller";
     import ConfirmModal from "../ConfirmModal";
 
     export default {
@@ -61,6 +67,7 @@
         mixins: [
             Translations,
             PreviewMessage,
+            Scroller,
         ],
         components: {
             MessageList,
@@ -80,7 +87,7 @@
         },
         async mounted() {
             try {
-                let { data } = await ApiService.drafts();
+                let { data } = await ApiService.drafts(0, this.requestLimit);
                 this.drafts = data;
                 this.loading = false;
             } catch (e) {
@@ -132,6 +139,21 @@
                 }
 
                 this.$toasted.show(this.messages['draft-successfully-deleted'], {type: 'success'});
+            },
+
+            /**
+             * @inheritDoc
+             */
+            async infiniteHandler($state) {
+                let { data } = await ApiService.drafts(this.drafts.length, this.requestLimit);
+
+                if (data.length) {
+                    this.drafts.push(...data);
+
+                    $state.loaded();
+                } else {
+                    $state.complete();
+                }
             }
         }
     }

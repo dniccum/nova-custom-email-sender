@@ -15,6 +15,11 @@
                         @show="showMessage(message)"
                         :active="activeMessage && activeMessage.id === message.id"
             ></email-card>
+
+            <infinite-loading spinner="spiral" direction="bottom" @infinite="infiniteHandler" v-if="emailMessages.length >= requestLimit">
+                <span slot="no-more"></span>
+                <span slot="no-results"></span>
+            </infinite-loading>
         </message-list>
 
         <message-preview :message="activeMessage"
@@ -46,6 +51,7 @@
     import EmailCard from "../EmailCard";
     import ApiService from "../../../services/ApiService";
     import Translations from "../../../mixins/Translations";
+    import Scroller from "../../../mixins/Scroller";
     import Timestamp from "../../../mixins/Timestamp";
     import PreviewMessage from "../../../mixins/PreviewMessage";
     import ActionPane from "../ActionPane";
@@ -57,6 +63,7 @@
             Translations,
             Timestamp,
             PreviewMessage,
+            Scroller,
         ],
         components: {
             ConfirmModal,
@@ -77,7 +84,7 @@
         },
         async mounted() {
             try {
-                let { data } = await ApiService.messages();
+                let { data } = await ApiService.messages(0, this.requestLimit);
                 this.emailMessages = data;
                 this.loading = false;
             } catch (e) {
@@ -86,6 +93,11 @@
             }
         },
         methods: {
+            /**
+             * @name showResendConfirm
+             * @param {Object} message
+             * @return {void}
+             */
             showResendConfirm(message) {
                 this.confirmResend.message = message;
                 this.confirmResend.visible = true;
@@ -115,6 +127,21 @@
                     this.confirmResend.loading = false;
                 }
             },
+
+            /**
+             * @inheritDoc
+             */
+            async infiniteHandler($state) {
+                let { data } = await ApiService.messages(this.emailMessages.length, this.requestLimit);
+
+                if (data.length) {
+                    this.emailMessages.push(...data);
+
+                    $state.loaded();
+                } else {
+                    $state.complete();
+                }
+            }
         }
     }
 </script>

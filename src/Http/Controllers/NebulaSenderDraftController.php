@@ -21,8 +21,14 @@ class NebulaSenderDraftController
      */
     public function index(Request $request)
     {
+        $limit = $request->get('limit');
+        $offset = $request->get('offset');
+
         $response = Http::withToken($this->key)
-            ->get($this->apiRoute.'/draft');
+            ->get($this->apiRoute.'/draft', [
+                'limit' => $limit,
+                'offset' => $offset,
+            ]);
 
         return response()->json([
             'data' => $response->json('data')
