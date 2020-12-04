@@ -1,3 +1,4 @@
+import MessageFormWrapper from "../components/MessageFormWrapper";
 import MessageForm from "../components/MessageForm";
 import SuccessPanel from '../components/SuccessPanel';
 
@@ -5,6 +6,7 @@ export default {
     components: {
         MessageForm,
         SuccessPanel,
+        MessageFormWrapper,
     },
     data() {
         return {
