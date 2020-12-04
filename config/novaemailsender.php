@@ -57,7 +57,7 @@ return [
 
     'model' => [
         'classes' => [
-            \App\User::class,
+            \App\Models\User::class,
         ],
         'email' => 'email',
         'name' => null,
@@ -115,6 +115,7 @@ return [
     |--------------------------------------------------------------------------
     | Validation
     |--------------------------------------------------------------------------
+    |
     | Email Validation Settings
     |
     */
@@ -122,4 +123,49 @@ return [
     'validation' => [
         'max-characters' => 250000,
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Nebula Sender
+    |--------------------------------------------------------------------------
+    |
+    | Nebula Sender is a service that will allow you to save/edit sent messages as
+    | well as message drafts. For more information, visit: https://nebulasender.com
+    |
+    */
+    'nebula_sender' => [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Nebula Sender Key
+        |--------------------------------------------------------------------------
+        |
+        | If you are subscribing to Nebula Sender, provide your application key
+        | below to utilize these features.
+        |
+        */
+        'key' => env('NEBULA_SENDER_KEY'),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Timezone
+        |--------------------------------------------------------------------------
+        |
+        | The Timezone should the application use to parse it's dates
+        |
+        */
+        'timezone' => env('NEBULA_SENDER_TIMEZONE', config('app.timezone')),
+
+        /*
+        |--------------------------------------------------------------------------
+        | Timezone
+        |--------------------------------------------------------------------------
+        |
+        | The Moment.js date formatting that will be used to display dates. Refer to the
+        | Moment.js documentation for further details: https://momentjs.com/docs/#/displaying/
+        |
+        */
+        'date_format' => env('NEBULA_SENDER_DATE_FORMAT', 'MMM D, YYYY \a\t h:mm A'),
+    ],
+
 ];

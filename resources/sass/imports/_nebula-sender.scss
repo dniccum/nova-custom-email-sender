@@ -1,0 +1,97 @@
+// Nebula Sender specific code
+.nebula-sender {
+
+    $vertical-gutter: calc(100vh - 12.8rem);
+    $list-width: 26%;
+
+    &.min-h-screen {
+        min-height: #{$vertical-gutter};
+    }
+
+    .max-w-2xs {
+        max-width: 15rem;
+    }
+
+    .navigation {
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: 20%;
+        padding: 20px;
+
+        .nav-list {
+            margin: 50px 0 0;
+        }
+    }
+
+    .list {
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: $list-width;
+        overflow-y: scroll;
+        padding: 0 20px;
+        max-height: #{$vertical-gutter};
+
+        & > .card {
+            position: relative;
+            min-height: 140px;
+            margin: 16px 0;
+            cursor: pointer;
+            transition: transform .15s ease-in-out, background-color .2s ease-in-out;
+            overflow: hidden;
+
+            &:hover {
+                transform: scale(1.08);
+            }
+            &.active {
+                transform: scale(1.1);
+                background-color: #{'var(--20)'};
+            }
+            &.show-drafts {
+                padding-bottom: 50px;
+
+                .button-wrapper {
+                    position: absolute;
+                    right: 10px;
+                    bottom: 10px;
+
+                    .action-button {
+                        outline: none;
+                        height: 26px;
+                        width: 26px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: color .15s ease-in-out, background-color .15s ease-in-out;
+                    }
+                }
+            }
+            .card-click-overlay {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 100%;
+                z-index: 10;
+            }
+        }
+    }
+    .action-pane {
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: calc(100% - #{$list-width});
+        overflow-y: scroll;
+        padding: 40px 20px;
+        max-height: #{$vertical-gutter};
+
+        .preview-wrapper {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+    }
+    .watermark {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+    }
+}

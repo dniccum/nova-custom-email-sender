@@ -14,14 +14,17 @@
 </template>
 
 <script>
+    import Translations from "../mixins/Translations";
+
     export default {
         name: "PreviewModal",
-        props: {
-            closeCopy: String,
-        },
+        mixins: [
+            Translations,
+        ],
         data() {
             return {
-                visible: false
+                visible: false,
+                previewContent: null
             }
         },
         mounted() {
@@ -32,11 +35,55 @@
                 document.getElementById('preview-frame').contentWindow.document.write(response);
             })
         },
+        computed: {
+            /**
+             * @return {string}
+             */
+            closeCopy() {
+                return this.messages['close']
+            }
+        },
         methods: {
             close() {
                 this.visible = false;
                 document.getElementById('preview-frame').contentWindow.document.body.innerHTML = '';
-            }
+            },
+
+            /**
+             * @name preview
+             * @param {string} from
+             * @param {string} subject
+             * @param {array} recipients
+             * @param {string} htmlContent
+             * @param {boolean} sendToAll
+             */
+            preview(from, subject, recipients, htmlContent, sendToAll = false) {
+                let vm = this;
+
+                this.$emit('preview', true)
+
+                Nova.request().post('/nova-vendor/custom-email-sender/preview', {
+                    from,
+                    subject,
+                    recipients,
+                    htmlContent,
+                    sendToAll,
+                }).then(response => {
+                    document.getElementById('preview-frame').contentWindow.document.write(response.data.content);
+                    vm.visible = true;
+                    this.$emit('preview', false)
+                }).catch(error => {
+                    let response = error.response;
+                    let status = response.status
+
+                    if (status === 422) {
+                        this.$toasted.show(response.data.message, {type: 'error'})
+                    } else {
+                        this.$toasted.show(response.statusText, {type: 'error'})
+                    }
+                    this.$emit('preview', false)
+                });
+            },
         }
     }
 </script>

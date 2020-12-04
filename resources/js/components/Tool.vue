@@ -1,34 +1,33 @@
 <template>
     <loading-card v-if="loading" class="flex flex-col px-6 py-4" style="min-height: 400px;"></loading-card>
 
-    <div class="email-sender" v-else>
-        <message-form
-                :quill-configuration="config.editor"
-                :messages="messages"
-                :from-select-options="config.from"
-        ></message-form>
+    <div class="relative rounded overflow-hidden min-h-screen flex flex-row bg-white email-sender" v-else>
+        <message-form-wrapper v-if="!complete">
+            <heading class="mb-6">{{ messages['create-new-message'] }}</heading>
 
-        <preview-modal :close-copy="messages['close']" ></preview-modal>
+            <message-form ref="messageForm" @success="success"></message-form>
+        </message-form-wrapper>
+
+        <success-panel v-else @reset="reset"></success-panel>
     </div>
 </template>
 
 <script>
-    import MessageForm from './MessageForm';
-    import PreviewModal from './PreviewModal';
+    import NebulaSenderService from "../services/NebulaSenderService";
+    import Translations from "../mixins/Translations";
+    import CreateNewMessage from "../mixins/CreateNewMessage";
+    import TranslationService from "../services/TranslationService";
+    import StorageService from "../services/StorageService";
 
     export default {
         name: 'CustomEmailSender',
-        components: {
-            MessageForm,
-            PreviewModal,
-        },
+        mixins: [
+            Translations,
+            CreateNewMessage,
+        ],
         data() {
             return {
                 loading: true,
-                config: {
-                    editor: {},
-                },
-                messages: {}
             }
         },
         mounted() {
@@ -36,17 +35,23 @@
         },
         methods: {
             getConfig() {
-                let vm = this;
-
                 Nova.request().get('/nova-vendor/custom-email-sender/config').then(response => {
-                    vm.config = response.data.config;
-                    vm.messages = response.data.messages;
+                    this.config = response.data.config;
+
+                    TranslationService.localization = response.data.messages;
+                    StorageService.configuration = response.data.config;
+
+                    if (response.data.nebula_sender_active) {
+                        NebulaSenderService.active = true;
+                        this.$router.push('/custom-email-sender/nebula-sender')
+                    }
+                    this.loading = false;
                 }).catch(error => {
                     this.$toasted.show(error.response.data, { type: 'error' })
-                }).finally(() => {
-                    vm.loading = false;
+                    this.loading = false;
                 });
             },
+
         }
     }
 </script>

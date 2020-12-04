@@ -2,6 +2,7 @@
 namespace Dniccum\CustomEmailSender\Http\Controllers;
 
 use Dniccum\CustomEmailSender\Http\Requests\SendCustomEmailMessage;
+use Dniccum\CustomEmailSender\Library\NebulaSenderUtility;
 use Dniccum\CustomEmailSender\Library\UserUtility;
 use Dniccum\CustomEmailSender\Mail\CustomMessageMailable;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class CustomEmailSenderController
         /**
          * @var string[]|array $configurationOptions
          */
-        $configurationFromOptions = $configuration['from']['options'];
+        $configurationFromOptions = config('novaemailsender.from.options');
 
         $fromOptions = collect($configurationFromOptions)->map(function($sender) {
             return [
@@ -54,10 +55,13 @@ class CustomEmailSenderController
         $configurationFromOptions = $fromOptions->toArray();
         $configuration['from']['options'] = $configurationFromOptions;
 
+        $nebulaSenderActive = NebulaSenderUtility::isActive();
+
         return response()
             ->json([
                 'config' => $configuration,
-                'messages' => __('custom-email-sender::tool')
+                'messages' => array_merge(__('custom-email-sender::tool'), __('custom-email-sender::nebula-sender')),
+                'nebula_sender_active' => $nebulaSenderActive,
             ]);
     }
 
@@ -91,6 +95,19 @@ class CustomEmailSenderController
             \Mail::to($user)
                  ->send(new CustomMessageMailable($subject, $content, $sender));
         });
+
+        if (config('novaemailsender.nebula_sender.key')) {
+            $template = config('novaemailsender.template.view');
+            $fullContent = (new CustomMessageMailable($subject, $content, $sender))->render();
+            NebulaSenderUtility::logSentMessage(
+                $requestData['from'],
+                $subject,
+                $template,
+                $users->toArray(),
+                $content,
+                $fullContent
+            );
+        }
 
         return response()->json($users->count(). ' '.__('custom-email-sender::tool.emails-sent'), 200);
     }
