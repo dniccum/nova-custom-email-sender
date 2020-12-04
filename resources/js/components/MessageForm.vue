@@ -65,8 +65,14 @@
 
             <div class="mt-4">
                 <div v-if="nebulaSenderActive">
-                    <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview-draft'] }}</h3>
-                    <p class="mb-2">{{ messages['preview-draft-copy'] }}</p>
+                    <div v-if="existingMessage">
+                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview-update-draft'] }}</h3>
+                        <p class="mb-2">{{ messages['preview-update-draft-copy'] }}</p>
+                    </div>
+                    <div v-else>
+                        <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview-draft'] }}</h3>
+                        <p class="mb-2">{{ messages['preview-draft-copy'] }}</p>
+                    </div>
                 </div>
                 <div v-else>
                     <h3 class="text-base text-80 font-bold mb-3">{{ messages['send-preview'] }}</h3>
@@ -82,7 +88,7 @@
                         <button class="btn btn-default btn-primary" @click="saveDraft"
                                 :disabled="isThinking || !draftIsValid()">
                             <span v-if="draftSaved">
-                                {{ loading ? messages['updating'] : messages['update-draft'] }}
+                                {{ draftSaving ? messages['updating'] : messages['update-draft'] }}
                             </span>
                             <span v-else>
                                 {{ draftSaving ? messages['saving'] : messages['save-draft'] }}
@@ -148,6 +154,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
@@ -172,6 +179,9 @@ export default {
     mixins: [
         Translations,
     ],
+    props: {
+        existingMessage: Object
+    },
     components: {
         PreviewModal,
         CounterInput,
@@ -194,6 +204,17 @@ export default {
             htmlFile: null,
             htmlContent: '',
             draftSaved: false,
+        }
+    },
+    beforeMount() {
+        // Sets draft content
+        if (this.existingMessage && !_.isEmpty(this.existingMessage)) {
+            this.from = this.existingMessage.from;
+            this.subject = this.existingMessage.subject;
+            this.sendToAll = this.existingMessage.send_to_all;
+            this.recipients = this.existingMessage.recipients;
+            this.htmlContent = this.existingMessage.content;
+            this.draftSaved = true;
         }
     },
     computed: {
@@ -220,18 +241,10 @@ export default {
             if (!StorageService.configuration.editor) {
                 return {
                     toolbar: [
-                        {
-                            'header': 1
-                        },
-                        {
-                            'header': 2
-                        },
-                        {
-                            'list': 'ordered'
-                        },
-                        {
-                            'list': 'bullet'
-                        },
+                        { 'header': 1 },
+                        { 'header': 2 },
+                        { 'list': 'ordered' },
+                        { 'list': 'bullet' },
                         'bold',
                         'italic',
                         'link',
@@ -285,11 +298,11 @@ export default {
          * @return {boolean}
          */
         formIsValid() {
-            if (this.subject.length === 0 || this.htmlContent.length === 0) {
+            if (this.subject && this.subject.length === 0 || this.htmlContent && this.htmlContent.length === 0) {
                 return false;
             }
 
-            if (this.recipients.length === 0 && !this.sendToAll) {
+            if (this.recipients && this.recipients.length === 0 && !this.sendToAll) {
                 return false;
             }
 
@@ -301,11 +314,7 @@ export default {
          * @return {boolean}
          */
         draftIsValid() {
-            if (this.htmlContent.length === 0 || this.from.length === 0) {
-                return false;
-            }
-
-            return true;
+            return !(this.htmlContent.length === 0 || this.from.length === 0);
         },
         /**
          * @param {boolean} loading
@@ -339,7 +348,7 @@ export default {
                 this.recipients,
                 this.htmlContent
             ).then(response => {
-                vm.$toasted.show(response, {type: 'success'});
+                vm.$toasted.show(response, { type: 'success' });
                 vm.$emit('success')
                 vm.setLoading(false);
             }).catch(error => {
@@ -395,18 +404,38 @@ export default {
         saveDraft() {
             this.setLoading(true, true);
             let template = StorageService.configuration.template.view;
+            let request;
 
-            // TODO handle updating a draft
-            ApiService.createDraft(
-                this.from,
-                template,
-                this.htmlContent,
-                this.subject,
-                this.recipients,
-                this.sendToAll
-            ).then(response => {
+            if (this.existingMessage) {
+                request = ApiService.updateDraft(
+                    this.existingMessage.id,
+                    this.htmlContent,
+                    this.from,
+                    this.existingMessage.template,
+                    this.subject,
+                    this.recipients,
+                    this.sendToAll
+                )
+            } else {
+                request = ApiService.createDraft(
+                    this.from,
+                    template,
+                    this.htmlContent,
+                    this.subject,
+                    this.recipients,
+                    this.sendToAll
+                )
+            }
+
+            request.then(response => {
                 this.$toasted.show(this.messages['draft-saved'], {type: 'success'})
-                this.$router.push({ name: 'nebula-sender-drafts-edit', params: { id: response.data.id }})
+
+                if (this.existingMessage) {
+                    this.setLoading(false, true);
+                    this.$emit('update', response.data);
+                } else {
+                    this.$router.push({ name: 'nebula-sender-drafts-edit', params: { id: response.data.id }})
+                }
             }).catch(error => {
                 let status = error.status
 
@@ -415,7 +444,6 @@ export default {
                 } else {
                     this.$toasted.show(error.statusText, {type: 'error'})
                 }
-
                 this.setLoading(false, true);
             })
         }

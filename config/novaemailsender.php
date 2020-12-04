@@ -129,7 +129,7 @@ return [
     | Nebula Sender
     |--------------------------------------------------------------------------
     |
-    | Nebula Sender is a service that will allow you to save sent messages as
+    | Nebula Sender is a service that will allow you to save/edit sent messages as
     | well as message drafts. For more information, visit: https://nebulasender.com
     |
     */
