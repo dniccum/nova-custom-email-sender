@@ -1,13 +1,13 @@
 import vClickOutside from 'v-click-outside'
-import VTooltip from 'v-tooltip'
+import { VTooltip } from 'v-tooltip'
 import Filters from './filters';
 import NebulaSenderService from "./services/NebulaSenderService";
 
 Nova.booting((Vue, router, store) => {
     Vue.use(vClickOutside);
-    Vue.use(VTooltip, {
+    Vue.directive('tooltip', VTooltip, {
         defaultClass: 'nebula-sender',
-    });
+    })
 
     Vue.filter('limit', Filters.limit);
     Vue.filter('stripped', Filters.stripped);

@@ -154,11 +154,6 @@
 </template>
 
 <script>
-import _ from 'lodash';
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-
 import {quillEditor} from 'vue-quill-editor'
 
 import Translations from "../mixins/Translations";
