@@ -1,4 +1,4 @@
-import moment from 'moment-timezone';
+import momentTz from 'moment-timezone/builds/moment-timezone-with-data-10-year-range.min';
 import StorageService from "../services/StorageService";
 
 export default {
@@ -10,7 +10,7 @@ export default {
         timestamp(date) {
             let { timezone, date_format } = StorageService.configuration.nebula_sender;
 
-            return moment.unix(date)
+            return momentTz.unix(date)
                 .tz(timezone)
                 .format(date_format);
         }
