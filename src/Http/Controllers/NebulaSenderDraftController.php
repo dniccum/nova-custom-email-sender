@@ -25,6 +25,7 @@ class NebulaSenderDraftController
         $offset = $request->get('offset');
 
         $response = Http::withToken($this->key)
+            ->asJson()
             ->get($this->apiRoute.'/draft', [
                 'limit' => $limit,
                 'offset' => $offset,
@@ -45,6 +46,7 @@ class NebulaSenderDraftController
     public function show(int $draft, Request $request)
     {
         $response = Http::withToken($this->key)
+            ->asJson()
             ->get($this->apiRoute.'/draft/'.$draft);
 
         return response()->json([
@@ -61,6 +63,7 @@ class NebulaSenderDraftController
     public function store(CreateDraft $request)
     {
         $response = Http::withToken($this->key)
+            ->asJson()
             ->post($this->apiRoute.'/draft', $request->validated());
 
         return response()->json([
@@ -78,6 +81,7 @@ class NebulaSenderDraftController
     public function update(int $draft, UpdateDraft $request)
     {
         $response = Http::withToken($this->key)
+            ->asJson()
             ->put($this->apiRoute.'/draft/'.$draft, $request->validated());
 
         return response()->json([
@@ -94,6 +98,7 @@ class NebulaSenderDraftController
     public function destroy(int $draft)
     {
         $response = Http::withToken($this->key)
+            ->asJson()
             ->delete($this->apiRoute.'/draft/'.$draft);
 
         return response()->json([

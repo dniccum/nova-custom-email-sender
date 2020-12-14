@@ -23,6 +23,7 @@ class NebulaSenderController
         $offset = $request->get('offset');
 
         $response = Http::withToken($this->key)
+            ->asJson()
             ->get($this->apiRoute.'/message', [
                 'limit' => $limit,
                 'offset' => $offset,
@@ -43,6 +44,7 @@ class NebulaSenderController
     public function clone(string $message, Request $request)
     {
         $response = Http::withToken($this->key)
+            ->asJson()
             ->post($this->apiRoute.'/message/'.$message.'/clone');
 
         return response()->json([
