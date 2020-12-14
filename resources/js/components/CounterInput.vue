@@ -9,7 +9,7 @@
                 v-on:keydown="addNew"
                 :disabled="disabled"
         />
-        <div class="counter" :style="counterColor()" v-if="interface.length > 0">
+        <div class="counter" :style="counterColor()" v-if="interface && interface.length > 0">
             {{ counterNumber() }}
         </div>
     </div>
@@ -45,7 +45,7 @@
                 }
             },
             isLimit: function() {
-                return this.limit > 0 && Number(this.limit) === this.interface.length;
+                return this.limit > 0 && this.interface && Number(this.limit) === this.interface.length;
             },
         },
         methods: {

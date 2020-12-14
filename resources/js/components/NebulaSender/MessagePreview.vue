@@ -29,7 +29,7 @@
                             {{ messages['message-sent-to-all-users'] }}
                         </div>
                         <div v-else>
-                            <span class="italic text-70" v-if="message.recipients.length === 0">
+                            <span class="italic text-70" v-if="!message.recipients || message.recipients.length === 0">
                                 {{ messages['no-recipients'] }}
                             </span>
                             <span v-else class="text-sm" v-for="(recipient, index) of message.recipients">

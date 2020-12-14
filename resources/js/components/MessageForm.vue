@@ -128,7 +128,7 @@
                     </ul>
                 </div>
 
-                <div v-if="recipients.length === 0 && sendToAll === false" class="relative rounded-md p-4 overflow-hidden">
+                <div v-if="!recipients && sendToAll === false || recipients.length === 0 && sendToAll === false" class="relative rounded-md p-4 overflow-hidden">
                     <div class="absolute w-full h-full bg-danger opacity-25" style="left: 0; top: 0;"></div>
                     <div class="relative flex">
                         <div class="flex-shrink-0">
