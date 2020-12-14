@@ -1,4 +1,4 @@
-import moment from 'moment-timezone/builds/moment-timezone.min';
+import moment from 'moment-timezone';
 import StorageService from "../services/StorageService";
 
 export default {
