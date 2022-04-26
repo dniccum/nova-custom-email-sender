@@ -1,14 +1,22 @@
 <template>
-    <loading-card v-if="loading" class="flex flex-col px-6 py-4" style="min-height: 400px;"></loading-card>
+    <div>
+        <Head title="Custom Email Sender" />
 
-    <div class="relative rounded overflow-hidden min-h-screen flex flex-row bg-white email-sender" v-else>
-        <message-form-wrapper v-if="!complete">
-            <heading class="mb-6">{{ messages['create-new-message'] }}</heading>
+        <loading-card v-if="loading" class="flex flex-col px-6 py-4" style="min-height: 400px;"></loading-card>
 
-            <message-form ref="messageForm" @success="success"></message-form>
-        </message-form-wrapper>
+        <Card
+            class="flex flex-col items-start justify-center"
+            style="min-height: 300px"
+            v-else
+        >
+            <message-form-wrapper v-if="!complete">
+                <heading class="mb-6">{{ messages['create-new-message'] }}</heading>
 
-        <success-panel v-else @reset="reset"></success-panel>
+                <message-form ref="messageForm" @success="success"></message-form>
+            </message-form-wrapper>
+
+            <success-panel v-else @reset="reset"></success-panel>
+        </Card>
     </div>
 </template>
 

@@ -4,14 +4,14 @@
     left: 0;
     margin: 5px 0 0;
     border-radius: 10px;
-    background-color: #{'var(--20)'};
-    border: 1px solid #{'var(--40)'};
+    background-color: rgb(var(--colors-gray-200));
+    border: 1px solid rgb(var(--colors-gray-400));
     z-index: 10;
 
     .auto-complete-result {
         position: relative;
         padding: 8px 10px;
-        color: #{'var(--80)'};
+        color: rgb(var(--colors-gray-800));
 
         font-size: 1rem;
         font-weight: 300;
@@ -31,8 +31,8 @@
             border-bottom-right-radius: 10px;
         }
         &:hover {
-            background-color: #{'var(--white)'};
-            color: #{'var(--primary)'}
+            background-color: rgb(var(--colors-gray-100));
+            color: rgb(var(--colors-primary-500));
         }
     }
     .auto-complete-loader {
@@ -49,6 +49,7 @@
         line-height: 1rem;
         font-weight: 300;
         font-style: italic;
-        color: #{'var(--90)'};
+        color: rgb(var(--colors-gray-400));
+        background-color: rgb(var(--colors-gray-700));
     }
 }

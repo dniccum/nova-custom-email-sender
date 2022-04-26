@@ -1,0 +1,17 @@
+html.dark {
+    .toggle {
+        border-color: rgba(var(--colors-gray-700),var(--tw-border-opacity));
+    }
+    .toggle-off {
+        background-color: rgba(var(--colors-gray-900),var(--tw-bg-opacity));
+    }
+    .toggle-off-disabled {
+        background-color: rgba(var(--colors-gray-700),var(--tw-bg-opacity));
+    }
+    .toggle-on {
+        color: rgb(var(--colors-gray-700));
+    }
+    .toggle-handle {
+        background: rgb(var(--colors-gray-500));
+    }
+}

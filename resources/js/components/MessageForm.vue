@@ -1,5 +1,105 @@
 <template>
     <div class="flex">
+        <div style="flex: 3">
+            <h3 class="text-base text-80 font-bold mb-3">{{ messages['from-header'] }}</h3>
+
+            <div class="mb-8">
+                <p class="mb-2 italic">{{ messages['from-copy'] }}</p>
+                <select-control
+                    v-model="from"
+                    class="w-full"
+                    :disabled="config.from.options.length <= 1 || isThinking"
+                >
+                    <option value="" selected disabled>
+                        {{ messages['choose-an-option'] }}
+                    </option>
+                    <option v-for="option in config.from.options" :key="option.address" :value="option.address">
+                        {{ option.name }}
+                    </option>
+                </select-control>
+            </div>
+            <div class="mb-8">
+                <h3 class="text-base text-80 font-bold mb-3">{{ messages['subject-header'] }}</h3>
+                <div class="mb-8">
+                    <p class="mb-2 italic">{{ messages['subject-copy'] }}</p>
+                    <counter-input :placeholder="messages['subject-placeholder']"
+                                   v-model:model="subject"
+                                   :disabled="isThinking"
+                    ></counter-input>
+                </div>
+            </div>
+            <div class="mb-8">
+                <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-header'] }}</h3>
+                <recipient-form :messages="messages"
+                                @add="addAddress"
+                                v-model:send-to-all="sendToAll"
+                                :loading="isThinking"
+                                :recipients="recipients"
+                ></recipient-form>
+            </div>
+            <div class="mb-8">
+                <h3 class="text-base text-80 font-bold mb-3">{{ messages['content-header'] }}</h3>
+
+                <div class="mb-6">
+                    <p class="mb-2">{{ messages['toggle-use-file'] }}</p>
+                    <toggle color="var(--primary)" v-model="useFileContent" :disabled="loading"/>
+                </div>
+                <div class="mb-8" v-if="useFileContent">
+                    <file-select @input="loadFile" v-model="htmlFile" :messages="messages" />
+                </div>
+                <div class="mb-8" v-else>
+
+                    <p class="mb-2">{{ messages['content-copy'] }}</p>
+                    <div class="input-wrapper">
+                        <!--
+                        <quill-editor class="quill-editor"
+                                      :options="quillEditorOptions"
+                                      v-model="htmlContent"
+                                      ref="myQuillEditor"
+                        ></quill-editor>
+                        -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="flex: 2">
+            <div class="recipients-list px-6">
+                <h3 class="text-base text-80 font-bold mb-3">{{ messages['recipients-list-header'] }}</h3>
+                <div>
+                    <ul style="padding-left: 0;">
+                        <recipient-item :recipient="recipient"
+                                        v-for="(recipient, index) of recipients"
+                                        :key="index"
+                                        @delete="removeRecipient(index)"
+                        ></recipient-item>
+                    </ul>
+                </div>
+
+                <div v-if="!recipients && sendToAll === false || recipients.length === 0 && sendToAll === false" class="relative rounded-md p-4 overflow-hidden">
+                    <div class="absolute w-full h-full bg-danger opacity-25" style="left: 0; top: 0;"></div>
+                    <div class="relative flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-danger" x-description="Heroicon name: x-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm leading-5 font-medium text-danger">
+                                {{ messages['recipients-no-address-found'] }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="sendToAll === true" class="p-4 bg-primary rounded">
+                    <p class="text-white">{{ messages['recipients-send-all'] }}</p>
+                </div>
+            </div>
+        </div>
+
+        <preview-modal ref="previewModal" @preview="setGettingPreview"></preview-modal>
+    </div>
+    <!--
+    <div class="flex">
         <div class="w-3/5">
             <h3 class="text-base text-80 font-bold mb-3">{{ messages['from-header'] }}</h3>
 
@@ -151,6 +251,7 @@
 
         <preview-modal ref="previewModal" @preview="setGettingPreview"></preview-modal>
     </div>
+    -->
 </template>
 
 <script>
@@ -165,7 +266,7 @@ import RecipientItem from "./RecipientItem";
 
 import StorageService from "../services/StorageService";
 
-import { ToggleButton } from 'vue-js-toggle-button'
+import Toggle from '@vueform/toggle'
 import NebulaSenderService from "../services/NebulaSenderService";
 import ApiService from "../services/ApiService";
 
@@ -183,7 +284,7 @@ export default {
         RecipientForm,
         FileSelect,
         quillEditor,
-        ToggleButton,
+        Toggle,
         RecipientItem,
     },
     data() {

@@ -32,6 +32,9 @@
                 default: false
             }
         },
+        model: {
+            prop: 'model'
+        },
         mounted() {
             //
         },
