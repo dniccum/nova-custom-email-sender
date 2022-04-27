@@ -21,11 +21,11 @@
     },
     "dependencies": {
         "@vueform/toggle": "^2.0.1",
+        "@vueup/vue-quill": "^1.0.0-beta.8",
         "click-outside-vue3": "^4.0.1",
         "floating-vue": "^2.0.0-beta.15",
         "moment-timezone": "^0.5.32",
         "v-click-outside": "^2.0.2",
-        "vue-infinite-loading": "^2.4.5",
-        "vue-quill-editor": "^3.0.6"
+        "vue-infinite-loading": "^2.4.5"
     }
 }
