@@ -29,6 +29,9 @@
 
     export default {
         name: 'CustomEmailSender',
+        props: {
+            settings: Object
+        },
         mixins: [
             Translations,
             CreateNewMessage,
@@ -38,26 +41,17 @@
                 loading: true,
             }
         },
-        mounted() {
+        beforeMount() {
             this.getConfig();
+        },
+        mounted() {
+            this.loading = false;
         },
         methods: {
             getConfig() {
-                Nova.request().get('/nova-vendor/custom-email-sender/config').then(response => {
-                    this.config = response.data.config;
-
-                    TranslationService.localization = response.data.messages;
-                    StorageService.configuration = response.data.config;
-
-                    if (response.data.nebula_sender_active) {
-                        NebulaSenderService.active = true;
-                        this.$router.push('/custom-email-sender/nebula-sender')
-                    }
-                    this.loading = false;
-                }).catch(error => {
-                    this.$toasted.show(error.response.data, { type: 'error' })
-                    this.loading = false;
-                });
+                TranslationService.localization = this.settings.messages;
+                StorageService.configuration = this.settings.config;
+                this.config = this.settings.config;
             },
 
         }

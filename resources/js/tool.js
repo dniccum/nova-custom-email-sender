@@ -6,6 +6,10 @@ import {
 } from 'floating-vue'
 
 import Tool from './pages/Tool'
+import NebulaSenderHome from './pages/NebulaSender/Home'
+import NebulaSenderNew from './pages/NebulaSender/New'
+import NebulaSenderDrafts from './pages/NebulaSender/Drafts'
+import NebulaSenderSent from './pages/NebulaSender/Sent'
 
 Nova.booting((Vue, store) => {
     Vue.use(vClickOutside);
@@ -14,6 +18,10 @@ Nova.booting((Vue, store) => {
     })
 
     Nova.inertia('CustomEmailSender', Tool)
+    Nova.inertia('NebulaSenderHome', NebulaSenderHome)
+    Nova.inertia('NebulaSenderNew', NebulaSenderNew)
+    Nova.inertia('NebulaSenderDrafts', NebulaSenderDrafts)
+    Nova.inertia('NebulaSenderSent', NebulaSenderSent)
 })
 /*
 Nova.booting((Vue, router, store) => {

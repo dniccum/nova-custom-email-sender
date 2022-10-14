@@ -10,6 +10,7 @@
         "production": "mix --production"
     },
     "devDependencies": {
+        "@vue/babel-plugin-jsx": "^1.1.1",
         "@vue/compiler-sfc": "^3.2.22",
         "laravel-mix": "^6.0.41",
         "lodash": "^4.17.20",
@@ -24,6 +25,7 @@
         "@vueup/vue-quill": "^1.0.0-beta.8",
         "click-outside-vue3": "^4.0.1",
         "floating-vue": "^2.0.0-beta.15",
+        "infinite-loading-vue3": "^1.0.1",
         "moment-timezone": "^0.5.32",
         "v-click-outside": "^2.0.2",
         "vue-infinite-loading": "^2.4.5"

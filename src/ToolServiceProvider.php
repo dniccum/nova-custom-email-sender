@@ -2,6 +2,7 @@
 
 namespace Dniccum\CustomEmailSender;
 
+use Dniccum\CustomEmailSender\Http\Middleware\HandleInertiaRequests;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Route;

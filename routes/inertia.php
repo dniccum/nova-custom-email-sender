@@ -14,6 +14,14 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 |
 */
 
-Route::get('/', function (NovaRequest $request) {
-    return inertia('CustomEmailSender');
-})->name('nova.tools.custom-email-sender');
+Route::get('/', [ \Dniccum\CustomEmailSender\Http\Controllers\InertiaController::class, 'home' ])
+    ->name('nova.tools.custom-email-sender');
+
+Route::get('/nebula-sender', [ \Dniccum\CustomEmailSender\Http\Controllers\InertiaController::class, 'nebulaSenderHome' ])
+    ->name('nova.tools.custom-email-sender.nebula-sender-home');
+Route::get('/nebula-sender/new', [ \Dniccum\CustomEmailSender\Http\Controllers\InertiaController::class, 'nebulaSenderNew' ])
+    ->name('nova.tools.custom-email-sender.nebula-sender-new');
+Route::get('/nebula-sender/drafts', [ \Dniccum\CustomEmailSender\Http\Controllers\InertiaController::class, 'nebulaSenderDrafts' ])
+    ->name('nova.tools.custom-email-sender.nebula-sender-drafts');
+Route::get('/nebula-sender/sent', [ \Dniccum\CustomEmailSender\Http\Controllers\InertiaController::class, 'nebulaSenderSentMessages' ])
+    ->name('nova.tools.custom-email-sender.nebula-sender-sent');

@@ -1,36 +1,40 @@
 <template>
-    <div class="relative nebula-sender rounded overflow-hidden min-h-screen flex flex flex-row bg-white">
+    <Card class="relative nebula-sender overflow-hidden min-h-screen flex flex-row">
         <div class="navigation max-w-2xs">
-            <router-link :to="{ name: 'nebula-sender-new' }" active-class="bg-primary-dark" class="btn btn-default flex justify-center w-full text-center btn-primary">
+            <ButtonInertiaLink href="/nova/custom-email-sender/nebula-sender/new" :class="{ 'active': $page.component === 'NebulaSenderNew' }">
                 <span class="flex items-center">
                     <svg class="w-4 h-4 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                     </svg>
                     {{ messages['compose'] }}
                 </span>
-            </router-link>
-            <nav class="nav-list">
-                <router-link :to="{ name: 'nebula-sender-drafts' }" active-class="bg-40" class="cursor-pointer flex items-center font-normal text-80 mb-2 p-3 text-base no-underline rounded-lg hover:bg-20">
-                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
-                    </svg>
-                    <span class="sidebar-label">
-                        {{ messages['drafts'] }}
+            </ButtonInertiaLink>
+            <nav class="nav-list space-y-4">
+                <OutlineButtonInertiaLink href="/nova/custom-email-sender/nebula-sender/drafts" :class="{ 'active': $page.component === 'Users/Index' }">
+                    <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="sidebar-label">
+                            {{ messages['drafts'] }}
+                        </span>
                     </span>
-                </router-link>
-                <router-link :to="{ name: 'nebula-sender-sent' }" active-class="bg-40" class="cursor-pointer flex items-center font-normal text-80 mb-2 p-3 text-base no-underline rounded-lg hover:bg-20">
-                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
-                    </svg>
-                    <span class="sidebar-label">
-                        {{ messages['sent-messages'] }}
+                </OutlineButtonInertiaLink>
+                <OutlineButtonInertiaLink href="/nova/custom-email-sender/nebula-sender/sent" :class="{ 'active': $page.component === 'Users/Index' }">
+                    <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                        </svg>
+                        <span class="sidebar-label">
+                            {{ messages['sent-messages'] }}
+                        </span>
                     </span>
-                </router-link>
+                </OutlineButtonInertiaLink>
             </nav>
         </div>
 
-        <router-view></router-view>
+        <slot></slot>
 
         <div class="watermark">
             <svg class="h-6" alt="Nebula Sender Active" height="100%" viewBox="0 0 651 89" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
@@ -51,7 +55,7 @@
     </defs>
 </svg>
         </div>
-    </div>
+    </Card>
 </template>
 
 <script>
@@ -66,11 +70,6 @@
         components: {
             EmailCard
         },
-        data() {
-            return {
-
-            }
-        }
     }
 </script>
 

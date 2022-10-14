@@ -44,7 +44,11 @@
             }
             &.active {
                 transform: scale(1.1);
-                background-color: #{'var(--20)'};
+                background-color: rgb(var(--colors-gray-200)) !important;
+
+                .dark & {
+                    background-color: rgb(var(--colors-gray-900)) !important;
+                }
             }
             &.show-drafts {
                 padding-bottom: 50px;
@@ -93,5 +97,11 @@
         position: absolute;
         right: 16px;
         bottom: 16px;
+
+        .dark & {
+            border-radius: 4px;
+            padding: 4px;
+            background-color: rgba(var(--colors-gray-100), .8)
+        }
     }
 }

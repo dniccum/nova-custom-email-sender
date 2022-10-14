@@ -1,4 +1,4 @@
-import InfiniteLoading from 'vue-infinite-loading';
+import InfiniteLoading from "infinite-loading-vue3";
 
 export default {
     components: {
