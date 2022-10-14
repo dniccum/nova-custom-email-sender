@@ -1,9 +1,11 @@
 <template>
-    <modal
-        data-testid="nebula-sender-confirm-modal"
+    <ConfirmActionModal
+        :show="modalVisible"
+        @showing="handleShowingModal"
+        @close-via-escape="handlePreventModalAbandonmentOnClose"
+        data-testid="confirm-action-modal"
         tabindex="-1"
         role="dialog"
-        @modal-close="handleClose"
     >
         <form
             autocomplete="off"
@@ -46,7 +48,7 @@
                 </div>
             </div>
         </form>
-    </modal>
+    </ConfirmActionModal>
 </template>
 
 <script>
@@ -67,22 +69,23 @@ export default {
         cancelText: {
             type: String,
             default: "Cancel"
+        },
+        visible: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    computed: {
+        modalVisible: {
+            get() {
+                // return this.visible
+                return true
+            },
+            set(value) {
+                this.$emit('update:visible', value)
+            }
         }
     },
-
-    /**
-     * Mount the component.
-     */
-    mounted() {
-        // If the modal has inputs, let's highlight the first one, otherwise
-        // let's highlight the submit button
-        if (document.querySelectorAll('.modal input').length) {
-            document.querySelectorAll('.modal input')[0].focus()
-        } else {
-            this.$refs.runButton.focus()
-        }
-    },
-
     methods: {
         /**
          * Stop propogation of input events unless it's for an escape or enter keypress

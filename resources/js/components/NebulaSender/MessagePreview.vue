@@ -1,14 +1,14 @@
 <template>
     <action-pane :class="{ 'flex' : !message }">
         <div class="flex-1 flex items-center justify-center" v-if="!message">
-            <div class="font-medium text-60 text-4xl">
+            <div class="font-medium text-gray-600 text-4xl">
                 {{ messages['select-message-to-view'] }}
             </div>
         </div>
         <div v-else-if="message">
             <header class="flex items-start border-b border-40 pb-4 mb-5">
                 <div class="flex-1">
-                    <h2 class="font-bold text-90 text-3xl">
+                    <h2 class="heading font-bold text-3xl">
                         <span v-if="message.subject && message.subject.length > 0">
                             {{ message.subject }}
                         </span>
@@ -16,12 +16,12 @@
                             {{ messages['no-subject'] }}
                         </span>
                     </h2>
-                    <div class="mt-2 text-80">
+                    <div class="mt-2 from-line">
                         <h4 class="font-normal text-base pb-2">
                             {{ messages['from'] }}: {{ message.from }}
                         </h4>
                     </div>
-                    <div class="mt-2 text-80">
+                    <div class="mt-4 mb-4 recipients-line">
                         <h4 class="font-normal text-base pb-2">
                             {{ messages['recipients'] }}
                         </h4>
@@ -34,7 +34,7 @@
                             </span>
                             <span v-else class="text-sm" v-for="(recipient, index) of message.recipients">
                                 <span v-if="recipient.name">
-                                    {{ recipient.name }} <<a :href="`mailto:${recipient.email}`" class="underline text-primary hover:text-80">{{ recipient.email }}</a>>{{ index < message.recipients.length - 1 ? ', ' : ''  }}
+                                    {{ recipient.name }} &lt;<a :href="`mailto:${recipient.email}`" class="underline text-primary hover:text-80">{{ recipient.email }}</a>&lt;{{ index < message.recipients.length - 1 ? ', ' : ''  }}
                                 </span>
                                 <span v-else>
                                     <a :href="`mailto:${recipient.email}`" class="underline text-primary hover:text-80">{{ recipient.email }}</a>{{ index < message.recipients.length - 1 ? ', ' : ''  }}
@@ -48,7 +48,7 @@
                         {{ timestamp(message.created) }}
                     </div>
                     <div class="mt-4">
-                        <button class="outline-none text-primary hover:text-80 mr-2"
+                        <button class="outline-none text-primary  text-gray-600 hover:text-gray-500 mr-2"
                                 v-if="showEdit"
                                 @click="editMessage"
                                 :disabled="loading"
@@ -58,7 +58,7 @@
                                 <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <button class="outline-none text-70 hover:text-80 mr-2"
+                        <button class="outline-none text-gray-500 hover:text-gray-400 mr-2"
                                 v-if="showResend"
                                 @click="$emit('resend', message)"
                                 :disabled="loading"
@@ -67,7 +67,7 @@
                                 <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <button class="outline-none text-70 hover:text-80 mr-2"
+                        <button class="outline-none text-gray-500 hover:text-gray-400 mr-2"
                                 v-if="showClone"
                                 @click="cloneMessage"
                                 :disabled="loading"
@@ -77,7 +77,7 @@
                                 <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z" />
                             </svg>
                         </button>
-                        <button class="outline-none text-danger hover:text-90"
+                        <button class="outline-none text-red-500 hover:text-gray-600"
                                 v-if="showDelete"
                                 @click="$emit('delete', message)"
                                 :disabled="loading"
@@ -92,7 +92,7 @@
             <section class="mt-2 pt-4 pb-4 leading-normal">
                 <div v-html="messageContent"></div>
             </section>
-            <h3 class="block font-medium text-90 text-xl pt-4 my-3 text-80" v-if="showPreview">
+            <h3 class="block font-medium from-line text-xl pt-4 mt-3 mb-3" v-if="showPreview">
                 {{ messages['message-preview'] }}
             </h3>
             <section class="preview-wrapper" v-if="showPreview">
@@ -180,5 +180,22 @@
 </script>
 
 <style scoped>
-
+    .heading {
+        color: rgb(var(--colors-gray-800))
+    }
+    .dark .heading {
+        color: rgb(var(--colors-gray-300))
+    }
+    .from-line {
+        color: rgb(var(--colors-gray-800))
+    }
+    .dark .from-line {
+        color: rgb(var(--colors-gray-300))
+    }
+    .recipients-line {
+        color: rgb(var(--colors-gray-700))
+    }
+    .dark .recipients-line {
+        color: rgb(var(--colors-gray-500))
+    }
 </style>

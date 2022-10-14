@@ -32,9 +32,9 @@
                         </button>
                     </p>
                     <p class="text-center" v-else>
-                        <button class="btn btn-default btn-white text-primary" type="button" @click="$emit('reset')">
+                        <DefaultButton type="button" @click="$emit('reset')">
                             {{ messages['start-over'] }}
-                        </button>
+                        </DefaultButton>
                     </p>
                 </div>
             </div>
@@ -51,12 +51,6 @@
         mixins: [
             Translations,
         ],
-        components: {
-            //
-        },
-        props: {
-            messages: Object
-        },
         computed: {
             successAnimation() {
                 return {

@@ -28,7 +28,7 @@
                          @resend="showResendConfirm"
         ></message-preview>
 
-        <confirm-modal v-if="confirmResend.visible"
+        <confirm-modal v-model:visible="confirmResend.visible"
                        :confirm-text="messages['yes-resend']"
                        :cancel-text="messages['nevermind']"
                        :working="confirmResend.loading"

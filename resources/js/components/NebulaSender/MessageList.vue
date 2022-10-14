@@ -1,5 +1,5 @@
 <template>
-    <div class="list max-w-xs bg-30">
+    <div class="list max-w-xs bg-gray-300 dark:bg-gray-700 pt-3">
         <slot></slot>
     </div>
 </template>

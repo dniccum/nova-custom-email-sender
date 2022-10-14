@@ -2,6 +2,7 @@
 
 namespace Dniccum\CustomEmailSender;
 
+use Dniccum\CustomEmailSender\Http\Middleware\HandleInertiaRequests;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +57,9 @@ class ToolServiceProvider extends ServiceProvider
         if ($this->app->routesAreCached()) {
             return;
         }
+
+        Nova::router(['nova', Authorize::class], 'custom-email-sender')
+            ->group(__DIR__.'/../routes/inertia.php');
 
         Route::middleware(['nova', Authorize::class])
                 ->prefix('nova-vendor/custom-email-sender')

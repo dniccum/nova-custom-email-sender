@@ -2,7 +2,9 @@
     <div class="mb-8">
         <div class="mb-6">
             <p class="mb-2">{{ messages['recipients-toggle-copy'] }}</p>
-            <toggle-button :width="60" :height="26" color="var(--primary)" v-model="sendToAllInterface" :disabled="loading" />
+            <toggle color="var(--primary)"
+                    v-model="sendToAllInterface"
+                    :disabled="loading" />
         </div>
         <transition name="slide-fade">
             <div  v-if="!sendToAllInterface">
@@ -11,9 +13,9 @@
                     <auto-complete-input
                             class="form-control flex-1"
                             name="search"
-                            :loading.sync="loading"
-                            :model.sync="search"
-                            :results.sync="searchResults"
+                            v-model:loading="loading"
+                            v-model:model="search"
+                            v-model:results="searchResults"
                             @search="performSearch"
                             @select="selectResult"
                             @ad-hoc="addAdHocEmail"
@@ -30,15 +32,17 @@
 <script>
     import EmailInputTag from './EmailInputTag';
     import AutoCompleteInput from './AutoCompleteInput';
-    import { ToggleButton } from 'vue-js-toggle-button'
+    import Toggle from '@vueform/toggle'
     import EmailUtility from "../services/EmailUtility";
     import Recipient from "../interfaces/Recipient";
+
+    import '@vueform/toggle/themes/default.css';
 
     export default {
         name: "RecipientForm",
         components: {
             EmailInputTag,
-            ToggleButton,
+            Toggle,
             AutoCompleteInput,
         },
         props: {

@@ -2,6 +2,7 @@
 namespace Dniccum\CustomEmailSender\Http\Controllers;
 
 use Dniccum\CustomEmailSender\Http\Requests\SendCustomEmailMessage;
+use Dniccum\CustomEmailSender\Library\ConfigUtility;
 use Dniccum\CustomEmailSender\Library\NebulaSenderUtility;
 use Dniccum\CustomEmailSender\Library\UserUtility;
 use Dniccum\CustomEmailSender\Mail\CustomMessageMailable;
@@ -34,35 +35,10 @@ class CustomEmailSenderController
      */
     public function config()
     {
-        $configuration = config('novaemailsender');
-
-        /**
-         * @var string[]|array $configurationOptions
-         */
-        $configurationFromOptions = config('novaemailsender.from.options');
-
-        $fromOptions = collect($configurationFromOptions)->map(function($sender) {
-            return [
-                'address' => $sender['address'],
-                'name' => $sender['name'] . ' (' . $sender['address'] . ')',
-            ];
-        });
-        if($user = $this->getAuthUserSender()){
-            $user['name'] = $user['name']?  __('Me') . ' (' . $user['name'] . ' | ' . $user['address'] . ')' : '—';
-            $fromOptions->push($user);
-        }
-
-        $configurationFromOptions = $fromOptions->toArray();
-        $configuration['from']['options'] = $configurationFromOptions;
-
-        $nebulaSenderActive = NebulaSenderUtility::isActive();
+        $config = NebulaSenderUtility::config();
 
         return response()
-            ->json([
-                'config' => $configuration,
-                'messages' => array_merge(__('custom-email-sender::tool'), __('custom-email-sender::nebula-sender')),
-                'nebula_sender_active' => $nebulaSenderActive,
-            ]);
+            ->json($config);
     }
 
     /**
@@ -86,7 +62,7 @@ class CustomEmailSenderController
         }
 
         $sender = collect( config('novaemailsender.from.options') )
-                ->push($this->getAuthUserSender()) // remember the auth select option
+                ->push(ConfigUtility::getAuthUserSender()) // remember the auth select option
                 ->firstWhere('address', $requestData['from']);
         $content = $requestData['htmlContent'];
         $subject = $requestData['subject'];
@@ -138,38 +114,5 @@ class CustomEmailSenderController
         $results = $this->userUtility->searchUsers($query);
 
         return response()->json($results, 200);
-    }
-
-    /**
-     * Get auth user
-     *
-     * @return array
-     */
-    private function getAuthUserSender()
-    {
-        $user = request()->user();
-
-        if ($user) {
-            if (config('novaemailsender')) {
-                $email = 'email';
-                $name = 'first_name';
-
-                if (config('novaemailsender.model.email')) {
-                    $email = config('novaemailsender.model.email');
-                }
-                if (config('novaemailsender.model.name')) {
-                    $name = 'name';
-                } elseif (config('novaemailsender.model.first_name')) {
-                    $name = 'first_name';
-                }
-
-                return [
-                    'address' => $user->$email ?? null,
-                    'name' => $user->$name ?? null
-                ];
-            }
-        }
-
-        return null;
     }
 }

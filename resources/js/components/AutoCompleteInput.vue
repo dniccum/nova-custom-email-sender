@@ -9,7 +9,7 @@
             </div>
             <div class="auto-complete-result" @click="selectResult(result)" v-if="!loadingInterface && searchResults.length >= 1" v-for="result of searchResults">
                 <span class="font-bold">{{ result.name }}</span>
-                <span class="font-italic font-light"><{{ result.email }}></span>
+                <span class="font-italic font-light">&lt;{{ result.email }}></span>
             </div>
             <div class="auto-complete-no-results flex flex-row justify-center items-center" style="padding: 10px 0;" v-if="!loadingInterface && searchResults.length === 0 && searchIsEmail()">
                 <span class="mr-4">{{ messages['recipients-click-to-add'] }}</span>
